@@ -97,6 +97,18 @@
           <Property Name="CurID" Type="int" Nullable="false" />
           <Property Name="Flag" Type="varchar" MaxLength="2" />
         </EntityType>
+        <EntityType Name="SBP_BlotterCRRReportCalcSetup">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CalcVal1" Type="int" />
+          <Property Name="CalcVal2" Type="int" />
+          <Property Name="isActive" Type="bit" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="UpdateDate" Type="datetime" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="SBP_BlotterCRRReportDaysWiseBal">
           <Key>
             <PropertyRef Name="Id" />
@@ -124,7 +136,6 @@
           <Property Name="OtherTotal" Type="numeric" Precision="18" Scale="0" />
           <Property Name="PakistanToTal" Type="numeric" Precision="18" Scale="0" />
           <Property Name="CRR3Pcr" Type="float" />
-          <Property Name="CRR4Pcr" Type="float" />
           <Property Name="CRR5Pcr" Type="float" />
           <Property Name="BalMaintain" Type="numeric" Precision="18" Scale="0" />
           <Property Name="Penalty" Type="numeric" Precision="18" Scale="0" />
@@ -423,6 +434,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SBP_BlotterCRRReportCalcSetup_UserID">
+          <End Role="SBP_LoginInfo" Type="Self.SBP_LoginInfo" Multiplicity="1" />
+          <End Role="SBP_BlotterCRRReportCalcSetup" Type="Self.SBP_BlotterCRRReportCalcSetup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SBP_LoginInfo">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SBP_BlotterCRRReportCalcSetup">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_SBP_BlotterTBO_BranchID">
           <End Role="Branches" Type="Self.Branches" Multiplicity="1" />
           <End Role="SBP_BlotterTBO" Type="Self.SBP_BlotterTBO" Multiplicity="*" />
@@ -616,6 +639,7 @@
           <EntitySet Name="SBP_BlotterBreakups" EntityType="Self.SBP_BlotterBreakups" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SBP_BlotterClearing" EntityType="Self.SBP_BlotterClearing" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SBP_BlotterCRRFINCON" EntityType="Self.SBP_BlotterCRRFINCON" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SBP_BlotterCRRReportCalcSetup" EntityType="Self.SBP_BlotterCRRReportCalcSetup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SBP_BlotterCRRReportDaysWiseBal" EntityType="Self.SBP_BlotterCRRReportDaysWiseBal" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SBP_BlotterDTL" EntityType="Self.SBP_BlotterDTL" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SBP_BlotterDTLDaysWiseBal" EntityType="Self.SBP_BlotterDTLDaysWiseBal" Schema="dbo" store:Type="Tables" />
@@ -652,6 +676,10 @@
           <AssociationSet Name="FK_SBP_BlotterCRRFINCON_UserID" Association="Self.FK_SBP_BlotterCRRFINCON_UserID">
             <End Role="SBP_LoginInfo" EntitySet="SBP_LoginInfo" />
             <End Role="SBP_BlotterCRRFINCON" EntitySet="SBP_BlotterCRRFINCON" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SBP_BlotterCRRReportCalcSetup_UserID" Association="Self.FK_SBP_BlotterCRRReportCalcSetup_UserID">
+            <End Role="SBP_LoginInfo" EntitySet="SBP_LoginInfo" />
+            <End Role="SBP_BlotterCRRReportCalcSetup" EntitySet="SBP_BlotterCRRReportCalcSetup" />
           </AssociationSet>
           <AssociationSet Name="FK_SBP_BlotterTBO_BranchID" Association="Self.FK_SBP_BlotterTBO_BranchID">
             <End Role="Branches" EntitySet="Branches" />
@@ -810,18 +838,6 @@
             <Parameter Name="BR" Mode="In" Type="Int32" />
           </FunctionImport>
           <EntitySet Name="SBP_BlotterDTLDaysWiseBal" EntityType="BlotterEF.SBP_BlotterDTLDaysWiseBal" />
-          <FunctionImport Name="SP_AddDaysInBlotterReport">
-            <Parameter Name="DTLValue" Mode="In" Type="Decimal" />
-            <Parameter Name="StartDate" Mode="In" Type="DateTime" />
-            <Parameter Name="EndDate" Mode="In" Type="DateTime" />
-            <Parameter Name="BR" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="SP_UpdateDaysInBlotterReport">
-            <Parameter Name="DTLValue" Mode="In" Type="Decimal" />
-            <Parameter Name="StartDate" Mode="In" Type="DateTime" />
-            <Parameter Name="EndDate" Mode="In" Type="DateTime" />
-            <Parameter Name="BR" Mode="In" Type="Int32" />
-          </FunctionImport>
           <EntitySet Name="SBP_BlotterBreakups" EntityType="BlotterEF.SBP_BlotterBreakups" />
           <AssociationSet Name="FK_SBP_BlotterBreakups_BranchID" Association="BlotterEF.FK_SBP_BlotterBreakups_BranchID">
             <End Role="Branches" EntitySet="Branches" />
@@ -837,10 +853,6 @@
             <Parameter Name="CurID" Mode="In" Type="Int32" />
             <Parameter Name="BR" Mode="In" Type="Int32" />
           </FunctionImport>
-          <EntitySet Name="SBP_BlotterCRRReportDaysWiseBal" EntityType="BlotterEF.SBP_BlotterCRRReportDaysWiseBal" />
-          <FunctionImport Name="SP_GETLatestBlotterDTLReportDayWise" ReturnType="Collection(BlotterEF.SP_GETLatestBlotterDTLReportDayWise_Result)">
-          <Parameter Name="BR" Mode="In" Type="Int32" />
-          </FunctionImport>
           <EntitySet Name="SBP_BlotterTrade" EntityType="BlotterEF.SBP_BlotterTrade" />
           <AssociationSet Name="FK_SBP_BlotterTrade_BranchID" Association="BlotterEF.FK_SBP_BlotterTrade_BranchID">
             <End Role="Branches" EntitySet="Branches" />
@@ -854,6 +866,27 @@
             <Parameter Name="UserID" Mode="In" Type="Int32" />
             <Parameter Name="BranchID" Mode="In" Type="Int32" />
             <Parameter Name="CurID" Mode="In" Type="Int32" />
+            <Parameter Name="BR" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="SBP_BlotterCRRReportCalcSetup" EntityType="BlotterEF.SBP_BlotterCRRReportCalcSetup" />
+          <EntitySet Name="SBP_BlotterCRRReportDaysWiseBal" EntityType="BlotterEF.SBP_BlotterCRRReportDaysWiseBal" />
+          <AssociationSet Name="FK_SBP_BlotterCRRReportCalcSetup_UserID" Association="BlotterEF.FK_SBP_BlotterCRRReportCalcSetup_UserID">
+            <End Role="SBP_LoginInfo" EntitySet="SBP_LoginInfo" />
+            <End Role="SBP_BlotterCRRReportCalcSetup" EntitySet="SBP_BlotterCRRReportCalcSetup" />
+          </AssociationSet>
+          <FunctionImport Name="SP_AddDaysInBlotterReport">
+            <Parameter Name="DTLValue" Mode="In" Type="Decimal" />
+            <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+            <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+            <Parameter Name="BR" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SP_UpdateDaysInBlotterReport">
+            <Parameter Name="DTLValue" Mode="In" Type="Decimal" />
+            <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+            <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+            <Parameter Name="BR" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SP_GETLatestBlotterDTLReportDayWise" ReturnType="Collection(BlotterEF.SP_GETLatestBlotterDTLReportDayWise_Result)">
             <Parameter Name="BR" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>        
@@ -1122,6 +1155,7 @@
           <NavigationProperty Name="SBP_BlotterClearing" Relationship="BlotterEF.FK_SBP_BlotterClearing_UserID" FromRole="SBP_LoginInfo" ToRole="SBP_BlotterClearing" />
           <NavigationProperty Name="SBP_BlotterBreakups" Relationship="BlotterEF.FK_SBP_BlotterBreakups_UserID" FromRole="SBP_LoginInfo" ToRole="SBP_BlotterBreakups" />
           <NavigationProperty Name="SBP_BlotterTrade" Relationship="BlotterEF.FK_SBP_BlotterTrade_UserID" FromRole="SBP_LoginInfo" ToRole="SBP_BlotterTrade" />
+          <NavigationProperty Name="SBP_BlotterCRRReportCalcSetup" Relationship="BlotterEF.FK_SBP_BlotterCRRReportCalcSetup_UserID" FromRole="SBP_LoginInfo" ToRole="SBP_BlotterCRRReportCalcSetup" />
         </EntityType>
         <Association Name="FK_URRUserID">
           <End Type="BlotterEF.SBP_LoginInfo" Role="SBP_LoginInfo" Multiplicity="1" />
@@ -1513,75 +1547,6 @@
           <Property Type="Int32" Name="CurID" Nullable="false" />
           <Property Type="DateTime" Name="BreakupDate" Nullable="true" Precision="23" />
         </ComplexType>
-        <EntityType Name="SBP_BlotterCRRReportDaysWiseBal">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CRRFinconId" Type="Int32" Nullable="false" />
-          <Property Name="ReportDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="WeekDays" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="KarachiTotal" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="HyderabadTotal" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="SukkurTotal" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="LahoreTotal" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="FaisalabadTotal" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="GWalaTotal" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="MultanTotal" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="SialkotTotal" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="Isalamabad" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="PindiTotal" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="PeshawarTotal" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="BhawalpurTotal" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="MuzafarbadTotal" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="DIKhanTotal" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="QuettaTotal" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="GawadarTotal" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="OtherTotal" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="PakistanToTal" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="CRR3Pcr" Type="Double" />
-          <Property Name="CRR4Pcr" Type="Double" />
-          <Property Name="CRR5Pcr" Type="Double" />
-          <Property Name="BalMaintain" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="Penalty" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="Remarks" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="BR" Type="Int32" />
-          <Property Name="createDate" Type="DateTime" Precision="3" />
-          <Property Name="UpdateDate" Type="DateTime" Precision="3" />
-        </EntityType>
-        <ComplexType Name="SP_GETLatestBlotterDTLReportDayWise_Result">
-          <Property Type="Int32" Name="Id" Nullable="false" />
-          <Property Type="Int32" Name="CRRFinconId" Nullable="false" />
-          <Property Type="DateTime" Name="ReportDate" Nullable="false" Precision="23" />
-          <Property Type="String" Name="WeekDays" Nullable="true" MaxLength="20" />
-          <Property Type="Decimal" Name="KarachiTotal" Nullable="true" Precision="18" Scale="0" />
-          <Property Type="Decimal" Name="HyderabadTotal" Nullable="true" Precision="18" Scale="0" />
-          <Property Type="Decimal" Name="SukkurTotal" Nullable="true" Precision="18" Scale="0" />
-          <Property Type="Decimal" Name="LahoreTotal" Nullable="true" Precision="18" Scale="0" />
-          <Property Type="Decimal" Name="FaisalabadTotal" Nullable="true" Precision="18" Scale="0" />
-          <Property Type="Decimal" Name="GWalaTotal" Nullable="true" Precision="18" Scale="0" />
-          <Property Type="Decimal" Name="MultanTotal" Nullable="true" Precision="18" Scale="0" />
-          <Property Type="Decimal" Name="SialkotTotal" Nullable="true" Precision="18" Scale="0" />
-          <Property Type="Decimal" Name="Isalamabad" Nullable="true" Precision="18" Scale="0" />
-          <Property Type="Decimal" Name="PindiTotal" Nullable="true" Precision="18" Scale="0" />
-          <Property Type="Decimal" Name="PeshawarTotal" Nullable="true" Precision="18" Scale="0" />
-          <Property Type="Decimal" Name="BhawalpurTotal" Nullable="true" Precision="18" Scale="0" />
-          <Property Type="Decimal" Name="MuzafarbadTotal" Nullable="true" Precision="18" Scale="0" />
-          <Property Type="Decimal" Name="DIKhanTotal" Nullable="true" Precision="18" Scale="0" />
-          <Property Type="Decimal" Name="QuettaTotal" Nullable="true" Precision="18" Scale="0" />
-          <Property Type="Decimal" Name="GawadarTotal" Nullable="true" Precision="18" Scale="0" />
-          <Property Type="Decimal" Name="OtherTotal" Nullable="true" Precision="18" Scale="0" />
-          <Property Type="Decimal" Name="PakistanToTal" Nullable="true" Precision="18" Scale="0" />
-          <Property Type="Double" Name="CRR3Pcr" Nullable="true" />
-          <Property Type="Double" Name="CRR4Pcr" Nullable="true" />
-          <Property Type="Double" Name="CRR5Pcr" Nullable="true" />
-          <Property Type="Decimal" Name="BalMaintain" Nullable="true" Precision="18" Scale="0" />
-          <Property Type="Decimal" Name="Penalty" Nullable="true" Precision="18" Scale="0" />
-          <Property Type="String" Name="Remarks" Nullable="true" MaxLength="50" />
-          <Property Type="Int32" Name="BR" Nullable="true" />
-          <Property Type="DateTime" Name="createDate" Nullable="true" Precision="23" />
-          <Property Type="DateTime" Name="UpdateDate" Nullable="true" Precision="23" />
-        </ComplexType>
         <EntityType Name="SBP_BlotterTrade">
           <Key>
             <PropertyRef Name="SNo" />
@@ -1642,6 +1607,98 @@
           <Property Type="Int32" Name="BID" Nullable="false" />
           <Property Type="Int32" Name="CurID" Nullable="false" />
           <Property Type="String" Name="Flag" Nullable="true" MaxLength="2" />
+        </ComplexType>
+        <EntityType Name="SBP_BlotterCRRReportCalcSetup">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CalcVal1" Type="Int32" />
+          <Property Name="CalcVal2" Type="Int32" />
+          <Property Name="isActive" Type="Boolean" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="3" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="SBP_LoginInfo" Relationship="BlotterEF.FK_SBP_BlotterCRRReportCalcSetup_UserID" FromRole="SBP_BlotterCRRReportCalcSetup" ToRole="SBP_LoginInfo" />
+        </EntityType>
+        <EntityType Name="SBP_BlotterCRRReportDaysWiseBal">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CRRFinconId" Type="Int32" Nullable="false" />
+          <Property Name="ReportDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="WeekDays" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="KarachiTotal" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="HyderabadTotal" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="SukkurTotal" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="LahoreTotal" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="FaisalabadTotal" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="GWalaTotal" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="MultanTotal" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="SialkotTotal" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Isalamabad" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="PindiTotal" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="PeshawarTotal" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="BhawalpurTotal" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="MuzafarbadTotal" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="DIKhanTotal" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="QuettaTotal" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="GawadarTotal" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="OtherTotal" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="PakistanToTal" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="CRR3Pcr" Type="Double" />
+          <Property Name="CRR5Pcr" Type="Double" />
+          <Property Name="BalMaintain" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Penalty" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Remarks" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BR" Type="Int32" />
+          <Property Name="createDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <Association Name="FK_SBP_BlotterCRRReportCalcSetup_UserID">
+          <End Type="BlotterEF.SBP_LoginInfo" Role="SBP_LoginInfo" Multiplicity="1" />
+          <End Type="BlotterEF.SBP_BlotterCRRReportCalcSetup" Role="SBP_BlotterCRRReportCalcSetup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SBP_LoginInfo">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SBP_BlotterCRRReportCalcSetup">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="SP_GETLatestBlotterDTLReportDayWise_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="Int32" Name="CRRFinconId" Nullable="false" />
+          <Property Type="DateTime" Name="ReportDate" Nullable="true" />
+          <Property Type="String" Name="WeekDays" Nullable="true" MaxLength="20" />
+          <Property Type="Decimal" Name="KarachiTotal" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="HyderabadTotal" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="SukkurTotal" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="LahoreTotal" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="FaisalabadTotal" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="GWalaTotal" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="MultanTotal" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="SialkotTotal" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="Isalamabad" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="PindiTotal" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="PeshawarTotal" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="BhawalpurTotal" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="MuzafarbadTotal" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="DIKhanTotal" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="QuettaTotal" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="GawadarTotal" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="OtherTotal" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="PakistanToTal" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Double" Name="CRR3Pcr" Nullable="false" />
+          <Property Type="Double" Name="CRR5Pcr" Nullable="false" />
+          <Property Type="Decimal" Name="BalMaintain" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="Penalty" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="String" Name="Remarks" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="BR" Nullable="true" />
+          <Property Type="DateTime" Name="createDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="UpdateDate" Nullable="true" Precision="23" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -2160,8 +2217,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="SP_AddDaysInBlotterReport" FunctionName="BlotterEF.Store.SP_AddDaysInBlotterReport" />
-          <FunctionImportMapping FunctionImportName="SP_UpdateDaysInBlotterReport" FunctionName="BlotterEF.Store.SP_UpdateDaysInBlotterReport" />
           <EntitySetMapping Name="SBP_BlotterBreakups">
             <EntityTypeMapping TypeName="BlotterEF.SBP_BlotterBreakups">
               <MappingFragment StoreEntitySet="SBP_BlotterBreakups">
@@ -2214,80 +2269,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="SBP_BlotterCRRReportDaysWiseBal">
-            <EntityTypeMapping TypeName="BlotterEF.SBP_BlotterCRRReportDaysWiseBal">
-              <MappingFragment StoreEntitySet="SBP_BlotterCRRReportDaysWiseBal">
-                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
-                <ScalarProperty Name="createDate" ColumnName="createDate" />
-                <ScalarProperty Name="BR" ColumnName="BR" />
-                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-                <ScalarProperty Name="Penalty" ColumnName="Penalty" />
-                <ScalarProperty Name="BalMaintain" ColumnName="BalMaintain" />
-                <ScalarProperty Name="CRR5Pcr" ColumnName="CRR5Pcr" />
-                <ScalarProperty Name="CRR4Pcr" ColumnName="CRR4Pcr" />
-                <ScalarProperty Name="CRR3Pcr" ColumnName="CRR3Pcr" />
-                <ScalarProperty Name="PakistanToTal" ColumnName="PakistanToTal" />
-                <ScalarProperty Name="OtherTotal" ColumnName="OtherTotal" />
-                <ScalarProperty Name="GawadarTotal" ColumnName="GawadarTotal" />
-                <ScalarProperty Name="QuettaTotal" ColumnName="QuettaTotal" />
-                <ScalarProperty Name="DIKhanTotal" ColumnName="DIKhanTotal" />
-                <ScalarProperty Name="MuzafarbadTotal" ColumnName="MuzafarbadTotal" />
-                <ScalarProperty Name="BhawalpurTotal" ColumnName="BhawalpurTotal" />
-                <ScalarProperty Name="PeshawarTotal" ColumnName="PeshawarTotal" />
-                <ScalarProperty Name="PindiTotal" ColumnName="PindiTotal" />
-                <ScalarProperty Name="Isalamabad" ColumnName="Isalamabad" />
-                <ScalarProperty Name="SialkotTotal" ColumnName="SialkotTotal" />
-                <ScalarProperty Name="MultanTotal" ColumnName="MultanTotal" />
-                <ScalarProperty Name="GWalaTotal" ColumnName="GWalaTotal" />
-                <ScalarProperty Name="FaisalabadTotal" ColumnName="FaisalabadTotal" />
-                <ScalarProperty Name="LahoreTotal" ColumnName="LahoreTotal" />
-                <ScalarProperty Name="SukkurTotal" ColumnName="SukkurTotal" />
-                <ScalarProperty Name="HyderabadTotal" ColumnName="HyderabadTotal" />
-                <ScalarProperty Name="KarachiTotal" ColumnName="KarachiTotal" />
-                <ScalarProperty Name="WeekDays" ColumnName="WeekDays" />
-                <ScalarProperty Name="ReportDate" ColumnName="ReportDate" />
-                <ScalarProperty Name="CRRFinconId" ColumnName="CRRFinconId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="SP_GETLatestBlotterDTLReportDayWise" FunctionName="BlotterEF.Store.SP_GETLatestBlotterDTLReportDayWise">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="BlotterEF.SP_GETLatestBlotterDTLReportDayWise_Result">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="CRRFinconId" ColumnName="CRRFinconId" />
-                <ScalarProperty Name="ReportDate" ColumnName="ReportDate" />
-                <ScalarProperty Name="WeekDays" ColumnName="WeekDays" />
-                <ScalarProperty Name="KarachiTotal" ColumnName="KarachiTotal" />
-                <ScalarProperty Name="HyderabadTotal" ColumnName="HyderabadTotal" />
-                <ScalarProperty Name="SukkurTotal" ColumnName="SukkurTotal" />
-                <ScalarProperty Name="LahoreTotal" ColumnName="LahoreTotal" />
-                <ScalarProperty Name="FaisalabadTotal" ColumnName="FaisalabadTotal" />
-                <ScalarProperty Name="GWalaTotal" ColumnName="GWalaTotal" />
-                <ScalarProperty Name="MultanTotal" ColumnName="MultanTotal" />
-                <ScalarProperty Name="SialkotTotal" ColumnName="SialkotTotal" />
-                <ScalarProperty Name="Isalamabad" ColumnName="Isalamabad" />
-                <ScalarProperty Name="PindiTotal" ColumnName="PindiTotal" />
-                <ScalarProperty Name="PeshawarTotal" ColumnName="PeshawarTotal" />
-                <ScalarProperty Name="BhawalpurTotal" ColumnName="BhawalpurTotal" />
-                <ScalarProperty Name="MuzafarbadTotal" ColumnName="MuzafarbadTotal" />
-                <ScalarProperty Name="DIKhanTotal" ColumnName="DIKhanTotal" />
-                <ScalarProperty Name="QuettaTotal" ColumnName="QuettaTotal" />
-                <ScalarProperty Name="GawadarTotal" ColumnName="GawadarTotal" />
-                <ScalarProperty Name="OtherTotal" ColumnName="OtherTotal" />
-                <ScalarProperty Name="PakistanToTal" ColumnName="PakistanToTal" />
-                <ScalarProperty Name="CRR3Pcr" ColumnName="CRR3Pcr" />
-                <ScalarProperty Name="CRR4Pcr" ColumnName="CRR4Pcr" />
-                <ScalarProperty Name="CRR5Pcr" ColumnName="CRR5Pcr" />
-                <ScalarProperty Name="BalMaintain" ColumnName="BalMaintain" />
-                <ScalarProperty Name="Penalty" ColumnName="Penalty" />
-                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-                <ScalarProperty Name="BR" ColumnName="BR" />
-                <ScalarProperty Name="createDate" ColumnName="createDate" />
-                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <EntitySetMapping Name="SBP_BlotterTrade">
             <EntityTypeMapping TypeName="BlotterEF.SBP_BlotterTrade">
               <MappingFragment StoreEntitySet="SBP_BlotterTrade">
@@ -2325,6 +2306,93 @@
                 <ScalarProperty Name="BID" ColumnName="BID" />
                 <ScalarProperty Name="CurID" ColumnName="CurID" />
                 <ScalarProperty Name="Flag" ColumnName="Flag" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="SBP_BlotterCRRReportCalcSetup">
+            <EntityTypeMapping TypeName="BlotterEF.SBP_BlotterCRRReportCalcSetup">
+              <MappingFragment StoreEntitySet="SBP_BlotterCRRReportCalcSetup">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="CalcVal2" ColumnName="CalcVal2" />
+                <ScalarProperty Name="CalcVal1" ColumnName="CalcVal1" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SBP_BlotterCRRReportDaysWiseBal">
+            <EntityTypeMapping TypeName="BlotterEF.SBP_BlotterCRRReportDaysWiseBal">
+              <MappingFragment StoreEntitySet="SBP_BlotterCRRReportDaysWiseBal">
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="createDate" ColumnName="createDate" />
+                <ScalarProperty Name="BR" ColumnName="BR" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="Penalty" ColumnName="Penalty" />
+                <ScalarProperty Name="BalMaintain" ColumnName="BalMaintain" />
+                <ScalarProperty Name="CRR5Pcr" ColumnName="CRR5Pcr" />
+                <ScalarProperty Name="CRR3Pcr" ColumnName="CRR3Pcr" />
+                <ScalarProperty Name="PakistanToTal" ColumnName="PakistanToTal" />
+                <ScalarProperty Name="OtherTotal" ColumnName="OtherTotal" />
+                <ScalarProperty Name="GawadarTotal" ColumnName="GawadarTotal" />
+                <ScalarProperty Name="QuettaTotal" ColumnName="QuettaTotal" />
+                <ScalarProperty Name="DIKhanTotal" ColumnName="DIKhanTotal" />
+                <ScalarProperty Name="MuzafarbadTotal" ColumnName="MuzafarbadTotal" />
+                <ScalarProperty Name="BhawalpurTotal" ColumnName="BhawalpurTotal" />
+                <ScalarProperty Name="PeshawarTotal" ColumnName="PeshawarTotal" />
+                <ScalarProperty Name="PindiTotal" ColumnName="PindiTotal" />
+                <ScalarProperty Name="Isalamabad" ColumnName="Isalamabad" />
+                <ScalarProperty Name="SialkotTotal" ColumnName="SialkotTotal" />
+                <ScalarProperty Name="MultanTotal" ColumnName="MultanTotal" />
+                <ScalarProperty Name="GWalaTotal" ColumnName="GWalaTotal" />
+                <ScalarProperty Name="FaisalabadTotal" ColumnName="FaisalabadTotal" />
+                <ScalarProperty Name="LahoreTotal" ColumnName="LahoreTotal" />
+                <ScalarProperty Name="SukkurTotal" ColumnName="SukkurTotal" />
+                <ScalarProperty Name="HyderabadTotal" ColumnName="HyderabadTotal" />
+                <ScalarProperty Name="KarachiTotal" ColumnName="KarachiTotal" />
+                <ScalarProperty Name="WeekDays" ColumnName="WeekDays" />
+                <ScalarProperty Name="ReportDate" ColumnName="ReportDate" />
+                <ScalarProperty Name="CRRFinconId" ColumnName="CRRFinconId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SP_AddDaysInBlotterReport" FunctionName="BlotterEF.Store.SP_AddDaysInBlotterReport" />
+          <FunctionImportMapping FunctionImportName="SP_UpdateDaysInBlotterReport" FunctionName="BlotterEF.Store.SP_UpdateDaysInBlotterReport" />
+          <FunctionImportMapping FunctionImportName="SP_GETLatestBlotterDTLReportDayWise" FunctionName="BlotterEF.Store.SP_GETLatestBlotterDTLReportDayWise">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BlotterEF.SP_GETLatestBlotterDTLReportDayWise_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CRRFinconId" ColumnName="CRRFinconId" />
+                <ScalarProperty Name="ReportDate" ColumnName="ReportDate" />
+                <ScalarProperty Name="WeekDays" ColumnName="WeekDays" />
+                <ScalarProperty Name="KarachiTotal" ColumnName="KarachiTotal" />
+                <ScalarProperty Name="HyderabadTotal" ColumnName="HyderabadTotal" />
+                <ScalarProperty Name="SukkurTotal" ColumnName="SukkurTotal" />
+                <ScalarProperty Name="LahoreTotal" ColumnName="LahoreTotal" />
+                <ScalarProperty Name="FaisalabadTotal" ColumnName="FaisalabadTotal" />
+                <ScalarProperty Name="GWalaTotal" ColumnName="GWalaTotal" />
+                <ScalarProperty Name="MultanTotal" ColumnName="MultanTotal" />
+                <ScalarProperty Name="SialkotTotal" ColumnName="SialkotTotal" />
+                <ScalarProperty Name="Isalamabad" ColumnName="Isalamabad" />
+                <ScalarProperty Name="PindiTotal" ColumnName="PindiTotal" />
+                <ScalarProperty Name="PeshawarTotal" ColumnName="PeshawarTotal" />
+                <ScalarProperty Name="BhawalpurTotal" ColumnName="BhawalpurTotal" />
+                <ScalarProperty Name="MuzafarbadTotal" ColumnName="MuzafarbadTotal" />
+                <ScalarProperty Name="DIKhanTotal" ColumnName="DIKhanTotal" />
+                <ScalarProperty Name="QuettaTotal" ColumnName="QuettaTotal" />
+                <ScalarProperty Name="GawadarTotal" ColumnName="GawadarTotal" />
+                <ScalarProperty Name="OtherTotal" ColumnName="OtherTotal" />
+                <ScalarProperty Name="PakistanToTal" ColumnName="PakistanToTal" />
+                <ScalarProperty Name="CRR3Pcr" ColumnName="CRR3Pcr" />
+                <ScalarProperty Name="CRR5Pcr" ColumnName="CRR5Pcr" />
+                <ScalarProperty Name="BalMaintain" ColumnName="BalMaintain" />
+                <ScalarProperty Name="Penalty" ColumnName="Penalty" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="BR" ColumnName="BR" />
+                <ScalarProperty Name="createDate" ColumnName="createDate" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

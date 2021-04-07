@@ -30,7 +30,6 @@ namespace WebApiServices.Models
         public Nullable<decimal> OtherTotal { get; set; }
         public Nullable<decimal> PakistanToTal { get; set; }
         public Nullable<double> CRR3Pcr { get; set; }
-        public Nullable<double> CRR4Pcr { get; set; }
         public Nullable<double> CRR5Pcr { get; set; }
         public Nullable<decimal> BalMaintain { get; set; }
         public Nullable<decimal> Penalty { get; set; }

@@ -15,31 +15,30 @@ namespace DataAccessLayer
     {
         public int Id { get; set; }
         public int CRRFinconId { get; set; }
-        public System.DateTime ReportDate { get; set; }
+        public Nullable<System.DateTime> ReportDate { get; set; }
         public string WeekDays { get; set; }
-        public Nullable<decimal> KarachiTotal { get; set; }
-        public Nullable<decimal> HyderabadTotal { get; set; }
-        public Nullable<decimal> SukkurTotal { get; set; }
-        public Nullable<decimal> LahoreTotal { get; set; }
-        public Nullable<decimal> FaisalabadTotal { get; set; }
-        public Nullable<decimal> GWalaTotal { get; set; }
-        public Nullable<decimal> MultanTotal { get; set; }
-        public Nullable<decimal> SialkotTotal { get; set; }
-        public Nullable<decimal> Isalamabad { get; set; }
-        public Nullable<decimal> PindiTotal { get; set; }
-        public Nullable<decimal> PeshawarTotal { get; set; }
-        public Nullable<decimal> BhawalpurTotal { get; set; }
-        public Nullable<decimal> MuzafarbadTotal { get; set; }
-        public Nullable<decimal> DIKhanTotal { get; set; }
-        public Nullable<decimal> QuettaTotal { get; set; }
-        public Nullable<decimal> GawadarTotal { get; set; }
-        public Nullable<decimal> OtherTotal { get; set; }
-        public Nullable<decimal> PakistanToTal { get; set; }
-        public Nullable<double> CRR3Pcr { get; set; }
-        public Nullable<double> CRR4Pcr { get; set; }
-        public Nullable<double> CRR5Pcr { get; set; }
-        public Nullable<decimal> BalMaintain { get; set; }
-        public Nullable<decimal> Penalty { get; set; }
+        public decimal KarachiTotal { get; set; }
+        public decimal HyderabadTotal { get; set; }
+        public decimal SukkurTotal { get; set; }
+        public decimal LahoreTotal { get; set; }
+        public decimal FaisalabadTotal { get; set; }
+        public decimal GWalaTotal { get; set; }
+        public decimal MultanTotal { get; set; }
+        public decimal SialkotTotal { get; set; }
+        public decimal Isalamabad { get; set; }
+        public decimal PindiTotal { get; set; }
+        public decimal PeshawarTotal { get; set; }
+        public decimal BhawalpurTotal { get; set; }
+        public decimal MuzafarbadTotal { get; set; }
+        public decimal DIKhanTotal { get; set; }
+        public decimal QuettaTotal { get; set; }
+        public decimal GawadarTotal { get; set; }
+        public decimal OtherTotal { get; set; }
+        public decimal PakistanToTal { get; set; }
+        public double CRR3Pcr { get; set; }
+        public double CRR5Pcr { get; set; }
+        public decimal BalMaintain { get; set; }
+        public decimal Penalty { get; set; }
         public string Remarks { get; set; }
         public Nullable<int> BR { get; set; }
         public Nullable<System.DateTime> createDate { get; set; }

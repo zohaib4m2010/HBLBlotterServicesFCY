@@ -33,10 +33,12 @@
         <EntityTypeShape EntityType="BlotterEF.SBP_BlotterBreakups" Width="1.5" PointX="2.5" PointY="4.75" />
         <AssociationConnector Association="BlotterEF.FK_SBP_BlotterBreakups_BranchID" />
         <AssociationConnector Association="BlotterEF.FK_SBP_BlotterBreakups_UserID" />
-        <EntityTypeShape EntityType="BlotterEF.SBP_BlotterCRRReportDaysWiseBal" Width="1.5" PointX="8.375" PointY="10.75" />
         <EntityTypeShape EntityType="BlotterEF.SBP_BlotterTrade" Width="1.5" PointX="14.625" PointY="5.25" />
         <AssociationConnector Association="BlotterEF.FK_SBP_BlotterTrade_BranchID" />
         <AssociationConnector Association="BlotterEF.FK_SBP_BlotterTrade_UserID" />
+        <EntityTypeShape EntityType="BlotterEF.SBP_BlotterCRRReportCalcSetup" Width="1.5" PointX="12.875" PointY="10.125" />
+        <EntityTypeShape EntityType="BlotterEF.SBP_BlotterCRRReportDaysWiseBal" Width="1.5" PointX="8.375" PointY="10.75" />
+        <AssociationConnector Association="BlotterEF.FK_SBP_BlotterCRRReportCalcSetup_UserID" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
