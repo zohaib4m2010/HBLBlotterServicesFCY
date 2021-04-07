@@ -1,0 +1,5 @@
+﻿1>------ Build started: Project: DataAccessLayer, Configuration: Debug Any CPU ------
+1>  DataAccessLayer -> D:\WebApi\WebApiServices\DataAccessLayer\bin\Debug\DataAccessLayer.dll
+2>------ Build started: Project: WebApiServices, Configuration: Debug Any CPU ------
+2>  WebApiServices -> D:\WebApi\WebApiServices\WebApiServices\bin\WebApiServices.dll
+========== Build: 2 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========

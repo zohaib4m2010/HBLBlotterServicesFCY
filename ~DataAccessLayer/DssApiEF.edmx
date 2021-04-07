@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="BlotterEF.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'Opics43.dbo.T_RTRATE' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="T_RTRATE">
+          <Property Name="FORMULA" Type="nvarchar" MaxLength="255" />
+          <Property Name="INPUT_DATE" Type="datetime" />
+          <Property Name="RATE_8" Type="float" />
+          <Property Name="ERRORCODE" Type="float" />
+        </EntityType>-->
+        <EntityContainer Name="BlotterEFStoreContainer" />
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BlotterEF" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="BlotterEntities" annotation:LazyLoadingEnabled="true" >
+          <FunctionImport Name="SP_SBPBlotter" ReturnType="Collection(BlotterEF.SP_SBPBlotter_Result)" >
+          <Parameter Name="Br" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SP_SBPOpicsSystemDate" ReturnType="Collection(BlotterEF.SP_SBPOpicsSystemDate_Result)" >
+          <Parameter Name="BrCode" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SP_SBPGetLoginInfo" ReturnType="Collection(BlotterEF.SP_SBPGetLoginInfo_Result)" >
+            <Parameter Name="UserName" Mode="In" Type="String" />
+            <Parameter Name="Password" Mode="In" Type="String" />
+            <Parameter Name="BranchCode" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SP_SBPBlotterRunningBal">
+            <Parameter Name="Br" Mode="In" Type="String" />
+            <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+            <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
+        </EntityContainer>        
+        <ComplexType Name="SP_SBPBlotter_Result">
+          <Property Type="String" Name="Description" Nullable="true" MaxLength="258" />
+          <Property Type="String" Name="Status" Nullable="false" MaxLength="1" />
+          <Property Type="DateTime" Name="DealDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="ValueDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="MaturityDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Currency" Nullable="true" MaxLength="3" />
+          <Property Type="Decimal" Name="Inflow" Nullable="false" Precision="38" Scale="4" />
+          <Property Type="Decimal" Name="Outflow" Nullable="false" Precision="38" Scale="4" />
+          <Property Type="Int32" Name="DealNo" Nullable="false" />
+          <Property Type="Decimal" Name="OpeningBalance" Nullable="false" Precision="19" Scale="4" />
+        </ComplexType>
+		<ComplexType Name="SP_SBPGetLoginInfo_Result">			
+          <Property Type="String" Name="UserName" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="Password" Nullable="false" MaxLength="30" />        
+        </ComplexType>
+        <ComplexType Name="SP_SBPOpicsSystemDate_Result">
+          <Property Type="DateTime" Name="OpicsCurrentDate" Nullable="true" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="SP_SBPBlotterRunningBal" >
+          <Property Type="String" Name="BranchCode" Nullable="false" />
+          <Property Type="DateTime" Name="StartDate" Nullable="false" />
+          <Property Type="DateTime" Name="EndDate" Nullable="false" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BlotterEFStoreContainer" CdmEntityContainer="BlotterEntities" >
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
