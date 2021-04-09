@@ -172,7 +172,7 @@ namespace DataAccessLayer
                     {
                         DbContextB.SBP_BlotterCRRFINCON.Add(CRRFINCONItem);
                         DbContextB.SaveChanges();
-                        DbContextB.SP_AddDaysInBlotterReport(CRRFINCONItem.TotalEligibleForCRR, CRRFINCONItem.StartDate, CRRFINCONItem.EndDate,CRRFINCONItem.BR);
+                        DbContextB.SP_AddDaysInBlotterReport(CRRFINCONItem.DemandTimeLiablitiesTotalForCRR, CRRFINCONItem.StartDate, CRRFINCONItem.EndDate,CRRFINCONItem.BR);
                         status = true;
                     }
                 }
@@ -190,12 +190,9 @@ namespace DataAccessLayer
             bool status;
             try
             {
-                List<SBP_BlotterCRRFINCON> GetCount = DbContextB.SBP_BlotterCRRFINCON.Where(p => p.SNo==CRRFINCONItem.SNo && CRRFINCONItem.StartDate >= p.StartDate && CRRFINCONItem.StartDate <= p.EndDate).ToList();
+                List<SBP_BlotterCRRFINCON> GetCount = DbContextB.SBP_BlotterCRRFINCON.Where(p => p.SNo==CRRFINCONItem.SNo && p.StartDate >= p.StartDate && p.EndDate <= p.EndDate).ToList();
                 if (GetCount.Count > 0)
                 {
-                    List<SBP_BlotterCRRFINCON> GetCount2 = DbContextB.SBP_BlotterCRRFINCON.Where(p => p.SNo == CRRFINCONItem.SNo && CRRFINCONItem.EndDate >= p.StartDate && CRRFINCONItem.EndDate <= p.EndDate).ToList();
-                    if (GetCount2.Count > 0)
-                    {
                         SBP_BlotterCRRFINCON CRRFINCONItems = DbContextB.SBP_BlotterCRRFINCON.Where(p => p.SNo == CRRFINCONItem.SNo).FirstOrDefault();
                         if (CRRFINCONItems != null)
                         {
@@ -204,19 +201,19 @@ namespace DataAccessLayer
                             CRRFINCONItems.DemandTimeLiablities = CRRFINCONItem.DemandTimeLiablities;
                             CRRFINCONItems.TimeLiablitiesOverOneYear = CRRFINCONItem.TimeLiablitiesOverOneYear;
                             CRRFINCONItems.DemandTimeLiablitiesTotal = CRRFINCONItem.DemandTimeLiablitiesTotal;
-                            CRRFINCONItems.DepositEligibleFor = CRRFINCONItem.DepositEligibleFor;
-                            CRRFINCONItems.OtherAmounts = CRRFINCONItem.OtherAmounts;
-                            CRRFINCONItems.TotalEligibleForCRR = CRRFINCONItem.TotalEligibleForCRR;
+                            CRRFINCONItems.PreMatureDeposit = CRRFINCONItem.PreMatureDeposit;
+                            CRRFINCONItems.DemandTimeLiablitiesTotalForCRR = CRRFINCONItem.DemandTimeLiablitiesTotalForCRR;
+                            CRRFINCONItems.Penalty = CRRFINCONItem.Penalty;
+                            CRRFINCONItems.ExtraBenefits = CRRFINCONItem.ExtraBenefits;
+                            CRRFINCONItems.CRR1Requirement = CRRFINCONItem.CRR1Requirement;
+                            CRRFINCONItems.CRR2Requirement = CRRFINCONItem.CRR2Requirement;
+                            CRRFINCONItems.RequirementPenalty = CRRFINCONItem.RequirementPenalty;
+                            CRRFINCONItems.RequirementExtBenefit = CRRFINCONItem.RequirementExtBenefit;
                             CRRFINCONItems.UpdateDate = CRRFINCONItem.UpdateDate;
                             DbContextB.SaveChanges();
-                            DbContextB.SP_UpdateDaysInBlotterReport(CRRFINCONItem.TotalEligibleForCRR, CRRFINCONItem.StartDate, CRRFINCONItem.EndDate,CRRFINCONItem.BR);
+                            DbContextB.SP_UpdateDaysInBlotterReport(CRRFINCONItem.DemandTimeLiablitiesTotalForCRR, CRRFINCONItem.StartDate, CRRFINCONItem.EndDate,CRRFINCONItem.BR);
                         }
                         status = true;
-                    }
-                    else
-                    {
-                        status = false;
-                    }
                 }
                 else
                 {

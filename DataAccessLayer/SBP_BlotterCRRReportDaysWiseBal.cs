@@ -36,9 +36,10 @@ namespace DataAccessLayer
         public Nullable<decimal> GawadarTotal { get; set; }
         public Nullable<decimal> OtherTotal { get; set; }
         public Nullable<decimal> PakistanToTal { get; set; }
-        public Nullable<double> CRR3Pcr { get; set; }
-        public Nullable<double> CRR5Pcr { get; set; }
-        public Nullable<decimal> BalMaintain { get; set; }
+        public Nullable<double> CRR3PcrReq { get; set; }
+        public Nullable<double> CRR5PcrReq { get; set; }
+        public Nullable<double> BalMaintAgainstPenalty { get; set; }
+        public Nullable<double> BalMaintAgainstExtBenft { get; set; }
         public Nullable<decimal> Penalty { get; set; }
         public string Remarks { get; set; }
         public Nullable<int> BR { get; set; }

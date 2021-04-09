@@ -19,9 +19,14 @@ namespace DataAccessLayer
         public Nullable<decimal> DemandTimeLiablities { get; set; }
         public Nullable<decimal> TimeLiablitiesOverOneYear { get; set; }
         public Nullable<decimal> DemandTimeLiablitiesTotal { get; set; }
-        public Nullable<decimal> DepositEligibleFor { get; set; }
-        public Nullable<decimal> OtherAmounts { get; set; }
-        public Nullable<decimal> TotalEligibleForCRR { get; set; }
+        public Nullable<decimal> PreMatureDeposit { get; set; }
+        public Nullable<decimal> DemandTimeLiablitiesTotalForCRR { get; set; }
+        public Nullable<decimal> Penalty { get; set; }
+        public Nullable<decimal> ExtraBenefits { get; set; }
+        public Nullable<decimal> CRR1Requirement { get; set; }
+        public Nullable<decimal> CRR2Requirement { get; set; }
+        public Nullable<decimal> RequirementPenalty { get; set; }
+        public Nullable<decimal> RequirementExtBenefit { get; set; }
         public int UserID { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }

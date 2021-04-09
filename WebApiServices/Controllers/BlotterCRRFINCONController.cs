@@ -41,6 +41,9 @@ namespace WebApiServices.Controllers
             bool status = false;
             if (ModelState.IsValid)
             {
+                blotterCRRFINCON.DemandTimeLiablitiesTotal = (blotterCRRFINCON.DemandTimeLiablities - blotterCRRFINCON.TimeLiablitiesOverOneYear);
+                blotterCRRFINCON.DemandTimeLiablitiesTotalForCRR = (blotterCRRFINCON.DemandTimeLiablitiesTotal + blotterCRRFINCON.PreMatureDeposit);
+
                 EntitiyMapperBlotterCRRFINCON<Models.SBP_BlotterCRRFINCON, DataAccessLayer.SBP_BlotterCRRFINCON> mapObj = new EntitiyMapperBlotterCRRFINCON<Models.SBP_BlotterCRRFINCON, DataAccessLayer.SBP_BlotterCRRFINCON>();
                 DataAccessLayer.SBP_BlotterCRRFINCON CRRFINCONObj = new DataAccessLayer.SBP_BlotterCRRFINCON();
                 CRRFINCONObj = mapObj.Translate(blotterCRRFINCON);
@@ -57,6 +60,8 @@ namespace WebApiServices.Controllers
             bool status = false;
             if (ModelState.IsValid)
             {
+                blotterCRRFINCON.DemandTimeLiablitiesTotal = (blotterCRRFINCON.DemandTimeLiablities - blotterCRRFINCON.TimeLiablitiesOverOneYear);
+                blotterCRRFINCON.DemandTimeLiablitiesTotalForCRR = (blotterCRRFINCON.DemandTimeLiablitiesTotal + blotterCRRFINCON.PreMatureDeposit);
                 EntitiyMapperBlotterCRRFINCON<Models.SBP_BlotterCRRFINCON, DataAccessLayer.SBP_BlotterCRRFINCON> mapObj = new EntitiyMapperBlotterCRRFINCON<Models.SBP_BlotterCRRFINCON, DataAccessLayer.SBP_BlotterCRRFINCON>();
                 DataAccessLayer.SBP_BlotterCRRFINCON CRRFINCONObj = new DataAccessLayer.SBP_BlotterCRRFINCON();
                 CRRFINCONObj = mapObj.Translate(blotterCRRFINCON);

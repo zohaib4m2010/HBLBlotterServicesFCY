@@ -39,12 +39,12 @@ namespace DataAccessLayer
         public virtual DbSet<UserPageRelation> UserPageRelations { get; set; }
         public virtual DbSet<SBP_LoginInfo> SBP_LoginInfo { get; set; }
         public virtual DbSet<SBP_BlotterTBO> SBP_BlotterTBO { get; set; }
-        public virtual DbSet<SBP_BlotterCRRFINCON> SBP_BlotterCRRFINCON { get; set; }
         public virtual DbSet<SBP_BlotterClearing> SBP_BlotterClearing { get; set; }
         public virtual DbSet<SBP_BlotterDTLDaysWiseBal> SBP_BlotterDTLDaysWiseBal { get; set; }
         public virtual DbSet<SBP_BlotterBreakups> SBP_BlotterBreakups { get; set; }
         public virtual DbSet<SBP_BlotterTrade> SBP_BlotterTrade { get; set; }
         public virtual DbSet<SBP_BlotterCRRReportCalcSetup> SBP_BlotterCRRReportCalcSetup { get; set; }
+        public virtual DbSet<SBP_BlotterCRRFINCON> SBP_BlotterCRRFINCON { get; set; }
         public virtual DbSet<SBP_BlotterCRRReportDaysWiseBal> SBP_BlotterCRRReportDaysWiseBal { get; set; }
     
         public virtual ObjectResult<SP_SBPBlotter_Result> SP_SBPBlotter(string br)
@@ -226,27 +226,6 @@ namespace DataAccessLayer
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_SBPBlotterRunningBal", brParameter, startDateParameter, endDateParameter);
         }
     
-        public virtual ObjectResult<SP_GetSBPBlotterCRRFINCON_Result> SP_GetSBPBlotterCRRFINCON(Nullable<int> userID, Nullable<int> branchID, Nullable<int> curID, Nullable<int> bR)
-        {
-            var userIDParameter = userID.HasValue ?
-                new ObjectParameter("UserID", userID) :
-                new ObjectParameter("UserID", typeof(int));
-    
-            var branchIDParameter = branchID.HasValue ?
-                new ObjectParameter("BranchID", branchID) :
-                new ObjectParameter("BranchID", typeof(int));
-    
-            var curIDParameter = curID.HasValue ?
-                new ObjectParameter("CurID", curID) :
-                new ObjectParameter("CurID", typeof(int));
-    
-            var bRParameter = bR.HasValue ?
-                new ObjectParameter("BR", bR) :
-                new ObjectParameter("BR", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetSBPBlotterCRRFINCON_Result>("SP_GetSBPBlotterCRRFINCON", userIDParameter, branchIDParameter, curIDParameter, bRParameter);
-        }
-    
         public virtual ObjectResult<SP_GetAll_SBPBlotterClearing_Result> SP_GetAll_SBPBlotterClearing(Nullable<int> userID, Nullable<int> branchID, Nullable<int> curID, Nullable<int> bR)
         {
             var userIDParameter = userID.HasValue ?
@@ -350,6 +329,27 @@ namespace DataAccessLayer
                 new ObjectParameter("BR", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_UpdateDaysInBlotterReport", dTLValueParameter, startDateParameter, endDateParameter, bRParameter);
+        }
+    
+        public virtual ObjectResult<SP_GetSBPBlotterCRRFINCON_Result> SP_GetSBPBlotterCRRFINCON(Nullable<int> userID, Nullable<int> branchID, Nullable<int> curID, Nullable<int> bR)
+        {
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(int));
+    
+            var branchIDParameter = branchID.HasValue ?
+                new ObjectParameter("BranchID", branchID) :
+                new ObjectParameter("BranchID", typeof(int));
+    
+            var curIDParameter = curID.HasValue ?
+                new ObjectParameter("CurID", curID) :
+                new ObjectParameter("CurID", typeof(int));
+    
+            var bRParameter = bR.HasValue ?
+                new ObjectParameter("BR", bR) :
+                new ObjectParameter("BR", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetSBPBlotterCRRFINCON_Result>("SP_GetSBPBlotterCRRFINCON", userIDParameter, branchIDParameter, curIDParameter, bRParameter);
         }
     
         public virtual ObjectResult<SP_GETLatestBlotterDTLReportDayWise_Result> SP_GETLatestBlotterDTLReportDayWise(Nullable<int> bR)

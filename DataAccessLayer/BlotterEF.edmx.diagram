@@ -23,9 +23,6 @@
         <EntityTypeShape EntityType="BlotterEF.SBP_BlotterTBO" Width="1.5" PointX="4.375" PointY="9.125" />
         <AssociationConnector Association="BlotterEF.FK_SBP_BlotterTBO_BranchID1" />
         <AssociationConnector Association="BlotterEF.FK_SBP_BlotterTBO_UserID1" />
-        <EntityTypeShape EntityType="BlotterEF.SBP_BlotterCRRFINCON" Width="1.5" PointX="6.375" PointY="4.75" />
-        <AssociationConnector Association="BlotterEF.FK_BlotterCRRFINCON_BranchID" />
-        <AssociationConnector Association="BlotterEF.FK_SBP_BlotterCRRFINCON_UserID" />
         <EntityTypeShape EntityType="BlotterEF.SBP_BlotterClearing" Width="1.5" PointX="4.375" PointY="4.75" />
         <AssociationConnector Association="BlotterEF.FK_SBP_BlotterClearing_BranchID" />
         <AssociationConnector Association="BlotterEF.FK_SBP_BlotterClearing_UserID" />
@@ -37,8 +34,11 @@
         <AssociationConnector Association="BlotterEF.FK_SBP_BlotterTrade_BranchID" />
         <AssociationConnector Association="BlotterEF.FK_SBP_BlotterTrade_UserID" />
         <EntityTypeShape EntityType="BlotterEF.SBP_BlotterCRRReportCalcSetup" Width="1.5" PointX="12.875" PointY="10.125" />
-        <EntityTypeShape EntityType="BlotterEF.SBP_BlotterCRRReportDaysWiseBal" Width="1.5" PointX="8.375" PointY="10.75" />
         <AssociationConnector Association="BlotterEF.FK_SBP_BlotterCRRReportCalcSetup_UserID" />
+        <EntityTypeShape EntityType="BlotterEF.SBP_BlotterCRRFINCON" Width="1.5" PointX="17.375" PointY="5" />
+        <AssociationConnector Association="BlotterEF.FK_BlotterCRRFINCON_BranchID" />
+        <AssociationConnector Association="BlotterEF.FK_SBP_BlotterCRRFINCON_UserID" />
+        <EntityTypeShape EntityType="BlotterEF.SBP_BlotterCRRReportDaysWiseBal" Width="1.5" PointX="8.375" PointY="10.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
