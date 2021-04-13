@@ -21,6 +21,8 @@ namespace WebApiServices.Models
         public Nullable<decimal> CRR2Requirement { get; set; }
         public Nullable<decimal> RequirementPenalty { get; set; }
         public Nullable<decimal> RequirementExtBenefit { get; set; }
+        public Nullable<double> BalMaintAgainstPenalty { get; set; }
+        public Nullable<double> BalMaintAgainstExtBenft { get; set; }
         public int UserID { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }

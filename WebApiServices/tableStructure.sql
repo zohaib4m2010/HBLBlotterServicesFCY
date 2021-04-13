@@ -318,6 +318,8 @@ CRR1Requirement numeric,
 CRR2Requirement numeric,
 RequirementPenalty numeric,
 RequirementExtBenefit numeric,
+BalMaintAgainstPenalty float,
+BalMaintAgainstExtBenft float,
 UserID int not null Constraint FK_SBP_BlotterCRRFINCON_UserID Foreign key References SBP_LoginInfo(ID),
 CreateDate DATETIME,
 UpdateDate DATETIME,
@@ -512,12 +514,12 @@ WITH ListDates(AllDates) AS
 
 
 
-insert into SBP_BlotterCRRReportDaysWiseBal(CRRFinconId,ReportDate,CRR3PcrReq,CRR5PcrReq,BalMaintAgainstPenalty,BalMaintAgainstExtBenft,CreateDate,BR)
-SELECT @CRRID,AllDates,@CRRReq1,@CRRReq2,(cast(@CRRCalc2 as float)/cast(@CRRReq2 as float)*cast((@CRRReq2+@Penalty) as float))*100,(cast(@CRRCalc2 as float)/cast(@CRRReq2 as float)*cast((@CRRReq2-@ExtBenefits) as float))*100,GETDATE(),@BR FROM ListDates
+insert into SBP_BlotterCRRReportDaysWiseBal(CRRFinconId,ReportDate,CRR3PcrReq,CRR5PcrReq,CreateDate,BR)
+SELECT @CRRID,AllDates,@CRRReq1,@CRRReq2,GETDATE(),@BR FROM ListDates
 
 
 update SBP_BlotterCRRFINCON set CRR1Requirement=@CRRReq1,CRR2Requirement=@CRRReq2,RequirementPenalty=(@CRRReq2+@Penalty),
-RequirementExtBenefit=(@CRRReq2-@ExtBenefits) where SNo=@CRRID
+RequirementExtBenefit=(@CRRReq2-@ExtBenefits),BalMaintAgainstPenalty=(cast(@CRRCalc2 as float)/cast(@CRRReq2 as float)*cast((@CRRReq2+@Penalty) as float))*100,BalMaintAgainstExtBenft=(cast(@CRRCalc2 as float)/cast(@CRRReq2 as float)*cast((@CRRReq2-@ExtBenefits) as float))*100 where SNo=@CRRID
 
 update SBP_BlotterCRRReportDaysWiseBal set WeekDays=DATENAME(DW,CONVERT(VARCHAR(20),ReportDate,101))
 end
@@ -542,10 +544,10 @@ WITH ListDates(AllDates) AS
     WHERE AllDates < @EndDate)
 
 
-update a set a.ReportDate=b.AllDates,a.CRR3PcrReq=@CRRReq1,a.CRR5PcrReq=@CRRReq2,BalMaintAgainstPenalty=(cast(@CRRCalc2 as float)/cast(@CRRReq2 as float)*cast((@CRRReq2+@Penalty) as float))*100,BalMaintAgainstExtBenft=(cast(@CRRCalc2 as float)/cast(@CRRReq2 as float)*cast((@CRRReq2-@ExtBenefits) as float))*100 from (select Id,ReportDate,CRR3PcrReq,CRR5PcrReq,BalMaintAgainstPenalty,BalMaintAgainstExtBenft,ROW_NUMBER() over (order by ReportDate) num from SBP_BlotterCRRReportDaysWiseBal where CRRFinconId=@CRRID) a inner join (select AllDates,ROW_NUMBER() over (order by AllDates) num from ListDates) b on a.num=b.num  
+update a set a.ReportDate=b.AllDates,a.CRR3PcrReq=@CRRReq1,a.CRR5PcrReq=@CRRReq2 from (select Id,ReportDate,CRR3PcrReq,CRR5PcrReq,ROW_NUMBER() over (order by ReportDate) num from SBP_BlotterCRRReportDaysWiseBal where CRRFinconId=@CRRID) a inner join (select AllDates,ROW_NUMBER() over (order by AllDates) num from ListDates) b on a.num=b.num  
 
 update SBP_BlotterCRRFINCON set CRR1Requirement=@CRRReq1,CRR2Requirement=@CRRReq2,RequirementPenalty=(@CRRReq2+@Penalty),
-RequirementExtBenefit=(@CRRReq2-@ExtBenefits) where SNo=@CRRID
+RequirementExtBenefit=(@CRRReq2-@ExtBenefits),BalMaintAgainstPenalty=cast((cast(@CRRCalc2 as float)/cast(@CRRReq2 as float)*cast((@CRRReq2+@Penalty) as float))*100 as float),BalMaintAgainstExtBenft=cast((cast(@CRRCalc2 as float)/cast(@CRRReq2 as float)*cast((@CRRReq2-@ExtBenefits) as float))*100 as float) where SNo=@CRRID
 
 update SBP_BlotterCRRReportDaysWiseBal set WeekDays=DATENAME(DW,CONVERT(VARCHAR(20),ReportDate,101))
 end
@@ -582,10 +584,10 @@ CREATE TABLE [dbo].[SBP_BlotterCRRReportDaysWiseBal](
 	GawadarTotal numeric,
 	OtherTotal numeric,
 	PakistanToTal numeric,
-	CRR3PcrReq float,
-	CRR5PcrReq float,
-	BalMaintAgainstPenalty float,
-	BalMaintAgainstExtBenft float,
+	CRR3PcrReq numeric,
+	CRR5PcrReq numeric,
+	BalMaintain3Pcr Float,
+	BalMaintain5Pcr float,
 	Penalty numeric,
 	Remarks varchar(50),
 	[BR] int,
@@ -617,10 +619,10 @@ declare  @CurrentDT as datetime,@KarachiTotal numeric,
 	@MuzafarbadTotal numeric=0,
 	@DIKhanTotal numeric=0,
 	@QuettaTotal numeric=0,
-	@GawadarTotal numeric=0,@PakistanTotal numeric=0, @Brr as varchar(02)='0'+cast(@BR as varchar);
+	@GawadarTotal numeric=0,@PakistanTotal numeric=0, @Brr as varchar(02)='0'+cast(@BR as varchar),@CRRCalc1 float ,@CRRCalc2 float;;
 --set @Br='01';
 Select  @CurrentDT=cast(left(BRANPRCDATE,11) as date)  from OPICSDBLNK.OPICS43.dbo.BRPS where br=@Br ;
-
+select @CRRCalc1=CalcVal1/100.0,@CRRCalc2=CalcVal2/100.0 from SBP_BlotterCRRReportCalcSetup where isActive=1;
 
 select @KarachiTotal = 
 SUM(case when isnull(Inflow,0.00)<0 then isnull(Inflow,0.00)*-1 else isnull(Inflow,0.00) end)  +
@@ -1093,7 +1095,7 @@ set @PakistanTotal=(@KarachiTotal+@HyderabadTotal+@SukkurTotal+@LahoreTotal+@Fai
 
 update SBP_BlotterCRRReportDaysWiseBal set KarachiTotal = @KarachiTotal,HyderabadTotal=@HyderabadTotal,SukkurTotal=@SukkurTotal,LahoreTotal=@LahoreTotal,FaisalabadTotal=@FaisalabadTotal,GWalaTotal=@GWalaTotal,
 MultanTotal=@MultanTotal,SialkotTotal=@SialkotTotal,Isalamabad=@Isalamabad,PindiTotal=@PindiTotal,PeshawarTotal=@PeshawarTotal,BhawalpurTotal=@BhawalpurTotal,MuzafarbadTotal=@MuzafarbadTotal,
-DIKhanTotal=@DIKhanTotal,GawadarTotal=@GawadarTotal,PakistanTotal=@PakistanTotal,BalMaintain=(0.05/CRR5Pcr*@PakistanTotal) where BR=@BR and cast(ReportDate as date)=@CurrentDT 
+DIKhanTotal=@DIKhanTotal,GawadarTotal=@GawadarTotal,PakistanTotal=@PakistanTotal,BalMaintain3Pcr=(@CRRCalc1/CRR3PcrReq*@PakistanTotal),BalMaintain5Pcr=(@CRRCalc2/CRR5PcrReq*@PakistanTotal) where BR=@BR and cast(ReportDate as date)=@CurrentDT 
 
 end
 
@@ -1125,8 +1127,8 @@ isnull(OtherTotal,0)OtherTotal,
 isnull(PakistanToTal,0)PakistanToTal,
 isnull(CRR3PcrReq,0)CRR3PcrReq,
 isnull(CRR5PcrReq,0)CRR5PcrReq,
-isnull(BalMaintAgainstPenalty,0)BalMaintAgainstPenalty,
-isnull(BalMaintAgainstExtBenft,0)BalMaintAgainstExtBenft,
+isnull(BalMaintain3Pcr,0)BalMaintain3Pcr,
+isnull(BalMaintain5Pcr,0)BalMaintain5Pcr,
 isnull(Penalty,0)Penalty,
 Remarks,
 BR,

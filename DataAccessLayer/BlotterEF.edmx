@@ -94,6 +94,8 @@
           <Property Name="CRR2Requirement" Type="numeric" Precision="18" Scale="0" />
           <Property Name="RequirementPenalty" Type="numeric" Precision="18" Scale="0" />
           <Property Name="RequirementExtBenefit" Type="numeric" Precision="18" Scale="0" />
+          <Property Name="BalMaintAgainstPenalty" Type="float" />
+          <Property Name="BalMaintAgainstExtBenft" Type="float" />
           <Property Name="UserID" Type="int" Nullable="false" />
           <Property Name="CreateDate" Type="datetime" />
           <Property Name="UpdateDate" Type="datetime" />
@@ -107,8 +109,8 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="CalcVal1" Type="int" />
-          <Property Name="CalcVal2" Type="int" />
+          <Property Name="CalcVal1" Type="float" />
+          <Property Name="CalcVal2" Type="float" />
           <Property Name="isActive" Type="bit" />
           <Property Name="CreatedDate" Type="datetime" />
           <Property Name="UpdateDate" Type="datetime" />
@@ -140,10 +142,10 @@
           <Property Name="GawadarTotal" Type="numeric" Precision="18" Scale="0" />
           <Property Name="OtherTotal" Type="numeric" Precision="18" Scale="0" />
           <Property Name="PakistanToTal" Type="numeric" Precision="18" Scale="0" />
-          <Property Name="CRR3PcrReq" Type="float" />
-          <Property Name="CRR5PcrReq" Type="float" />
-          <Property Name="BalMaintAgainstPenalty" Type="float" />
-          <Property Name="BalMaintAgainstExtBenft" Type="float" />
+          <Property Name="CRR3PcrReq" Type="numeric" Precision="18" Scale="0" />
+          <Property Name="CRR5PcrReq" Type="numeric" Precision="18" Scale="0" />
+          <Property Name="BalMaintain3Pcr" Type="float" />
+          <Property Name="BalMaintain5Pcr" Type="float" />
           <Property Name="Penalty" Type="numeric" Precision="18" Scale="0" />
           <Property Name="Remarks" Type="varchar" MaxLength="50" />
           <Property Name="BR" Type="int" />
@@ -864,15 +866,6 @@
             <End Role="SBP_LoginInfo" EntitySet="SBP_LoginInfo" />
             <End Role="SBP_BlotterCRRReportCalcSetup" EntitySet="SBP_BlotterCRRReportCalcSetup" />
           </AssociationSet>
-          <EntitySet Name="SBP_BlotterCRRFINCON" EntityType="BlotterEF.SBP_BlotterCRRFINCON" />
-          <AssociationSet Name="FK_BlotterCRRFINCON_BranchID" Association="BlotterEF.FK_BlotterCRRFINCON_BranchID">
-            <End Role="Branches" EntitySet="Branches" />
-            <End Role="SBP_BlotterCRRFINCON" EntitySet="SBP_BlotterCRRFINCON" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SBP_BlotterCRRFINCON_UserID" Association="BlotterEF.FK_SBP_BlotterCRRFINCON_UserID">
-            <End Role="SBP_LoginInfo" EntitySet="SBP_LoginInfo" />
-            <End Role="SBP_BlotterCRRFINCON" EntitySet="SBP_BlotterCRRFINCON" />
-          </AssociationSet>
           <FunctionImport Name="SP_AddDaysInBlotterReport">
             <Parameter Name="DTLValue" Mode="In" Type="Decimal" />
             <Parameter Name="StartDate" Mode="In" Type="DateTime" />
@@ -885,6 +878,15 @@
             <Parameter Name="EndDate" Mode="In" Type="DateTime" />
             <Parameter Name="BR" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="SBP_BlotterCRRFINCON" EntityType="BlotterEF.SBP_BlotterCRRFINCON" />
+          <AssociationSet Name="FK_BlotterCRRFINCON_BranchID" Association="BlotterEF.FK_BlotterCRRFINCON_BranchID">
+            <End Role="Branches" EntitySet="Branches" />
+            <End Role="SBP_BlotterCRRFINCON" EntitySet="SBP_BlotterCRRFINCON" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SBP_BlotterCRRFINCON_UserID" Association="BlotterEF.FK_SBP_BlotterCRRFINCON_UserID">
+            <End Role="SBP_LoginInfo" EntitySet="SBP_LoginInfo" />
+            <End Role="SBP_BlotterCRRFINCON" EntitySet="SBP_BlotterCRRFINCON" />
+          </AssociationSet>
           <FunctionImport Name="SP_GetSBPBlotterCRRFINCON" ReturnType="Collection(BlotterEF.SP_GetSBPBlotterCRRFINCON_Result)">
             <Parameter Name="UserID" Mode="In" Type="Int32" />
             <Parameter Name="BranchID" Mode="In" Type="Int32" />
@@ -1592,6 +1594,8 @@
           <Property Name="CRR2Requirement" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="RequirementPenalty" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="RequirementExtBenefit" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="BalMaintAgainstPenalty" Type="Double" />
+          <Property Name="BalMaintAgainstExtBenft" Type="Double" />
           <Property Name="UserID" Type="Int32" Nullable="false" />
           <Property Name="CreateDate" Type="DateTime" Precision="3" />
           <Property Name="UpdateDate" Type="DateTime" Precision="3" />
@@ -1641,6 +1645,8 @@
           <Property Type="Decimal" Name="CRR2Requirement" Nullable="true" Precision="18" Scale="0" />
           <Property Type="Decimal" Name="RequirementPenalty" Nullable="true" Precision="18" Scale="0" />
           <Property Type="Decimal" Name="RequirementExtBenefit" Nullable="true" Precision="18" Scale="0" />
+          <Property Type="Double" Name="BalMaintAgainstPenalty" Nullable="true" />
+          <Property Type="Double" Name="BalMaintAgainstExtBenft" Nullable="true" />
           <Property Type="Int32" Name="UserID" Nullable="false" />
           <Property Type="DateTime" Name="CreateDate" Nullable="true" Precision="23" />
           <Property Type="DateTime" Name="UpdateDate" Nullable="true" Precision="23" />
@@ -1675,10 +1681,10 @@
           <Property Name="GawadarTotal" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="OtherTotal" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="PakistanToTal" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="CRR3PcrReq" Type="Double" />
-          <Property Name="CRR5PcrReq" Type="Double" />
-          <Property Name="BalMaintAgainstPenalty" Type="Double" />
-          <Property Name="BalMaintAgainstExtBenft" Type="Double" />
+          <Property Name="CRR3PcrReq" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="CRR5PcrReq" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="BalMaintain3Pcr" Type="Double" />
+          <Property Name="BalMaintain5Pcr" Type="Double" />
           <Property Name="Penalty" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="Remarks" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="BR" Type="Int32" />
@@ -1708,10 +1714,10 @@
           <Property Type="Decimal" Name="GawadarTotal" Nullable="false" Precision="18" Scale="0" />
           <Property Type="Decimal" Name="OtherTotal" Nullable="false" Precision="18" Scale="0" />
           <Property Type="Decimal" Name="PakistanToTal" Nullable="false" Precision="18" Scale="0" />
-          <Property Type="Double" Name="CRR3PcrReq" Nullable="false" />
-          <Property Type="Double" Name="CRR5PcrReq" Nullable="false" />
-          <Property Type="Double" Name="BalMaintAgainstPenalty" Nullable="false" />
-          <Property Type="Double" Name="BalMaintAgainstExtBenft" Nullable="false" />
+          <Property Type="Decimal" Name="CRR3PcrReq" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="CRR5PcrReq" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Double" Name="BalMaintain3Pcr" Nullable="false" />
+          <Property Type="Double" Name="BalMaintain5Pcr" Nullable="false" />
           <Property Type="Decimal" Name="Penalty" Nullable="false" Precision="18" Scale="0" />
           <Property Type="String" Name="Remarks" Nullable="true" MaxLength="50" />
           <Property Type="Int32" Name="BR" Nullable="true" />
@@ -2296,6 +2302,8 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SP_AddDaysInBlotterReport" FunctionName="BlotterEF.Store.SP_AddDaysInBlotterReport" />
+          <FunctionImportMapping FunctionImportName="SP_UpdateDaysInBlotterReport" FunctionName="BlotterEF.Store.SP_UpdateDaysInBlotterReport" />
           <EntitySetMapping Name="SBP_BlotterCRRFINCON">
             <EntityTypeMapping TypeName="BlotterEF.SBP_BlotterCRRFINCON">
               <MappingFragment StoreEntitySet="SBP_BlotterCRRFINCON">
@@ -2306,6 +2314,8 @@
                 <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
                 <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="BalMaintAgainstExtBenft" ColumnName="BalMaintAgainstExtBenft" />
+                <ScalarProperty Name="BalMaintAgainstPenalty" ColumnName="BalMaintAgainstPenalty" />
                 <ScalarProperty Name="RequirementExtBenefit" ColumnName="RequirementExtBenefit" />
                 <ScalarProperty Name="RequirementPenalty" ColumnName="RequirementPenalty" />
                 <ScalarProperty Name="CRR2Requirement" ColumnName="CRR2Requirement" />
@@ -2323,8 +2333,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="SP_AddDaysInBlotterReport" FunctionName="BlotterEF.Store.SP_AddDaysInBlotterReport" />
-          <FunctionImportMapping FunctionImportName="SP_UpdateDaysInBlotterReport" FunctionName="BlotterEF.Store.SP_UpdateDaysInBlotterReport" />
           <FunctionImportMapping FunctionImportName="SP_GetSBPBlotterCRRFINCON" FunctionName="BlotterEF.Store.SP_GetSBPBlotterCRRFINCON">
             <ResultMapping>
               <ComplexTypeMapping TypeName="BlotterEF.SP_GetSBPBlotterCRRFINCON_Result">
@@ -2342,6 +2350,8 @@
                 <ScalarProperty Name="CRR2Requirement" ColumnName="CRR2Requirement" />
                 <ScalarProperty Name="RequirementPenalty" ColumnName="RequirementPenalty" />
                 <ScalarProperty Name="RequirementExtBenefit" ColumnName="RequirementExtBenefit" />
+                <ScalarProperty Name="BalMaintAgainstPenalty" ColumnName="BalMaintAgainstPenalty" />
+                <ScalarProperty Name="BalMaintAgainstExtBenft" ColumnName="BalMaintAgainstExtBenft" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
                 <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
@@ -2360,8 +2370,8 @@
                 <ScalarProperty Name="BR" ColumnName="BR" />
                 <ScalarProperty Name="Remarks" ColumnName="Remarks" />
                 <ScalarProperty Name="Penalty" ColumnName="Penalty" />
-                <ScalarProperty Name="BalMaintAgainstExtBenft" ColumnName="BalMaintAgainstExtBenft" />
-                <ScalarProperty Name="BalMaintAgainstPenalty" ColumnName="BalMaintAgainstPenalty" />
+                <ScalarProperty Name="BalMaintain5Pcr" ColumnName="BalMaintain5Pcr" />
+                <ScalarProperty Name="BalMaintain3Pcr" ColumnName="BalMaintain3Pcr" />
                 <ScalarProperty Name="CRR5PcrReq" ColumnName="CRR5PcrReq" />
                 <ScalarProperty Name="CRR3PcrReq" ColumnName="CRR3PcrReq" />
                 <ScalarProperty Name="PakistanToTal" ColumnName="PakistanToTal" />
@@ -2416,8 +2426,8 @@
                 <ScalarProperty Name="PakistanToTal" ColumnName="PakistanToTal" />
                 <ScalarProperty Name="CRR3PcrReq" ColumnName="CRR3PcrReq" />
                 <ScalarProperty Name="CRR5PcrReq" ColumnName="CRR5PcrReq" />
-                <ScalarProperty Name="BalMaintAgainstPenalty" ColumnName="BalMaintAgainstPenalty" />
-                <ScalarProperty Name="BalMaintAgainstExtBenft" ColumnName="BalMaintAgainstExtBenft" />
+                <ScalarProperty Name="BalMaintain3Pcr" ColumnName="BalMaintain3Pcr" />
+                <ScalarProperty Name="BalMaintain5Pcr" ColumnName="BalMaintain5Pcr" />
                 <ScalarProperty Name="Penalty" ColumnName="Penalty" />
                 <ScalarProperty Name="Remarks" ColumnName="Remarks" />
                 <ScalarProperty Name="BR" ColumnName="BR" />
