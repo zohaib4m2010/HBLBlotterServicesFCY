@@ -380,51 +380,69 @@ Constraint ID primary key  clustered (ID)
 --select * from NostroBanks
 
 -- Drop Table SBP_BlotterBreakups
---create table SBP_BlotterBreakups(
---SNo bigint identity not null,
---OpeningBalActual numeric,
---FoodPayment_inFlow numeric,
---HOKRemittance_inFlow numeric,
---ERF_inflow numeric,
---SBPChequeDeposite_inflow numeric,
---Miscellaneous_inflow numeric,
---CashWithdrawbySBPCheques_outFlow numeric,
---ERF_outflow numeric,
---DSC_outFlow numeric,
---RemitanceToHOK_outFlow numeric,
---SBPCheqGivenToOtherBank_outFlow numeric,
---Miscellaneous_outflow numeric,
---EstimatedCLossingBal numeric,
---BreakupDate DateTime,
---UserID int not null Constraint FK_SBP_BlotterBreakups_UserID Foreign key References SBP_LoginInfo(ID),
---CreateDate DATETIME,
---UpdateDate DATETIME,
---BR int,
---BID int not null Constraint FK_SBP_BlotterBreakups_BranchID Foreign key References Branches(BID),
---CurID int not null Constraint FK_SBP_BlotterBreakups_CurID Foreign key References Currencies(CID),
---Flag varchar(2),
---Constraint PK_SBP_BlotterBreakups_SNo primary key  clustered (SNo))
+create table SBP_BlotterBreakups(
+SNo bigint identity not null,
+OpeningBalActual numeric,
+AdjOpeningBalActual numeric,
+FoodPayment_inFlow numeric,
+AdjFoodPayment_inFlow numeric,
+HOKRemittance_inFlow numeric,
+AdjHOKRemittance_inFlow numeric,
+ERF_inflow numeric,
+AdjERF_inflow numeric,
+SBPChequeDeposite_inflow numeric,
+AdjSBPChequeDeposite_inflow numeric,
+Miscellaneous_inflow numeric,
+AdjMiscellaneous_inflow numeric,
+CashWithdrawbySBPCheques_outFlow numeric,
+AdjCashWithdrawbySBPCheques_outFlow numeric,
+ERF_outflow numeric,
+AdjERF_outflow numeric,
+DSC_outFlow numeric,
+AdjDSC_outFlow numeric,
+RemitanceToHOK_outFlow numeric,
+AdjRemitanceToHOK_outFlow numeric,
+SBPCheqGivenToOtherBank_outFlow numeric,
+AdjSBPCheqGivenToOtherBank_outFlow numeric,
+Miscellaneous_outflow numeric,
+AdjMiscellaneous_outflow numeric,
+EstimatedCLossingBal numeric,
+AdjEstimatedCLossingBal numeric,
+BreakupDate DateTime,
+AdjDate DateTime,
+UserID int not null Constraint FK_SBP_BlotterBreakups_UserID Foreign key References SBP_LoginInfo(ID),
+CreateDate DATETIME,
+UpdateDate DATETIME,
+BR int,
+BID int not null Constraint FK_SBP_BlotterBreakups_BranchID Foreign key References Branches(BID),
+CurID int not null Constraint FK_SBP_BlotterBreakups_CurID Foreign key References Currencies(CID),
+Flag varchar(2),
+Constraint PK_SBP_BlotterBreakups_SNo primary key  clustered (SNo))
 
 --truncate table SBP_BlotterBreakups
 select* from SBP_BlotterBreakups
 
+delete from SBP_BlotterBreakups where SNo = 3
+
 --Drop proc  SP_GetLatestBreakup
---create proc SP_GetLatestBreakup(@UserID int,@BranchID int,@CurID int,@BR int)
---as
---select a.SNo,
---a.OpeningBalActual,
---a.FoodPayment_inFlow,
---a.HOKRemittance_inFlow,
---a.ERF_inflow,
---a.SBPChequeDeposite_inflow,
---a.Miscellaneous_inflow,
---a.CashWithdrawbySBPCheques_outFlow,
---a.ERF_outflow,
---a.DSC_outFlow,
---a.RemitanceToHOK_outFlow,
---a.SBPCheqGivenToOtherBank_outFlow,
---a.Miscellaneous_outflow,
---a.EstimatedCLossingBal,a.UserID,B.BranchName,a.CurID,a.BreakupDate from SBP_BlotterBreakups a inner join Branches b on a.BID=b.BID where a.UserID=@UserID and a.BID=@BranchID and a.CurID=@CurID and a.BR=@BR and cast(a.BreakupDate as date)=cast(GETDATE() as date) 
+alter proc SP_GetLatestBreakup(@UserID int,@BranchID int,@CurID int,@BR int)
+as
+select a.SNo,
+isnull(a.AdjOpeningBalActual,a.OpeningBalActual)OpeningBalActual,
+isnull(a.AdjFoodPayment_inFlow,a.FoodPayment_inFlow)FoodPayment_inFlow,
+isnull(a.AdjHOKRemittance_inFlow,a.HOKRemittance_inFlow)HOKRemittance_inFlow,
+isnull(a.AdjERF_inflow,ERF_inflow)ERF_inflow,
+isnull(a.AdjSBPChequeDeposite_inflow,a.SBPChequeDeposite_inflow)SBPChequeDeposite_inflow,
+isnull(a.AdjMiscellaneous_inflow,a.Miscellaneous_inflow)Miscellaneous_inflow,
+isnull(a.AdjCashWithdrawbySBPCheques_outFlow,a.CashWithdrawbySBPCheques_outFlow)CashWithdrawbySBPCheques_outFlow,
+isnull(a.AdjERF_outflow,a.ERF_outflow)ERF_outflow,
+isnull(a.AdjDSC_outFlow,a.DSC_outFlow)DSC_outFlow,
+isnull(a.AdjRemitanceToHOK_outFlow,a.RemitanceToHOK_outFlow)RemitanceToHOK_outFlow,
+isnull(a.AdjSBPCheqGivenToOtherBank_outFlow,a.SBPCheqGivenToOtherBank_outFlow)SBPCheqGivenToOtherBank_outFlow,
+isnull(a.AdjMiscellaneous_outflow,a.Miscellaneous_outflow)Miscellaneous_outflow,
+isnull(a.AdjEstimatedCLossingBal,a.EstimatedCLossingBal)EstimatedCLossingBal,
+a.UserID,B.BranchName,a.CurID,a.BreakupDate from SBP_BlotterBreakups a inner join Branches b on a.BID=b.BID 
+where a.BID=@BranchID and a.CurID=@CurID and a.BR=@BR and cast(a.BreakupDate as date)=cast(GETDATE() as date)  --and a.UserID=@UserID
 
 
 --drop proc sp_GetAllUsers
@@ -1070,7 +1088,7 @@ WHERE
  cast(left(b.INTENDDTE,11) as datetime) =   cast(left(@CurrentDT,11) as datetime)
 and  a.PURCHQTY-a.SALEQTY <> 0
 ) a
-Select  @CurrentDT=cast(GETDATE() as date)
+Select  @CurrentDT=cast(GETDATE()-1 as date)
 
 
 
@@ -1095,7 +1113,7 @@ set @PakistanTotal=(@KarachiTotal+@HyderabadTotal+@SukkurTotal+@LahoreTotal+@Fai
 
 update SBP_BlotterCRRReportDaysWiseBal set KarachiTotal = @KarachiTotal,HyderabadTotal=@HyderabadTotal,SukkurTotal=@SukkurTotal,LahoreTotal=@LahoreTotal,FaisalabadTotal=@FaisalabadTotal,GWalaTotal=@GWalaTotal,
 MultanTotal=@MultanTotal,SialkotTotal=@SialkotTotal,Isalamabad=@Isalamabad,PindiTotal=@PindiTotal,PeshawarTotal=@PeshawarTotal,BhawalpurTotal=@BhawalpurTotal,MuzafarbadTotal=@MuzafarbadTotal,
-DIKhanTotal=@DIKhanTotal,GawadarTotal=@GawadarTotal,PakistanTotal=@PakistanTotal,BalMaintain3Pcr=(@CRRCalc1/CRR3PcrReq*@PakistanTotal),BalMaintain5Pcr=(@CRRCalc2/CRR5PcrReq*@PakistanTotal) where BR=@BR and cast(ReportDate as date)=@CurrentDT 
+DIKhanTotal=@DIKhanTotal,GawadarTotal=@GawadarTotal,PakistanTotal=@PakistanTotal,BalMaintain3Pcr=(@CRRCalc1/CRR3PcrReq*@PakistanTotal),BalMaintain5Pcr=(@CRRCalc2/CRR5PcrReq*@PakistanTotal),Remarks=case when (@PakistanTotal-CRR3PcrReq) <=0 then 'Warning' else 'OK' end where BR=@BR and cast(ReportDate as date)=@CurrentDT 
 
 end
 

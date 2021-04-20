@@ -23,17 +23,17 @@ namespace WebApiServices.Controllers
             return Json<Models.SBP_BlotterBreakups>(products);
         }
         [HttpGet]
-        public JsonResult<List<Models.SP_GetLatestBreakup_Result>> GetAllBlotterBreakups(int UserID, int BranchID, int CurID, int BR)
+        public JsonResult<Models.SP_GetLatestBreakup_Result> GetAllBlotterBreakups(int UserID, int BranchID, int CurID, int BR)
         {
             EntityMapperBlotterBreakups<DataAccessLayer.SP_GetLatestBreakup_Result, Models.SP_GetLatestBreakup_Result> mapObj = new EntityMapperBlotterBreakups<DataAccessLayer.SP_GetLatestBreakup_Result, Models.SP_GetLatestBreakup_Result>();
 
-            List<DataAccessLayer.SP_GetLatestBreakup_Result> SBP_BlotterBreakupsList = DAL.GetAllBlotterBreakups(UserID,BranchID,CurID,BR);
-            List<Models.SP_GetLatestBreakup_Result> blotterSBP_BlotterBreakups = new List<Models.SP_GetLatestBreakup_Result>();
-            foreach (var item in SBP_BlotterBreakupsList)
-            {
-                blotterSBP_BlotterBreakups.Add(mapObj.Translate(item));
-            }
-            return Json<List<Models.SP_GetLatestBreakup_Result>>(blotterSBP_BlotterBreakups);
+            DataAccessLayer.SP_GetLatestBreakup_Result SBP_BlotterBreakupsList = DAL.GetAllBlotterBreakups(UserID,BranchID,CurID,BR);
+            Models.SP_GetLatestBreakup_Result blotterSBP_BlotterBreakups = new Models.SP_GetLatestBreakup_Result();
+            //foreach (var item in SBP_BlotterBreakupsList)
+            //{
+                blotterSBP_BlotterBreakups = mapObj.Translate(SBP_BlotterBreakupsList);
+            //}
+            return Json<Models.SP_GetLatestBreakup_Result>(blotterSBP_BlotterBreakups);
         }
         [HttpPost]
         public bool InsertBlotterBreakups(Models.SBP_BlotterBreakups item)
@@ -61,6 +61,21 @@ namespace WebApiServices.Controllers
                 DataAccessLayer.SBP_BlotterBreakups SBP_BlotterBreakupsObj = new DataAccessLayer.SBP_BlotterBreakups();
                 SBP_BlotterBreakupsObj = mapObj.Translate(item);
                 status = DAL.UpdateBlotterBreakups(SBP_BlotterBreakupsObj);
+            }
+            return status;
+
+        }
+
+        [HttpPut]
+        public bool UpdateBreakupsOpngBal(Models.SBP_BlotterBreakups item)
+        {
+            bool status = false;
+            if (ModelState.IsValid)
+            {
+                EntityMapperBlotterBreakups<Models.SBP_BlotterBreakups, DataAccessLayer.SBP_BlotterBreakups> mapObj = new EntityMapperBlotterBreakups<Models.SBP_BlotterBreakups, DataAccessLayer.SBP_BlotterBreakups>();
+                DataAccessLayer.SBP_BlotterBreakups SBP_BlotterBreakupsObj = new DataAccessLayer.SBP_BlotterBreakups();
+                SBP_BlotterBreakupsObj = mapObj.Translate(item);
+                status = DAL.UpdateBreakupsOpngBal(SBP_BlotterBreakupsObj);
             }
             return status;
 

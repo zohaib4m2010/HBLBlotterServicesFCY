@@ -801,9 +801,9 @@ namespace DataAccessLayer
         //Breakups Producers
         //*****************************************************
 
-        public static List<SP_GetLatestBreakup_Result> GetAllBlotterBreakups(int UserID, int BranchID, int CurID, int BR)
+        public static SP_GetLatestBreakup_Result GetAllBlotterBreakups(int UserID, int BranchID, int CurID, int BR)
         {
-            return DbContextB.SP_GetLatestBreakup(UserID, BranchID, CurID, BR).ToList();
+            return DbContextB.SP_GetLatestBreakup(UserID, BranchID, CurID, BR).FirstOrDefault();
         }
         public static SBP_BlotterBreakups GetBlotterBreakups(int Id)
         {
@@ -828,6 +828,27 @@ namespace DataAccessLayer
             return status;
         }
 
+        public static bool UpdateBreakupsOpngBal(SBP_BlotterBreakups Item)
+        {
+            bool status;
+            try
+            {
+                SBP_BlotterBreakups Items = DbContextB.SBP_BlotterBreakups.Where(p => p.SNo == Item.SNo).FirstOrDefault();
+                if (Items != null)
+                {
+                    Items.OpeningBalActual = Item.OpeningBalActual;
+                    Items.EstimatedCLossingBal = Item.OpeningBalActual + (Items.HOKRemittance_inFlow + Items.FoodPayment_inFlow + Items.Miscellaneous_inflow + Items.ERF_inflow+Items.SBPChequeDeposite_inflow)-(Items.CashWithdrawbySBPCheques_outFlow+Items.DSC_outFlow+Items.ERF_outflow+Items.Miscellaneous_outflow+Items.SBPCheqGivenToOtherBank_outFlow+Items.RemitanceToHOK_outFlow);
+                    Items.UpdateDate = Item.UpdateDate;
+                    DbContextB.SaveChanges();
+                }
+                status = true;
+            }
+            catch (Exception)
+            {
+                status = false;
+            }
+            return status;
+        }
         public static bool UpdateBlotterBreakups(SBP_BlotterBreakups Item)
         {
             bool status;
