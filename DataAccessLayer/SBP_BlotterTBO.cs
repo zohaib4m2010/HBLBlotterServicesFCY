@@ -19,7 +19,9 @@ namespace DataAccessLayer
         public Nullable<System.DateTime> TBO_Date { get; set; }
         public string TBOCOde { get; set; }
         public Nullable<decimal> TBO_InFlow { get; set; }
+        public Nullable<decimal> AdjTBO_InFlow { get; set; }
         public Nullable<decimal> TBO_OutFLow { get; set; }
+        public Nullable<decimal> AdjTBO_OutFLow { get; set; }
         public string Note { get; set; }
         public int UserID { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }

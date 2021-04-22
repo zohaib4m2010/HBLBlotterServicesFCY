@@ -19,7 +19,9 @@ namespace DataAccessLayer
         public Nullable<System.DateTime> Trade_Date { get; set; }
         public string TradeCOde { get; set; }
         public Nullable<decimal> Trade_InFlow { get; set; }
+        public Nullable<decimal> AdjTrade_InFlow { get; set; }
         public Nullable<decimal> Trade_OutFLow { get; set; }
+        public Nullable<decimal> AdjTrade_OutFLow { get; set; }
         public string Note { get; set; }
         public int UserID { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }

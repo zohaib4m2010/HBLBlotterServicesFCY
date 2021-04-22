@@ -72,6 +72,8 @@ UserID int not null Constraint FK_UserCurrencyRelation_UserID Foreign key Refere
 CID int not null Constraint FK_UserCurrencyRelation_CID Foreign key References Currencies(CID),
 )
 
+select * from UserCurrencyRelation
+
 --insert into UserCurrencyRelation(UserID,CID) values(10,1)
 --insert into UserCurrencyRelation(UserID,CID) values(10,2)
 
@@ -85,6 +87,7 @@ CreateDate datetime,
 UpdateDate datetime,
 Constraint PK_UserRole primary key  clustered(URID)
 )
+select * from UserRole
 
 --Drop Table if exists  UserRoleRelation;
 create table UserRoleRelation
@@ -185,7 +188,9 @@ TTID int not null Constraint FK_SBP_BlotterTBO_TTID Foreign key References SBP_B
 TBO_Date DATETIME,
 TBOCOde nvarchar(20),
 TBO_InFlow numeric,
+AdjTBO_InFlow numeric,
 TBO_OutFLow numeric,
+AdjTBO_OutFLow numeric,
 Note nvarchar(250),
 UserID int not null Constraint FK_SBP_BlotterTBO_UserID Foreign key References SBP_LoginInfo(ID),
 CreateDate DATETIME,
@@ -196,6 +201,7 @@ CurID int not null Constraint FK_SBP_BlotterTBO_CurID Foreign key References Cur
 Flag varchar(2),
 Constraint PKTBO_SNo primary key  clustered (Sno))
 
+--truncate table SBP_BlotterTBO 
 
 select* from SBP_BlotterTBO
 
@@ -204,7 +210,7 @@ select* from SBP_BlotterTBO
 Create proc SP_GetAll_SBPBlotterTBO(@UserID int,@BranchID int,@CurID int,@BR int)
 as
 Begin
-select TBO.SNo,TBO.TTID,TT.TranctionTitle TransactionType,TBO.TBO_Date,TBOCOde,TBO_InFlow,TBO.TBO_OutFLow,TBO.Note,TBO.CreateDate,TBO.UpdateDate,TBO.BR,TBO.CurID,TBO.Flag 
+select TBO.SNo,TBO.TTID,TT.TranctionTitle TransactionType,TBO.TBO_Date,TBOCOde,isnull(TBO.AdjTBO_InFlow,TBO.TBO_InFlow) TBO_InFlow,isnull(AdjTBO_OutFLow, TBO.TBO_OutFLow)TBO_OutFLow,TBO.Note,TBO.CreateDate,TBO.UpdateDate,TBO.BR,TBO.CurID,TBO.Flag 
 From SBP_BlotterTBO TBO inner join SBP_BlotterTransactionTitles TT on TBO.TTID=TT.TTID
 where TBO.UserID=@UserID and TBO.BR=@BR and BID=@BranchID and TBO.CurID=@CurID
 end
@@ -231,7 +237,9 @@ TTID int not null Constraint FK_SBP_BlotterClearing_TID Foreign key References S
 Clearing_Date DATETIME,
 ClearingCOde nvarchar(20),
 Clearing_InFlow numeric,
+AdjClearing_InFlow numeric,
 Clearing_OutFLow numeric,
+AdjClearing_OutFLow numeric,
 Note nvarchar(250),
 UserID int not null Constraint FK_SBP_BlotterClearing_UserID Foreign key References SBP_LoginInfo(ID),
 CreateDate DATETIME,
@@ -248,7 +256,7 @@ select* From SBP_BlotterClearing
 Create proc SP_GetAll_SBPBlotterClearing(@UserID int,@BranchID int,@CurID int,@BR int)
 as
 Begin
-select Clearing.SNo,Clearing.TTID,TT.TranctionTitle TransactionType,Clearing.Clearing_Date,ClearingCOde,Clearing_InFlow,Clearing.Clearing_OutFLow,Clearing.Note,Clearing.CreateDate,Clearing.UpdateDate,Clearing.BR,Clearing.BID,Clearing.CurID,Clearing.Flag 
+select Clearing.SNo,Clearing.TTID,TT.TranctionTitle TransactionType,Clearing.Clearing_Date,ClearingCOde,isnull(Clearing.AdjClearing_InFlow,Clearing.Clearing_InFlow)Clearing_InFlow,isnull(Clearing.AdjClearing_OutFLow,Clearing.Clearing_OutFLow)Clearing_OutFLow,Clearing.Note,Clearing.CreateDate,Clearing.UpdateDate,Clearing.BR,Clearing.BID,Clearing.CurID,Clearing.Flag 
 From SBP_BlotterClearing Clearing inner join SBP_BlotterTransactionTitles TT on Clearing.TTID=TT.TTID
 where Clearing.UserID=@UserID and Clearing.BID=@BranchID and Clearing.CurID=@CurID and BR=@BR
 end
@@ -270,7 +278,9 @@ TTID int not null Constraint FK_SBP_BlotterTrade_TID Foreign key References SBP_
 Trade_Date DATETIME,
 TradeCOde nvarchar(20),
 Trade_InFlow numeric,
+AdjTrade_InFlow numeric,
 Trade_OutFLow numeric,
+AdjTrade_OutFLow numeric,
 Note nvarchar(250),
 UserID int not null Constraint FK_SBP_BlotterTrade_UserID Foreign key References SBP_LoginInfo(ID),
 CreateDate DATETIME,
@@ -285,7 +295,7 @@ select* From SBP_BlotterTrade
 alter proc SP_GetAll_SBPBlotterTrade(@UserID int,@BranchID int,@CurID int,@BR int)
 as
 Begin
-select Trade.SNo,Trade.TTID,TT.TranctionTitle TransactionType,Trade.Trade_Date,Trade.TradeCOde,Trade_InFlow,Trade.Trade_OutFLow,Trade.Note,Trade.CreateDate,Trade.UpdateDate,Trade.BR,Trade.BID,Trade.CurID,Trade.Flag 
+select Trade.SNo,Trade.TTID,TT.TranctionTitle TransactionType,Trade.Trade_Date,Trade.TradeCOde,isnull(Trade.AdjTrade_InFlow,Trade.Trade_InFlow)Trade_InFlow,isnull(Trade.AdjTrade_OutFLow,Trade.Trade_OutFLow)Trade_OutFLow,Trade.Note,Trade.CreateDate,Trade.UpdateDate,Trade.BR,Trade.BID,Trade.CurID,Trade.Flag 
 From SBP_BlotterTrade Trade inner join SBP_BlotterTransactionTitles TT on Trade.TTID=TT.TTID
 where Trade.UserID=@UserID and Trade.BID=@BranchID and BR=@BR and Trade.CurID=@CurID
 end
@@ -616,6 +626,7 @@ CREATE TABLE [dbo].[SBP_BlotterCRRReportDaysWiseBal](
 select * from SBP_BlotterCRRReportDaysWiseBal
 
 
+
 exec [SP_SBPBlotterCRRReportGenerator] 1
 
 alter proc [dbo].[SP_SBPBlotterCRRReportGenerator] ( @BR int)
@@ -642,453 +653,456 @@ declare  @CurrentDT as datetime,@KarachiTotal numeric,
 Select  @CurrentDT=cast(left(BRANPRCDATE,11) as date)  from OPICSDBLNK.OPICS43.dbo.BRPS where br=@Br ;
 select @CRRCalc1=CalcVal1/100.0,@CRRCalc2=CalcVal2/100.0 from SBP_BlotterCRRReportCalcSetup where isActive=1;
 
-select @KarachiTotal = 
-SUM(case when isnull(Inflow,0.00)<0 then isnull(Inflow,0.00)*-1 else isnull(Inflow,0.00) end)  +
-SUM(case when isnull(Outflow,0.00)>0 then isnull(Outflow,0.00)*-1 else isnull(Outflow,0.00) end ) + 
-SUM(isnull(OpeningBalance,0.00)) 
-from
-(
+--select @KarachiTotal = 
+--SUM(case when isnull(Inflow,0.00)<0 then isnull(Inflow,0.00)*-1 else isnull(Inflow,0.00) end)  +
+--SUM(case when isnull(Outflow,0.00)>0 then isnull(Outflow,0.00)*-1 else isnull(Outflow,0.00) end ) + 
+--SUM(isnull(OpeningBalance,0.00)) 
+--from
+--(
 
- SELECT
-  100000001 as DealNo, 
- 'Opening Balance-' Description,
- '' as Status,
- '' DealDate,
- '' as ValueDate ,
- '' as MaturityDate ,
- '' Currency ,
-  0.00 Inflow ,
- 0.00 Outflow
- ,a.todayamount  OpeningBalance 
+-- SELECT
+--  100000001 as DealNo, 
+-- 'Opening Balance-' Description,
+-- '' as Status,
+-- '' DealDate,
+-- '' as ValueDate ,
+-- '' as MaturityDate ,
+-- '' Currency ,
+--  0.00 Inflow ,
+-- 0.00 Outflow
+-- ,a.todayamount  OpeningBalance 
 
-  FROM opicsweb.dbo.SBP_Blotteropening a
-  where a.BR=@Brr and
-   cast(left(a.currentdate,11) as datetime) =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
-  and 
-  a.sno=(select max(a.sno) from  opicsweb.dbo.SBP_Blotteropening a where BR=@Brr ) -- where  cast(left(a.currentdate,11) as datetime) =CAST(LEFT(@CurrentDT, 11) AS DATETIME))
- union all 
- SELECT
-  100000002 as DealNo, 
- 'Manual Balance- '+Description as Description,
- 'F' as Status,
- DealDate,
- @CurrentDT as ValueDate ,
- @CurrentDT as MaturityDate ,
- 'PKR' Currency ,
- sum(isnull(Inflow,0.00)) as Inflow ,
- sum(isnull(Outflow,0.00)) as Outflow,
- 0 OpeningBalance
-  FROM opicsweb.dbo.SBP_BlotterManualDeals a where a.BR=@Brr 
-  and  cast(left(a.DealDate,11) as datetime) =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
-  group by Description,DealDate
+--  FROM opicsweb.dbo.SBP_Blotteropening a
+--  where a.BR=@Brr and
+--   cast(left(a.currentdate,11) as datetime) =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
+--  and 
+--  a.sno=(select max(a.sno) from  opicsweb.dbo.SBP_Blotteropening a where BR=@Brr ) -- where  cast(left(a.currentdate,11) as datetime) =CAST(LEFT(@CurrentDT, 11) AS DATETIME))
+-- union all 
+-- SELECT
+--  100000002 as DealNo, 
+-- 'Manual Balance- '+Description as Description,
+-- 'F' as Status,
+-- DealDate,
+-- @CurrentDT as ValueDate ,
+-- @CurrentDT as MaturityDate ,
+-- 'PKR' Currency ,
+-- sum(isnull(Inflow,0.00)) as Inflow ,
+-- sum(isnull(Outflow,0.00)) as Outflow,
+-- 0 OpeningBalance
+--  FROM opicsweb.dbo.SBP_BlotterManualDeals a where a.BR=@Brr 
+--  and  cast(left(a.DealDate,11) as datetime) =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
+--  group by Description,DealDate
   
- union all
--- --=======================================================================================================================
--- --======================================       RTGS     =================================================================
--- --=======================================================================================================================
+-- union all
+---- --=======================================================================================================================
+---- --======================================       RTGS     =================================================================
+---- --=======================================================================================================================
 
-  SELECT   100000003 as DealNo, ACCT_Description Description  ,'M' Status	
-	  ,cast(left(TXN_DTE_TME,11) as datetime) DealDate	,null ValueDate	
-	  ,null MaturityDate,'PKR' Currency      ,sum(Inflow) Inflow
-      ,sum(Outflow*-1) Outflow	  ,0 OpeningBalance
+--  SELECT   100000003 as DealNo, ACCT_Description Description  ,'M' Status	
+--	  ,cast(left(TXN_DTE_TME,11) as datetime) DealDate	,null ValueDate	
+--	  ,null MaturityDate,'PKR' Currency      ,sum(Inflow) Inflow
+--      ,sum(Outflow*-1) Outflow	  ,0 OpeningBalance
 
      
-  FROM [OPICSWEB].[dbo].[SBP_BlotterRTGS]
-where BatchCount=(select max(BatchCount) FROM [OPICSWEB].[dbo].[SBP_BlotterRTGS])  
-and cast(left(TXN_DTE_TME,11) as datetime) =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
-and BR=@Brr
-group by TXN_DTE_TME,ACCT_Description
+--  FROM [OPICSWEB].[dbo].[SBP_BlotterRTGS]
+--where BatchCount=(select max(BatchCount) FROM [OPICSWEB].[dbo].[SBP_BlotterRTGS])  
+--and cast(left(TXN_DTE_TME,11) as datetime) =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
+--and BR=@Brr
+--group by TXN_DTE_TME,ACCT_Description
 
 
 
- union all
--- --=======================================================================================================================
--- --======================================       DLDT     =================================================================
--- --=======================================================================================================================
+-- union all
+---- --=======================================================================================================================
+---- --======================================       DLDT     =================================================================
+---- --=======================================================================================================================
 
-Select DEALNO, Description, Status,Deal_date as DealDate, ValueDate ,
-MaturityDate,  Currency ,
-case when Amount_Asset<0 then  Amount_Asset*-1 else Amount_Asset end 'Inflow',
-case when Amount_Liability>0 then  Amount_Liability*-1 else Amount_Liability end 'Outflow',
-0 OpeningBalance
-from
-(
-select a.DEALNO  ,a.DealNo+'-'+rtrim(a.PRODUCT)+'-'+a.PRODTYPE+'-'+a.CNO Description,
-a.DEALDATE as Deal_date,a.VDATE as ValueDate,a.MDATE as MaturityDate,a.CCY as Currency,
-case when a.CCYAMT < 0 then a.CCYAMT*-1 else  a.CCYAMT end Amount_Asset ,
-0 Amount_Liability,a.PORT,a.PRODUCT,'F' Status
-FROM OPICSDBLNK.OPICS43.dbo.DLDT a,OPICSDBLNK.OPICS43.dbo.BRPS b,OPICSDBLNK.OPICS43.dbo.CUST d
-WHERE PRODUCT IN ('PKRBR','PKUMUS','PKUMUD','PKRUWA','PKSMUS','PKSMUD','PKRSWA','USBAIM','USBAIN') AND d.CNO = a.CNO And a.REVDATE is null AND a.BR = b.BR
-and a.CCY='PKR' and isnull(REVDATE,'')='' and isnull(REVREASON,'') ='' and AL='A'
-and cast(left(a.VDATE,11) as datetime) =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
-and  a.BR=@Brr
-union all
-select a.DEALNO  ,a.DealNo+'-'+rtrim(a.PRODUCT)+'-'+a.PRODTYPE+'-'+d.SN Description,CAST(LEFT(a.DEALDATE, 11) AS DATETIME) as Dealdate,
-a.VDATE as ValueDate,a.MDATE as MaturityDate,
-a.CCY as Currency,0 Amount_Asset,
-case when a.CCYAMT > 0 then a.CCYAMT*-1 else  a.CCYAMT end Amount_Liability ,
-a.PORT,a.PRODUCT ,'F' Status
-FROM OPICSDBLNK.OPICS43.dbo.DLDT a inner join OPICSDBLNK.OPICS43.dbo.cust d  on d.CNO =a.CNO 
-, OPICSDBLNK.OPICS43.dbo.BRPS b 
-WHERE PRODUCT IN ('PKRPL','PKUMUS','PKUMUD','PKRUWA','PKSMUS','PKSMUD','PKRSWA','USBAIM','USBAIN') AND d.CNO = a.CNO
-And a.REVDATE is null AND a.BR = b.BR
-and a.CCY='PKR' and isnull(REVDATE,'')='' and isnull(REVREASON,'') ='' and AL='L'
-and cast(left(a.VDATE,11) as datetime)  =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
-and  a.BR=@Brr) a 
---==========================
-union all
---============================
+--Select DEALNO, Description, Status,Deal_date as DealDate, ValueDate ,
+--MaturityDate,  Currency ,
+--case when Amount_Asset<0 then  Amount_Asset*-1 else Amount_Asset end 'Inflow',
+--case when Amount_Liability>0 then  Amount_Liability*-1 else Amount_Liability end 'Outflow',
+--0 OpeningBalance
+--from
+--(
+--select a.DEALNO  ,a.DealNo+'-'+rtrim(a.PRODUCT)+'-'+a.PRODTYPE+'-'+a.CNO Description,
+--a.DEALDATE as Deal_date,a.VDATE as ValueDate,a.MDATE as MaturityDate,a.CCY as Currency,
+--case when a.CCYAMT < 0 then a.CCYAMT*-1 else  a.CCYAMT end Amount_Asset ,
+--0 Amount_Liability,a.PORT,a.PRODUCT,'F' Status
+--FROM OPICSDBLNK.OPICS43.dbo.DLDT a,OPICSDBLNK.OPICS43.dbo.BRPS b,OPICSDBLNK.OPICS43.dbo.CUST d
+--WHERE PRODUCT IN ('PKRBR','PKUMUS','PKUMUD','PKRUWA','PKSMUS','PKSMUD','PKRSWA','USBAIM','USBAIN') AND d.CNO = a.CNO And a.REVDATE is null AND a.BR = b.BR
+--and a.CCY='PKR' and isnull(REVDATE,'')='' and isnull(REVREASON,'') ='' and AL='A'
+--and cast(left(a.VDATE,11) as datetime) =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
+--and  a.BR=@Brr
+--union all
+--select a.DEALNO  ,a.DealNo+'-'+rtrim(a.PRODUCT)+'-'+a.PRODTYPE+'-'+d.SN Description,CAST(LEFT(a.DEALDATE, 11) AS DATETIME) as Dealdate,
+--a.VDATE as ValueDate,a.MDATE as MaturityDate,
+--a.CCY as Currency,0 Amount_Asset,
+--case when a.CCYAMT > 0 then a.CCYAMT*-1 else  a.CCYAMT end Amount_Liability ,
+--a.PORT,a.PRODUCT ,'F' Status
+--FROM OPICSDBLNK.OPICS43.dbo.DLDT a inner join OPICSDBLNK.OPICS43.dbo.cust d  on d.CNO =a.CNO 
+--, OPICSDBLNK.OPICS43.dbo.BRPS b 
+--WHERE PRODUCT IN ('PKRPL','PKUMUS','PKUMUD','PKRUWA','PKSMUS','PKSMUD','PKRSWA','USBAIM','USBAIN') AND d.CNO = a.CNO
+--And a.REVDATE is null AND a.BR = b.BR
+--and a.CCY='PKR' and isnull(REVDATE,'')='' and isnull(REVREASON,'') ='' and AL='L'
+--and cast(left(a.VDATE,11) as datetime)  =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
+--and  a.BR=@Brr) a 
+----==========================
+--union all
+----============================
 
 
---Select DEALNO, Description,'' Status,Dealdate as DealDate, ValueDate as Vdate,
+----Select DEALNO, Description,'' Status,Dealdate as DealDate, ValueDate as Vdate,
+---- MaturityDate, Currency ,
+----case when (Interest_Payments_Asset) <0 then  (Interest_Payments_Asset) *-1 else (Interest_Payments_Asset)  end 'Inflow',
+----case when (Interest_Payments_Liability+PrincipalAmount)>0 then  (Interest_Payments_Liability+PrincipalAmount)*-1 else (Interest_Payments_Liability+PrincipalAmount) end 'Outflow'
+----,0 OpeningBalance
+
+--Select DEALNO, Description, Status,Dealdate as DealDate, ValueDate as Vdate,
 -- MaturityDate, Currency ,
---case when (Interest_Payments_Asset) <0 then  (Interest_Payments_Asset) *-1 else (Interest_Payments_Asset)  end 'Inflow',
---case when (Interest_Payments_Liability+PrincipalAmount)>0 then  (Interest_Payments_Liability+PrincipalAmount)*-1 else (Interest_Payments_Liability+PrincipalAmount) end 'Outflow'
+--case when PRODUCT in ('PKRPL','PKUMUS','PKUMUD','PKRUWA','PKSMUS','PKSMUD','PKRSWA','USBAIM','USBAIN') THEN  Interest_Payments_Asset +PrincipalAmount else case when (Interest_Payments_Asset) <0 then  (Interest_Payments_Asset) *-1 else (Interest_Payments_Asset)  end end 'Inflow',
+--case when PRODUCT in ('PKRPL','PKUMUS','PKUMUD','PKRUWA','PKSMUS','PKSMUD','PKRSWA','USBAIM','USBAIN')  then 0 else case when (Interest_Payments_Liability+PrincipalAmount)>0 then  (Interest_Payments_Liability+PrincipalAmount)*-1 else 
+--(Interest_Payments_Liability+PrincipalAmount) end end 'Outflow',0 OpeningBalance
+
+--from
+--(
+--select a.DEALNO  ,a.DealNo+'-'+rtrim(a.PRODUCT)+'-'+a.PRODTYPE+'-'+d.SN Description,a.DEALDATE as Dealdate,a.VDATE as ValueDate,a.MDATE as MaturityDate,
+--DATEDIFF(DAY, a.VDATE, a.MDATE ) Tenor,
+
+--case when   CAST(LEFT(@CurrentDT, 11) AS DATETIME) <CAST(LEFT(a.VDATE, 11) AS DATETIME)  then 0 else 
+--DATEDIFF(DAY, a.vDATE, CAST(LEFT(@CurrentDT, 11) AS DATETIME)) end  AccruedDays,
+
+--a.CCY as Currency,a.CCYAMT as  PrincipalAmount,a.CCYAMT as Amount_Asset ,round(a.INTRATE,4) as Interest_rate_Asset,
+--(case when (a.CCY='PKR' or a.CCY='GBP') then ((a.CCYAMT*a.INTRATE)/ 36500) else ((a.CCYAMT*a.INTRATE)/ 36000) end) 
+--* ( CONVERT (INT, a.MDATE) - CONVERT (INT,a.VDATE) ) as Interest_Payments_Asset,
+--0 Amount_Liability,
+--0 Interest_rate_Liability ,0 Interest_Payments_Liability,
+--a.PORT,a.PRODUCT,'M' Status
+--FROM OPICSDBLNK.OPICS43.dbo.DLDT a inner join OPICSDBLNK.OPICS43.dbo.cust d  on d.CNO =a.CNO 
+--, OPICSDBLNK.OPICS43.dbo.BRPS b 
+--WHERE PRODUCT IN ('PKRBR','PKRPL','PKUMUS','PKUMUD','PKRUWA','PKSMUS','PKSMUD','PKRSWA','USBAIM','USBAIN')
+-- And a.REVDATE is null AND a.BR = b.BR and a.AL ='A'
+--and a.CCY='PKR' and isnull(REVDATE,'')='' and isnull(REVREASON,'') =''
+--and cast(left(a.MDATE,11) as datetime) =CAST(LEFT(@CurrentDT, 11) AS DATETIME) 
+-- and  a.BR=@Brr
+--union all
+
+
+--select a.DEALNO  ,a.DealNo+'-'+rtrim(a.PRODUCT)+'-'+a.PRODTYPE+'-'+d.SN  Description,a.DEALDATE as Deal_date,
+--a.VDATE as ValueDate,a.MDATE as MaturityDate,
+--DATEDIFF(DAY, a.VDATE, a.MDATE ) Tenor,
+--case when    CAST(LEFT(@CurrentDT, 11) AS DATETIME) <CAST(LEFT(a.VDATE, 11) AS DATETIME)   
+--then 0 else DATEDIFF(DAY,  a.vDATE , CAST(LEFT(@CurrentDT, 11) AS DATETIME)) end  AccruedDays,
+
+
+--a.CCY as Currency,a.CCYAMT as  PrincipalAmount,
+--0 Amount_Asset,
+--0 Interest_rate_Asset,
+--0 Interest_Payments_Asset,
+--a.CCYAMT as Amount_Liability,
+--round(a.INTRATE,4) as Interest_rate_Liability,
+--(case when (a.CCY='PKR' or a.CCY='GBP') then ((a.CCYAMT*a.INTRATE)/ 36500) else ((a.CCYAMT*a.INTRATE)/ 36000) end) 
+--* ( CONVERT (INT, a.MDATE) - CONVERT (INT,a.VDATE) ) as Interest_Payments_Liability,
+--a.PORT,a.PRODUCT ,'M' Status
+--FROM OPICSDBLNK.OPICS43.dbo.DLDT a inner join OPICSDBLNK.OPICS43.dbo.cust d  on d.CNO =a.CNO 
+--, OPICSDBLNK.OPICS43.dbo.BRPS b 
+--WHERE PRODUCT IN ('PKRBR','PKRPL','PKUMUS','PKUMUD','PKRUWA','PKSMUS','PKSMUD','PKRSWA','USBAIM','USBAIN')
+--And a.REVDATE is null
+--AND a.BR = b.BR and a.AL ='L'
+--and a.CCY='PKR' and isnull(a.REVDATE,'')='' and isnull(a.REVREASON,'') =''
+--and cast(left(a.MDATE,11) as datetime)  =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
+-- and  a.BR=@Brr
+--) a
+--union all
+-- --=======================================================================================================================
+-- --======================================       SPSH     =================================================================
+-- --=======================================================================================================================
+--select a.DealNo, a.DealNo+'-'+rtrim(a.PRODUCT)+'-'+a.PRODTYPE+'-'+b.SN Description,    
+--case when cast(left(a.SETTDATE,11) as datetime) =cast(left(@CurrentDT,11) as datetime) then 'M' else '' End Status,
+--a.DealDate,null Vdate,a.SETTDATE as MaturityDate, a.CCY Currency,  
+--case when a.PROCEEDAMT >0 then  a.PROCEEDAMT else 0 end InFlow  ,
+--case when a.PROCEEDAMT <0 then  a.PROCEEDAMT else 0 end OutFlow ,0 OpeningBalance
+-- from OPICSDBLNK.OPICS43.dbo.SPSH a
+-- inner join OPICSDBLNK.OPICS43.dbo.cust b  on b.CNO =a.CNO
+--where CCY='PKR' and isnull(REVDATE,'')='' and isnull(REVREASON,'') ='' and CCYSMEANS='NOS'
+-- and CCYSACCT in ('SBPPK','SBPIBB')
+-- and  br=@Brr
+-- and  cast(left(a.SETTDATE,11) as datetime)  =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
+-- union all
+-- ----=======================================================================================================================
+-- ----======================================       FXDH     =================================================================
+-- ----=======================================================================================================================
+--select a.DealNo, a.DEALNO+'-'+rtrim(a.PRODCODE)+'-'+a.PRODTYPE+'-'+b.SN Description,    
+-- 'F' Status,
+--a.DealDate,a.Vdate ValueDate,null as MaturityDate , a.CCY Currency,
+--case when a.CCYAMT >0 then  a.CCYAMT else 0 end InFlow ,  
+--case when a.CCYAMT <0 then  a.CCYAMT else 0 end OutFlow
 --,0 OpeningBalance
-
-Select DEALNO, Description, Status,Dealdate as DealDate, ValueDate as Vdate,
- MaturityDate, Currency ,
-case when PRODUCT in ('PKRPL','PKUMUS','PKUMUD','PKRUWA','PKSMUS','PKSMUD','PKRSWA','USBAIM','USBAIN') THEN  Interest_Payments_Asset +PrincipalAmount else case when (Interest_Payments_Asset) <0 then  (Interest_Payments_Asset) *-1 else (Interest_Payments_Asset)  end end 'Inflow',
-case when PRODUCT in ('PKRPL','PKUMUS','PKUMUD','PKRUWA','PKSMUS','PKSMUD','PKRSWA','USBAIM','USBAIN')  then 0 else case when (Interest_Payments_Liability+PrincipalAmount)>0 then  (Interest_Payments_Liability+PrincipalAmount)*-1 else 
-(Interest_Payments_Liability+PrincipalAmount) end end 'Outflow',0 OpeningBalance
-
-from
-(
-select a.DEALNO  ,a.DealNo+'-'+rtrim(a.PRODUCT)+'-'+a.PRODTYPE+'-'+d.SN Description,a.DEALDATE as Dealdate,a.VDATE as ValueDate,a.MDATE as MaturityDate,
-DATEDIFF(DAY, a.VDATE, a.MDATE ) Tenor,
-
-case when   CAST(LEFT(@CurrentDT, 11) AS DATETIME) <CAST(LEFT(a.VDATE, 11) AS DATETIME)  then 0 else 
-DATEDIFF(DAY, a.vDATE, CAST(LEFT(@CurrentDT, 11) AS DATETIME)) end  AccruedDays,
-
-a.CCY as Currency,a.CCYAMT as  PrincipalAmount,a.CCYAMT as Amount_Asset ,round(a.INTRATE,4) as Interest_rate_Asset,
-(case when (a.CCY='PKR' or a.CCY='GBP') then ((a.CCYAMT*a.INTRATE)/ 36500) else ((a.CCYAMT*a.INTRATE)/ 36000) end) 
-* ( CONVERT (INT, a.MDATE) - CONVERT (INT,a.VDATE) ) as Interest_Payments_Asset,
-0 Amount_Liability,
-0 Interest_rate_Liability ,0 Interest_Payments_Liability,
-a.PORT,a.PRODUCT,'M' Status
-FROM OPICSDBLNK.OPICS43.dbo.DLDT a inner join OPICSDBLNK.OPICS43.dbo.cust d  on d.CNO =a.CNO 
-, OPICSDBLNK.OPICS43.dbo.BRPS b 
-WHERE PRODUCT IN ('PKRBR','PKRPL','PKUMUS','PKUMUD','PKRUWA','PKSMUS','PKSMUD','PKRSWA','USBAIM','USBAIN')
- And a.REVDATE is null AND a.BR = b.BR and a.AL ='A'
-and a.CCY='PKR' and isnull(REVDATE,'')='' and isnull(REVREASON,'') =''
-and cast(left(a.MDATE,11) as datetime) =CAST(LEFT(@CurrentDT, 11) AS DATETIME) 
- and  a.BR=@Brr
-union all
+--from OPICSDBLNK.OPICS43.dbo.fxdh  a inner join OPICSDBLNK.OPICS43.dbo.cust b  on b.CNO =a.CUST
+--where a.CCY    ='PKR' and CAST(a.CCYAMT AS numeric(38, 4)) <>0.0000 
+--and  br=@Brr and  isnull(REVDATE,'')='' and isnull(REVREASON,'') ='' and  CCYSMEANS='NOS'
+-- and a.SWAPVDATE is null
+-- and CCYSACCT in ('SBPPK','SBPIBB')
+-- and  cast(left(a.dealdate,11) as datetime)  =CAST(LEFT(a.VDATE, 11) AS DATETIME)
+-- and  cast(left(a.VDATE,11) as datetime)  =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
+-- union all
+-- select a.DealNo, a.DEALNO+'-'+rtrim(a.PRODCODE)+'-'+a.PRODTYPE+'-'+b.SN Description,    
+-- 'M' Status,
+--a.DealDate,a.Vdate ValueDate,null as MaturityDate , a.CCY Currency,
+--case when a.CCYAMT >0 then  a.CCYAMT else 0 end InFlow ,  
+--case when a.CCYAMT <0 then  a.CCYAMT else 0 end OutFlow
+--,0 OpeningBalance
+--from OPICSDBLNK.OPICS43.dbo.fxdh  a inner join OPICSDBLNK.OPICS43.dbo.cust b  on b.CNO =a.CUST
+--where a.CCY    ='PKR' and CAST(a.CCYAMT AS numeric(38, 4)) <>0.0000 
+--and  br=@Brr and  isnull(REVDATE,'')='' and isnull(REVREASON,'') ='' and  CCYSMEANS='NOS'
+-- and a.SWAPVDATE is null
+-- and CCYSACCT in ('SBPPK','SBPIBB')
+-- and  cast(left(a.dealdate,11) as datetime)  <CAST(LEFT(a.VDATE, 11) AS DATETIME)
+-- and  cast(left(a.VDATE,11) as datetime)  =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
+--union all
 
 
-select a.DEALNO  ,a.DealNo+'-'+rtrim(a.PRODUCT)+'-'+a.PRODTYPE+'-'+d.SN  Description,a.DEALDATE as Deal_date,
-a.VDATE as ValueDate,a.MDATE as MaturityDate,
-DATEDIFF(DAY, a.VDATE, a.MDATE ) Tenor,
-case when    CAST(LEFT(@CurrentDT, 11) AS DATETIME) <CAST(LEFT(a.VDATE, 11) AS DATETIME)   
-then 0 else DATEDIFF(DAY,  a.vDATE , CAST(LEFT(@CurrentDT, 11) AS DATETIME)) end  AccruedDays,
+--select a.DEALNO, a.DEALNO+'-'+ rtrim(a.PRODCODE)+'-'+a.PRODTYPE+'-'+b.SN Des,  
+--'F'  Status,
+--a.DEALDATE,a.VDATE ValueDate,Null MaturityDate ,a.CTRCCY Currency,  
 
+-- case when a.CTRAMT >0 then  a.CTRAMT else 0 end InFlow ,
+-- case when a.CTRAMT <0 then  a.CTRAMT else 0 end OutFlow
+-- ,0 OpeningBalance
+-- from OPICSDBLNK.OPICS43.dbo.fxdh a inner join OPICSDBLNK.OPICS43.dbo.cust b  on b.CNO =a.CUST
+-- where 
+-- a.CTRCCY    ='PKR' and CAST(a.CTRAMT AS numeric(38, 4)) <>0.0000 
+-- and  br=@Brr and  isnull(REVDATE,'')='' and isnull(REVREASON,'') =''  and CTRSMEANS='NOS'
 
-a.CCY as Currency,a.CCYAMT as  PrincipalAmount,
-0 Amount_Asset,
-0 Interest_rate_Asset,
-0 Interest_Payments_Asset,
-a.CCYAMT as Amount_Liability,
-round(a.INTRATE,4) as Interest_rate_Liability,
-(case when (a.CCY='PKR' or a.CCY='GBP') then ((a.CCYAMT*a.INTRATE)/ 36500) else ((a.CCYAMT*a.INTRATE)/ 36000) end) 
-* ( CONVERT (INT, a.MDATE) - CONVERT (INT,a.VDATE) ) as Interest_Payments_Liability,
-a.PORT,a.PRODUCT ,'M' Status
-FROM OPICSDBLNK.OPICS43.dbo.DLDT a inner join OPICSDBLNK.OPICS43.dbo.cust d  on d.CNO =a.CNO 
-, OPICSDBLNK.OPICS43.dbo.BRPS b 
-WHERE PRODUCT IN ('PKRBR','PKRPL','PKUMUS','PKUMUD','PKRUWA','PKSMUS','PKSMUD','PKRSWA','USBAIM','USBAIN')
-And a.REVDATE is null
-AND a.BR = b.BR and a.AL ='L'
-and a.CCY='PKR' and isnull(a.REVDATE,'')='' and isnull(a.REVREASON,'') =''
-and cast(left(a.MDATE,11) as datetime)  =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
- and  a.BR=@Brr
-) a
-union all
- --=======================================================================================================================
- --======================================       SPSH     =================================================================
- --=======================================================================================================================
-select a.DealNo, a.DealNo+'-'+rtrim(a.PRODUCT)+'-'+a.PRODTYPE+'-'+b.SN Description,    
-case when cast(left(a.SETTDATE,11) as datetime) =cast(left(@CurrentDT,11) as datetime) then 'M' else '' End Status,
-a.DealDate,null Vdate,a.SETTDATE as MaturityDate, a.CCY Currency,  
-case when a.PROCEEDAMT >0 then  a.PROCEEDAMT else 0 end InFlow  ,
-case when a.PROCEEDAMT <0 then  a.PROCEEDAMT else 0 end OutFlow ,0 OpeningBalance
- from OPICSDBLNK.OPICS43.dbo.SPSH a
- inner join OPICSDBLNK.OPICS43.dbo.cust b  on b.CNO =a.CNO
-where CCY='PKR' and isnull(REVDATE,'')='' and isnull(REVREASON,'') ='' and CCYSMEANS='NOS'
- and CCYSACCT in ('SBPPK','SBPIBB')
- and  br=@Brr
- and  cast(left(a.SETTDATE,11) as datetime)  =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
- union all
- ----=======================================================================================================================
- ----======================================       FXDH     =================================================================
- ----=======================================================================================================================
-select a.DealNo, a.DEALNO+'-'+rtrim(a.PRODCODE)+'-'+a.PRODTYPE+'-'+b.SN Description,    
- 'F' Status,
-a.DealDate,a.Vdate ValueDate,null as MaturityDate , a.CCY Currency,
-case when a.CCYAMT >0 then  a.CCYAMT else 0 end InFlow ,  
-case when a.CCYAMT <0 then  a.CCYAMT else 0 end OutFlow
-,0 OpeningBalance
-from OPICSDBLNK.OPICS43.dbo.fxdh  a inner join OPICSDBLNK.OPICS43.dbo.cust b  on b.CNO =a.CUST
-where a.CCY    ='PKR' and CAST(a.CCYAMT AS numeric(38, 4)) <>0.0000 
-and  br=@Brr and  isnull(REVDATE,'')='' and isnull(REVREASON,'') ='' and  CCYSMEANS='NOS'
- and a.SWAPVDATE is null
- and CCYSACCT in ('SBPPK','SBPIBB')
- and  cast(left(a.dealdate,11) as datetime)  =CAST(LEFT(a.VDATE, 11) AS DATETIME)
- and  cast(left(a.VDATE,11) as datetime)  =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
- union all
- select a.DealNo, a.DEALNO+'-'+rtrim(a.PRODCODE)+'-'+a.PRODTYPE+'-'+b.SN Description,    
- 'M' Status,
-a.DealDate,a.Vdate ValueDate,null as MaturityDate , a.CCY Currency,
-case when a.CCYAMT >0 then  a.CCYAMT else 0 end InFlow ,  
-case when a.CCYAMT <0 then  a.CCYAMT else 0 end OutFlow
-,0 OpeningBalance
-from OPICSDBLNK.OPICS43.dbo.fxdh  a inner join OPICSDBLNK.OPICS43.dbo.cust b  on b.CNO =a.CUST
-where a.CCY    ='PKR' and CAST(a.CCYAMT AS numeric(38, 4)) <>0.0000 
-and  br=@Brr and  isnull(REVDATE,'')='' and isnull(REVREASON,'') ='' and  CCYSMEANS='NOS'
- and a.SWAPVDATE is null
- and CCYSACCT in ('SBPPK','SBPIBB')
- and  cast(left(a.dealdate,11) as datetime)  <CAST(LEFT(a.VDATE, 11) AS DATETIME)
- and  cast(left(a.VDATE,11) as datetime)  =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
-union all
+-- and a.SWAPVDATE is null
+-- and CTRSACCT in ('SBPPK','SBPIBB')
+-- and  cast(left(a.dealdate,11) as datetime)  =CAST(LEFT(a.VDATE, 11) AS DATETIME)
+-- and  cast(left(a.VDATE,11) as datetime)  =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
+-- union all
+-- select a.DEALNO, a.DEALNO+'-'+ rtrim(a.PRODCODE)+'-'+a.PRODTYPE+'-'+b.SN Des,  
+--'M'  Status,
+--a.DEALDATE,a.VDATE ValueDate,Null MaturityDate ,a.CTRCCY Currency,  
 
+-- case when a.CTRAMT >0 then  a.CTRAMT else 0 end InFlow ,
+-- case when a.CTRAMT <0 then  a.CTRAMT else 0 end OutFlow
+-- ,0 OpeningBalance
+-- from OPICSDBLNK.OPICS43.dbo.fxdh a inner join OPICSDBLNK.OPICS43.dbo.cust b  on b.CNO =a.CUST
+-- where a.CTRCCY    ='PKR' and CAST(a.CTRAMT AS numeric(38, 4)) <>0.0000 
+-- and  br=@Brr and  isnull(REVDATE,'')='' and isnull(REVREASON,'') =''  and CTRSMEANS='NOS'
 
-select a.DEALNO, a.DEALNO+'-'+ rtrim(a.PRODCODE)+'-'+a.PRODTYPE+'-'+b.SN Des,  
-'F'  Status,
-a.DEALDATE,a.VDATE ValueDate,Null MaturityDate ,a.CTRCCY Currency,  
-
- case when a.CTRAMT >0 then  a.CTRAMT else 0 end InFlow ,
- case when a.CTRAMT <0 then  a.CTRAMT else 0 end OutFlow
- ,0 OpeningBalance
- from OPICSDBLNK.OPICS43.dbo.fxdh a inner join OPICSDBLNK.OPICS43.dbo.cust b  on b.CNO =a.CUST
- where 
- a.CTRCCY    ='PKR' and CAST(a.CTRAMT AS numeric(38, 4)) <>0.0000 
- and  br=@Brr and  isnull(REVDATE,'')='' and isnull(REVREASON,'') =''  and CTRSMEANS='NOS'
-
- and a.SWAPVDATE is null
- and CTRSACCT in ('SBPPK','SBPIBB')
- and  cast(left(a.dealdate,11) as datetime)  =CAST(LEFT(a.VDATE, 11) AS DATETIME)
- and  cast(left(a.VDATE,11) as datetime)  =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
- union all
- select a.DEALNO, a.DEALNO+'-'+ rtrim(a.PRODCODE)+'-'+a.PRODTYPE+'-'+b.SN Des,  
-'M'  Status,
-a.DEALDATE,a.VDATE ValueDate,Null MaturityDate ,a.CTRCCY Currency,  
-
- case when a.CTRAMT >0 then  a.CTRAMT else 0 end InFlow ,
- case when a.CTRAMT <0 then  a.CTRAMT else 0 end OutFlow
- ,0 OpeningBalance
- from OPICSDBLNK.OPICS43.dbo.fxdh a inner join OPICSDBLNK.OPICS43.dbo.cust b  on b.CNO =a.CUST
- where a.CTRCCY    ='PKR' and CAST(a.CTRAMT AS numeric(38, 4)) <>0.0000 
- and  br=@Brr and  isnull(REVDATE,'')='' and isnull(REVREASON,'') =''  and CTRSMEANS='NOS'
-
- and a.SWAPVDATE is null
- and CTRSACCT in ('SBPPK','SBPIBB')
- and  cast(left(a.dealdate,11) as datetime)  <CAST(LEFT(a.VDATE, 11) AS DATETIME)
- and  cast(left(a.VDATE,11) as datetime)  =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
+-- and a.SWAPVDATE is null
+-- and CTRSACCT in ('SBPPK','SBPIBB')
+-- and  cast(left(a.dealdate,11) as datetime)  <CAST(LEFT(a.VDATE, 11) AS DATETIME)
+-- and  cast(left(a.VDATE,11) as datetime)  =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
   
   
----- =======================================================================================================================
--- --======================================       FXDH   End================================================================
--- --=======================================================================================================================  
-  union all
--- --=======================================================================================================================
--- --======================================       FXDH SWAP     ============================================================
--- --=======================================================================================================================
+------ =======================================================================================================================
+---- --======================================       FXDH   End================================================================
+---- --=======================================================================================================================  
+--  union all
+---- --=======================================================================================================================
+---- --======================================       FXDH SWAP     ============================================================
+---- --=======================================================================================================================
 
-select a.DealNo, a.DEALNO+'-'+rtrim(a.PRODCODE)+'-'+a.PRODTYPE+'-'+b.SN Description,    
-'F' Status,
-a.DealDate,a.Vdate,a.SWAPVDATE as MaturityDate , a.CCY Currency,  
- case when a.CCYAMT >0 then  a.CCYAMT else 0 end InFlow, 
-case when a.CCYAMT <0 then  a.CCYAMT else 0 end ,0 OpeningBalance
-from OPICSDBLNK.OPICS43.dbo.fxdh  a inner join OPICSDBLNK.OPICS43.dbo.cust b  on b.CNO =a.CUST
-where a.CCY    ='PKR' and CAST(a.CCYAMT AS numeric(38, 4)) <>0.0000 
-and  br=@Brr and  isnull(REVDATE,'')='' and isnull(REVREASON,'') ='' and  CCYSMEANS='NOS'
-and CCYSACCT in ('SBPPK','SBPIBB')
-and  CAST(LEFT(@CurrentDT, 11) AS DATETIME)<cast(left(a.SWAPVDATE,11) as datetime) 
-and  cast(left(a.dealdate,11) as datetime)  <=CAST(LEFT(a.VDATE, 11) AS DATETIME)
-and  cast(left(a.VDATE,11) as datetime)  =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
-union all
+--select a.DealNo, a.DEALNO+'-'+rtrim(a.PRODCODE)+'-'+a.PRODTYPE+'-'+b.SN Description,    
+--'F' Status,
+--a.DealDate,a.Vdate,a.SWAPVDATE as MaturityDate , a.CCY Currency,  
+-- case when a.CCYAMT >0 then  a.CCYAMT else 0 end InFlow, 
+--case when a.CCYAMT <0 then  a.CCYAMT else 0 end ,0 OpeningBalance
+--from OPICSDBLNK.OPICS43.dbo.fxdh  a inner join OPICSDBLNK.OPICS43.dbo.cust b  on b.CNO =a.CUST
+--where a.CCY    ='PKR' and CAST(a.CCYAMT AS numeric(38, 4)) <>0.0000 
+--and  br=@Brr and  isnull(REVDATE,'')='' and isnull(REVREASON,'') ='' and  CCYSMEANS='NOS'
+--and CCYSACCT in ('SBPPK','SBPIBB')
+--and  CAST(LEFT(@CurrentDT, 11) AS DATETIME)<cast(left(a.SWAPVDATE,11) as datetime) 
+--and  cast(left(a.dealdate,11) as datetime)  <=CAST(LEFT(a.VDATE, 11) AS DATETIME)
+--and  cast(left(a.VDATE,11) as datetime)  =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
+--union all
 
-select a.DealNo, a.DEALNO+'-'+rtrim(a.PRODCODE)+'-'+a.PRODTYPE+'-'+b.SN Description,    
-'M' Status,
-a.DealDate,a.Vdate,a.SWAPVDATE as MaturityDate , a.CCY Currency,  
- case when a.CCYAMT >0 then  a.CCYAMT else 0 end InFlow, 
-case when a.CCYAMT <0 then  a.CCYAMT else 0 end OutFlow,0 OpeningBalance
-from OPICSDBLNK.OPICS43.dbo.fxdh  a inner join OPICSDBLNK.OPICS43.dbo.cust b  on b.CNO =a.CUST
-where a.CCY    ='PKR' and CAST(a.CCYAMT AS numeric(38, 4)) <>0.0000 
-and  br=@Brr and  isnull(REVDATE,'')='' and isnull(REVREASON,'') ='' and  CCYSMEANS='NOS'
-and CCYSACCT in ('SBPPK','SBPIBB')
-and  cast(left(a.VDATE,11) as datetime)     =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
-and  cast(left(@CurrentDT,11) as datetime)  >cast(left(a.SWAPVDATE,11) as datetime) 
-and  CAST(LEFT(@CurrentDT, 11) AS DATETIME) >cast(left(a.dealdate,11) as datetime)
-union all
---===================================================================================
-
-
-select a.DEALNO, a.DEALNO+'-'+ rtrim(a.PRODCODE)+'-'+a.PRODTYPE+'-'+b.SN Des,  
-'F'  Status,
-a.DEALDATE,a.VDATE ValueDate,Null MaturityDate ,a.CTRCCY Currency,  
-
- case when a.CTRAMT >0 then  a.CTRAMT else 0 end InFlow ,
- case when a.CTRAMT <0 then  a.CTRAMT else 0 end OutFlow,0 OpeningBalance
- from OPICSDBLNK.OPICS43.dbo.fxdh a inner join OPICSDBLNK.OPICS43.dbo.cust b  on b.CNO =a.CUST
- where 
- a.CTRCCY    ='PKR' and CAST(a.CTRAMT AS numeric(38, 4)) <>0.0000 
- and  br=@Brr and  isnull(REVDATE,'')='' and isnull(REVREASON,'') =''  and CTRSMEANS='NOS'
-
- and a.SWAPVDATE is not null
- and CTRSACCT in ('SBPPK','SBPIBB')
-and  CAST(LEFT(@CurrentDT, 11) AS DATETIME)<cast(left(a.SWAPVDATE,11) as datetime) 
-and  cast(left(a.dealdate,11) as datetime) <=CAST(LEFT(a.VDATE, 11) AS DATETIME)
-and  cast(left(a.VDATE,11) as datetime)  =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
- union all
- select a.DEALNO, a.DEALNO+'-'+ rtrim(a.PRODCODE)+'-'+a.PRODTYPE+'-'+b.SN Description,  
-'M'  Status,
-a.DEALDATE,a.VDATE ValueDate,Null MaturityDate ,a.CTRCCY Currency,  
-
- case when a.CTRAMT >0 then  a.CTRAMT else 0 end InFlow ,
- case when a.CTRAMT <0 then  a.CTRAMT else 0 end OutFlow,0 OpeningBalance
- from OPICSDBLNK.OPICS43.dbo.fxdh a inner join OPICSDBLNK.OPICS43.dbo.cust b  on b.CNO =a.CUST
- where a.CTRCCY    ='PKR' and CAST(a.CTRAMT AS numeric(38, 4)) <>0.0000 
- and  br=@Brr and  isnull(REVDATE,'')='' and isnull(REVREASON,'') =''  and CTRSMEANS='NOS'
-  and a.SWAPVDATE is not null
- and CTRSACCT in ('SBPPK','SBPIBB')
-and  cast(left(a.VDATE,11) as datetime)     =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
-and  cast(left(@CurrentDT,11) as datetime)  >cast(left(a.SWAPVDATE,11) as datetime) 
-and  CAST(LEFT(@CurrentDT, 11) AS DATETIME) >cast(left(a.dealdate,11) as datetime)
+--select a.DealNo, a.DEALNO+'-'+rtrim(a.PRODCODE)+'-'+a.PRODTYPE+'-'+b.SN Description,    
+--'M' Status,
+--a.DealDate,a.Vdate,a.SWAPVDATE as MaturityDate , a.CCY Currency,  
+-- case when a.CCYAMT >0 then  a.CCYAMT else 0 end InFlow, 
+--case when a.CCYAMT <0 then  a.CCYAMT else 0 end OutFlow,0 OpeningBalance
+--from OPICSDBLNK.OPICS43.dbo.fxdh  a inner join OPICSDBLNK.OPICS43.dbo.cust b  on b.CNO =a.CUST
+--where a.CCY    ='PKR' and CAST(a.CCYAMT AS numeric(38, 4)) <>0.0000 
+--and  br=@Brr and  isnull(REVDATE,'')='' and isnull(REVREASON,'') ='' and  CCYSMEANS='NOS'
+--and CCYSACCT in ('SBPPK','SBPIBB')
+--and  cast(left(a.VDATE,11) as datetime)     =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
+--and  cast(left(@CurrentDT,11) as datetime)  >cast(left(a.SWAPVDATE,11) as datetime) 
+--and  CAST(LEFT(@CurrentDT, 11) AS DATETIME) >cast(left(a.dealdate,11) as datetime)
+--union all
+----===================================================================================
 
 
+--select a.DEALNO, a.DEALNO+'-'+ rtrim(a.PRODCODE)+'-'+a.PRODTYPE+'-'+b.SN Des,  
+--'F'  Status,
+--a.DEALDATE,a.VDATE ValueDate,Null MaturityDate ,a.CTRCCY Currency,  
+
+-- case when a.CTRAMT >0 then  a.CTRAMT else 0 end InFlow ,
+-- case when a.CTRAMT <0 then  a.CTRAMT else 0 end OutFlow,0 OpeningBalance
+-- from OPICSDBLNK.OPICS43.dbo.fxdh a inner join OPICSDBLNK.OPICS43.dbo.cust b  on b.CNO =a.CUST
+-- where 
+-- a.CTRCCY    ='PKR' and CAST(a.CTRAMT AS numeric(38, 4)) <>0.0000 
+-- and  br=@Brr and  isnull(REVDATE,'')='' and isnull(REVREASON,'') =''  and CTRSMEANS='NOS'
+
+-- and a.SWAPVDATE is not null
+-- and CTRSACCT in ('SBPPK','SBPIBB')
+--and  CAST(LEFT(@CurrentDT, 11) AS DATETIME)<cast(left(a.SWAPVDATE,11) as datetime) 
+--and  cast(left(a.dealdate,11) as datetime) <=CAST(LEFT(a.VDATE, 11) AS DATETIME)
+--and  cast(left(a.VDATE,11) as datetime)  =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
+-- union all
+-- select a.DEALNO, a.DEALNO+'-'+ rtrim(a.PRODCODE)+'-'+a.PRODTYPE+'-'+b.SN Description,  
+--'M'  Status,
+--a.DEALDATE,a.VDATE ValueDate,Null MaturityDate ,a.CTRCCY Currency,  
+
+-- case when a.CTRAMT >0 then  a.CTRAMT else 0 end InFlow ,
+-- case when a.CTRAMT <0 then  a.CTRAMT else 0 end OutFlow,0 OpeningBalance
+-- from OPICSDBLNK.OPICS43.dbo.fxdh a inner join OPICSDBLNK.OPICS43.dbo.cust b  on b.CNO =a.CUST
+-- where a.CTRCCY    ='PKR' and CAST(a.CTRAMT AS numeric(38, 4)) <>0.0000 
+-- and  br=@Brr and  isnull(REVDATE,'')='' and isnull(REVREASON,'') =''  and CTRSMEANS='NOS'
+--  and a.SWAPVDATE is not null
+-- and CTRSACCT in ('SBPPK','SBPIBB')
+--and  cast(left(a.VDATE,11) as datetime)     =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
+--and  cast(left(@CurrentDT,11) as datetime)  >cast(left(a.SWAPVDATE,11) as datetime) 
+--and  CAST(LEFT(@CurrentDT, 11) AS DATETIME) >cast(left(a.dealdate,11) as datetime)
 
 
 
- UNION all
---  --=======================================================================================================================
--- --======================================       RPRH          ============================================================
--- --=======================================================================================================================
- select a.DEALNO,
-a.DealNo+'-'+rtrim(a.PRODUCT)+'-'+a.PRODTYPE+'-'+b.SN 
- Description,
-'F' Status,
-a.DEALDATE as Deal_date,
-a.VDATE as ValueDate,
-a.MATDATE as MaturityDate,
-a.CCY as Currency,
-0 'InFlow',
-a.COMPROCDAMT 'OutFlow',
-0 OpeningBalance
-from OPICSDBLNK.OPICS43.dbo.RPRH a inner join OPICSDBLNK.OPICS43.dbo.cust b on b.CNO =a.CNO
- where a.CCY    ='PKR' and CAST(a.COMPROCDAMT AS numeric(38, 4)) <>0.0000  and a.PRODTYPE='RB'
- and  br=@Brr  and  isnull(REVDATE,'')='' and isnull(REVREASON,'') =''  and a.COMCCYSMEANS='NOS'
- and a.COMCCYSACCT in ('SBPPK','SBPIBB')  and  cast(left(a.VDATE,11) as datetime)=CAST(LEFT(@CurrentDT, 11) AS DATETIME)
+
+
+-- UNION all
+----  --=======================================================================================================================
+---- --======================================       RPRH          ============================================================
+---- --=======================================================================================================================
+-- select a.DEALNO,
+--a.DealNo+'-'+rtrim(a.PRODUCT)+'-'+a.PRODTYPE+'-'+b.SN 
+-- Description,
+--'F' Status,
+--a.DEALDATE as Deal_date,
+--a.VDATE as ValueDate,
+--a.MATDATE as MaturityDate,
+--a.CCY as Currency,
+--0 'InFlow',
+--a.COMPROCDAMT 'OutFlow',
+--0 OpeningBalance
+--from OPICSDBLNK.OPICS43.dbo.RPRH a inner join OPICSDBLNK.OPICS43.dbo.cust b on b.CNO =a.CNO
+-- where a.CCY    ='PKR' and CAST(a.COMPROCDAMT AS numeric(38, 4)) <>0.0000  and a.PRODTYPE='RB'
+-- and  br=@Brr  and  isnull(REVDATE,'')='' and isnull(REVREASON,'') =''  and a.COMCCYSMEANS='NOS'
+-- and a.COMCCYSACCT in ('SBPPK','SBPIBB')  and  cast(left(a.VDATE,11) as datetime)=CAST(LEFT(@CurrentDT, 11) AS DATETIME)
  
- union all
+-- union all
 
- select a.DEALNO,
-a.DealNo+'-'+rtrim(a.PRODUCT)+'-'+a.PRODTYPE+'-'+b.SN  Description,'M' Status,
-a.DEALDATE as Deal_date,a.VDATE as ValueDate,a.MATDATE as MaturityDate,a.CCY as Currency,a.MATPROCDAMT 'InFlow',0 'OutFlow',
-0 OpeningBalance
- from OPICSDBLNK.OPICS43.dbo.RPRH a inner join OPICSDBLNK.OPICS43.dbo.cust b  on b.CNO =a.CNO
- where a.CCY    ='PKR' and CAST(a.MATPROCDAMT AS numeric(38, 4)) <>0.0000  and a.PRODTYPE='RB'
- and  br=@Brr  and  isnull(REVDATE,'')='' and isnull(REVREASON,'') =''  and a.MATCCYSMEANS='NOS'
- and a.MATCCYSACCT in ('SBPPK','SBPIBB')
- and  cast(left(a.MATDATE,11) as datetime)  =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
- union all
+-- select a.DEALNO,
+--a.DealNo+'-'+rtrim(a.PRODUCT)+'-'+a.PRODTYPE+'-'+b.SN  Description,'M' Status,
+--a.DEALDATE as Deal_date,a.VDATE as ValueDate,a.MATDATE as MaturityDate,a.CCY as Currency,a.MATPROCDAMT 'InFlow',0 'OutFlow',
+--0 OpeningBalance
+-- from OPICSDBLNK.OPICS43.dbo.RPRH a inner join OPICSDBLNK.OPICS43.dbo.cust b  on b.CNO =a.CNO
+-- where a.CCY    ='PKR' and CAST(a.MATPROCDAMT AS numeric(38, 4)) <>0.0000  and a.PRODTYPE='RB'
+-- and  br=@Brr  and  isnull(REVDATE,'')='' and isnull(REVREASON,'') =''  and a.MATCCYSMEANS='NOS'
+-- and a.MATCCYSACCT in ('SBPPK','SBPIBB')
+-- and  cast(left(a.MATDATE,11) as datetime)  =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
+-- union all
 
- select 
-a.DEALNO,
-a.DealNo+'-'+rtrim(a.PRODUCT)+'-'+a.PRODTYPE+'-'+b.sn as Description,
-'F' as Status,
-a.DEALDATE as Deal_date,
-a.VDATE as ValueDate,
-a.MATDATE as MaturityDate,
-a.CCY as Currency,
-a.COMPROCDAMT as 'InFlow',
-0 as 'OutFlow',
-0 as OpeningBalance 
- from OPICSDBLNK.OPICS43.dbo.RPRH a inner join OPICSDBLNK.OPICS43.dbo.cust b  on b.CNO =a.CNO
- where a.CCY    ='PKR' and CAST(a.COMPROCDAMT AS numeric(38, 4)) <>0.0000  and a.PRODTYPE='RS'
- and  br=@Brr  and  isnull(REVDATE,'')='' and isnull(REVREASON,'') =''  and a.COMCCYSMEANS='NOS'
- and a.COMCCYSACCT in ('SBPPK','SBPIBB')  and  cast(left(a.VDATE,11) as datetime)=CAST(LEFT(@CurrentDT, 11) AS DATETIME)
- union all
+-- select 
+--a.DEALNO,
+--a.DealNo+'-'+rtrim(a.PRODUCT)+'-'+a.PRODTYPE+'-'+b.sn as Description,
+--'F' as Status,
+--a.DEALDATE as Deal_date,
+--a.VDATE as ValueDate,
+--a.MATDATE as MaturityDate,
+--a.CCY as Currency,
+--a.COMPROCDAMT as 'InFlow',
+--0 as 'OutFlow',
+--0 as OpeningBalance 
+-- from OPICSDBLNK.OPICS43.dbo.RPRH a inner join OPICSDBLNK.OPICS43.dbo.cust b  on b.CNO =a.CNO
+-- where a.CCY    ='PKR' and CAST(a.COMPROCDAMT AS numeric(38, 4)) <>0.0000  and a.PRODTYPE='RS'
+-- and  br=@Brr  and  isnull(REVDATE,'')='' and isnull(REVREASON,'') =''  and a.COMCCYSMEANS='NOS'
+-- and a.COMCCYSACCT in ('SBPPK','SBPIBB')  and  cast(left(a.VDATE,11) as datetime)=CAST(LEFT(@CurrentDT, 11) AS DATETIME)
+-- union all
 
- select a.DEALNO,
-a.DealNo+'-'+rtrim(a.PRODUCT)+'-'+a.PRODTYPE+'-'+b.sn Description,'M' Status,
-a.DEALDATE as Deal_date,a.VDATE as ValueDate,a.MATDATE as MaturityDate,a.CCY as Currency,0 'InFlow',a.MATPROCDAMT 'OutFlow',
-0 OpeningBalance
- from OPICSDBLNK.OPICS43.dbo.RPRH a inner join OPICSDBLNK.OPICS43.dbo.cust b  on b.CNO =a.CNO
- where a.CCY    ='PKR' and CAST(a.MATPROCDAMT AS numeric(38, 4)) <>0.0000  and a.PRODTYPE='RS'
- and  br=@Brr  and  isnull(REVDATE,'')='' and isnull(REVREASON,'') =''  and a.MATCCYSMEANS='NOS'
- and a.MATCCYSACCT in ('SBPPK','SBPIBB')
- and  cast(left(a.MATDATE,11) as datetime)  =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
------- --=======================================================================================================================
------- --======================================       TPOS          ============================================================
------- --=======================================================================================================================
-  union all
- Select 0 DealNo,a.secid+'-' +(CONVERT(Varchar(12),b.MDATE)) Description, 'M' Status,null  as DealDate,null ValueDate ,
-b.mdate MaturityDate,a.ccy  Currency ,case when a.prinamt< 0 then  a.prinamt*-1 else  a.prinamt end 'InFlow',0 'Outflow'
-, 0.00 OpeningBalance from OPICSDBLNK.OPICS43.dbo.tpos a
-inner join OPICSDBLNK.OPICS43.dbo.secm b on a.PRODUCT =b.PRODUCT AND b.SECID = a.SECID
-inner join OPICSDBLNK.OPICS43.dbo.BRPS c on c.BR = a.BR
-where a.PRINAMT <>'0'
-and a.product in ('tbill','bond','SUKUK')
---AND TPOS.PRODTYPE = SECM.PRODTYPE
-and cast(left(b.mDATE,11) as datetime)  =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
-AND a.BR =@Brr 
-and mktval <> '0'
-union all
-----=======================================================================================================================
--- --======================================  BOND, SUKUK,PIB   ============================================================
--- --=======================================================================================================================
+-- select a.DEALNO,
+--a.DealNo+'-'+rtrim(a.PRODUCT)+'-'+a.PRODTYPE+'-'+b.sn Description,'M' Status,
+--a.DEALDATE as Deal_date,a.VDATE as ValueDate,a.MATDATE as MaturityDate,a.CCY as Currency,0 'InFlow',a.MATPROCDAMT 'OutFlow',
+--0 OpeningBalance
+-- from OPICSDBLNK.OPICS43.dbo.RPRH a inner join OPICSDBLNK.OPICS43.dbo.cust b  on b.CNO =a.CNO
+-- where a.CCY    ='PKR' and CAST(a.MATPROCDAMT AS numeric(38, 4)) <>0.0000  and a.PRODTYPE='RS'
+-- and  br=@Brr  and  isnull(REVDATE,'')='' and isnull(REVREASON,'') =''  and a.MATCCYSMEANS='NOS'
+-- and a.MATCCYSACCT in ('SBPPK','SBPIBB')
+-- and  cast(left(a.MATDATE,11) as datetime)  =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
+-------- --=======================================================================================================================
+-------- --======================================       TPOS          ============================================================
+-------- --=======================================================================================================================
+--  union all
+-- Select 0 DealNo,a.secid+'-' +(CONVERT(Varchar(12),b.MDATE)) Description, 'M' Status,null  as DealDate,null ValueDate ,
+--b.mdate MaturityDate,a.ccy  Currency ,case when a.prinamt< 0 then  a.prinamt*-1 else  a.prinamt end 'InFlow',0 'Outflow'
+--, 0.00 OpeningBalance from OPICSDBLNK.OPICS43.dbo.tpos a
+--inner join OPICSDBLNK.OPICS43.dbo.secm b on a.PRODUCT =b.PRODUCT AND b.SECID = a.SECID
+--inner join OPICSDBLNK.OPICS43.dbo.BRPS c on c.BR = a.BR
+--where a.PRINAMT <>'0'
+--and a.product in ('tbill','bond','SUKUK')
+----AND TPOS.PRODTYPE = SECM.PRODTYPE
+--and cast(left(b.mDATE,11) as datetime)  =CAST(LEFT(@CurrentDT, 11) AS DATETIME)
+--AND a.BR =@Brr 
+--and mktval <> '0'
+--union all
+------=======================================================================================================================
+---- --======================================  BOND, SUKUK,PIB   ============================================================
+---- --=======================================================================================================================
 
 
-select 
-0 DealNo, ltrim(rtrim(ACCOUNTNO))+'-'+ltrim(rtrim(ACCTTITLE))+'--'+SECID Description,
-'M' Status, 
-null  DealDate ,
-null  ValueDate, 
-MDATE MaturityDate,
-'PKR' Currency,
-case when sum(PRINCIPAL)<0 then sum(PRINCIPAL) *-1 else  sum(PRINCIPAL) end InFlow, 
-0 OutFlow,0 OpeningBalance
-from(
-SELECT a.ACCOUNTNO,b.ACCTTITLE,a.SECID,c.MDATE,
-       ((a.PURCHQTY-a.SALEQTY)) PRINCIPAL
-FROM OPICSDBLNK.OPICS43.dbo.SACH  a inner join OPICSDBLNK.OPICS43.dbo.SACC b
-on a.ACCOUNTNO = b.ACCOUNTNO AND a.BR = b.BR
-inner join OPICSDBLNK.OPICS43.dbo.SECM c on c.SECID = a.SECID and c.ccy='PKR'
-WHERE 
- cast(left(c.MDATE,11) as datetime)  =  cast(left(@CurrentDT,11) as datetime)
-AND a.PURCHQTY-a.SALEQTY <> 0
-and a.br=@Brr
-UNION all 
-SELECT '1','HBL BANK HOLDINGS',a.SECID,c.MDATE,
-a.SETTQTY PRINCIPAL
-FROM 
-OPICSDBLNK.OPICS43.dbo.TPOS a inner join 
-OPICSDBLNK.OPICS43.dbo.SECM c on  c.SECID = a.SECID and  c.ccy=a.ccy and a.ccy='PKR'
-AND a.SETTQTY <> 0 and a.ccy='PKR'
-where  cast(left(c.MDATE,11) as datetime)  =   cast(left(@CurrentDT,11) as datetime)) a
-group by ACCOUNTNO,ACCTTITLE,SECID,MDATE
+--select 
+--0 DealNo, ltrim(rtrim(ACCOUNTNO))+'-'+ltrim(rtrim(ACCTTITLE))+'--'+SECID Description,
+--'M' Status, 
+--null  DealDate ,
+--null  ValueDate, 
+--MDATE MaturityDate,
+--'PKR' Currency,
+--case when sum(PRINCIPAL)<0 then sum(PRINCIPAL) *-1 else  sum(PRINCIPAL) end InFlow, 
+--0 OutFlow,0 OpeningBalance
+--from(
+--SELECT a.ACCOUNTNO,b.ACCTTITLE,a.SECID,c.MDATE,
+--       ((a.PURCHQTY-a.SALEQTY)) PRINCIPAL
+--FROM OPICSDBLNK.OPICS43.dbo.SACH  a inner join OPICSDBLNK.OPICS43.dbo.SACC b
+--on a.ACCOUNTNO = b.ACCOUNTNO AND a.BR = b.BR
+--inner join OPICSDBLNK.OPICS43.dbo.SECM c on c.SECID = a.SECID and c.ccy='PKR'
+--WHERE 
+-- cast(left(c.MDATE,11) as datetime)  =  cast(left(@CurrentDT,11) as datetime)
+--AND a.PURCHQTY-a.SALEQTY <> 0
+--and a.br=@Brr
+--UNION all 
+--SELECT '1','HBL BANK HOLDINGS',a.SECID,c.MDATE,
+--a.SETTQTY PRINCIPAL
+--FROM 
+--OPICSDBLNK.OPICS43.dbo.TPOS a inner join 
+--OPICSDBLNK.OPICS43.dbo.SECM c on  c.SECID = a.SECID and  c.ccy=a.ccy and a.ccy='PKR'
+--AND a.SETTQTY <> 0 and a.ccy='PKR'
+--where  cast(left(c.MDATE,11) as datetime)  =   cast(left(@CurrentDT,11) as datetime)) a
+--group by ACCOUNTNO,ACCTTITLE,SECID,MDATE
 
-union all
-SELECT 
-0 DealNo ,
-ltrim(rtrim(a.ACCOUNTNO))+'-'+ltrim(rtrim(c.ACCTTITLE))+'--'+a.SECID Description,
-'M' Status ,
- null DealDate,                
- null ValueDate,              
- b.INTENDDTE MaturityDate,
- 'PKR' Currency,
-((a.PURCHQTY-a.SALEQTY)*b.INTPAYAMT_8)  Inflow,
- 0 OutFlow
- ,0 OpeningBalance
-FROM 
-OPICSDBLNK.OPICS43.dbo.SACH a 
-inner join OPICSDBLNK.OPICS43.dbo.SECS b on  b.SECID = a.SECID 
-inner join OPICSDBLNK.OPICS43.dbo.SACC c on a.ACCOUNTNO = c.ACCOUNTNO
-AND a.BR = c.BR and a.br=@Brr --and c.ccy='PKR'
-WHERE 
- cast(left(b.INTENDDTE,11) as datetime) =   cast(left(@CurrentDT,11) as datetime)
-and  a.PURCHQTY-a.SALEQTY <> 0
-) a
-Select  @CurrentDT=cast(GETDATE()-1 as date)
+--union all
+--SELECT 
+--0 DealNo ,
+--ltrim(rtrim(a.ACCOUNTNO))+'-'+ltrim(rtrim(c.ACCTTITLE))+'--'+a.SECID Description,
+--'M' Status ,
+-- null DealDate,                
+-- null ValueDate,              
+-- b.INTENDDTE MaturityDate,
+-- 'PKR' Currency,
+--((a.PURCHQTY-a.SALEQTY)*b.INTPAYAMT_8)  Inflow,
+-- 0 OutFlow
+-- ,0 OpeningBalance
+--FROM 
+--OPICSDBLNK.OPICS43.dbo.SACH a 
+--inner join OPICSDBLNK.OPICS43.dbo.SECS b on  b.SECID = a.SECID 
+--inner join OPICSDBLNK.OPICS43.dbo.SACC c on a.ACCOUNTNO = c.ACCOUNTNO
+--AND a.BR = c.BR and a.br=@Brr --and c.ccy='PKR'
+--WHERE 
+-- cast(left(b.INTENDDTE,11) as datetime) =   cast(left(@CurrentDT,11) as datetime)
+--and  a.PURCHQTY-a.SALEQTY <> 0
+--) a
+
+Select  @CurrentDT=cast(GETDATE() as date)
+select @KarachiTotal = SUM(NetBalance) from SBP_BlotterManualData where cast(DateFor as date)=@CurrentDT
+
 
 
 
@@ -1167,3 +1181,31 @@ UserID int not null Constraint FK_SBP_BlotterCRRReportCalcSetup_UserID Foreign k
 )
 
 --insert into SBP_BlotterCRRReportCalcSetup(CalcVal1,CalcVal2,isActive,CreatedDate,UserID) values(3,5,1,GETDATE(),10)
+
+
+
+--drop table SBP_BlotterManualData
+create table SBP_BlotterManualData(
+SNo bigint identity not null,
+DataType varchar(100),
+Inflow numeric,
+OutFlow numeric,
+NetBalance numeric,
+DateFor DateTime,
+UserID int not null Constraint FK_SBP_BlotterManualData_UserID Foreign key References SBP_LoginInfo(ID),
+CreateDate DATETIME,
+UpdateDate DATETIME,
+BR int,
+CurID int not null Constraint FK_SBP_BlotterManualData_CurID Foreign key References Currencies(CID),
+Flag varchar(2),
+Constraint PK_SBP_BlotterManualData_SNo primary key  clustered (SNo))
+
+
+select* from SBP_BlotterManualData
+
+--insert into SBP_BlotterManualData(DataType,Inflow,OutFlow,NetBalance,DateFor,UserID,CreateDate,BR,CurID) values('DLDT',150000000,130000000,150000000+130000000,GETDATE(),10,GETDATE(),1,1)
+--insert into SBP_BlotterManualData(DataType,Inflow,OutFlow,NetBalance,DateFor,UserID,CreateDate,BR,CurID) values('SPSH',850000000,490000000,850000000+490000000,GETDATE(),10,GETDATE(),1,1)
+--insert into SBP_BlotterManualData(DataType,Inflow,OutFlow,NetBalance,DateFor,UserID,CreateDate,BR,CurID) values('FXDH',90000000,70000000,90000000+70000000,GETDATE(),10,GETDATE(),1,1)
+--insert into SBP_BlotterManualData(DataType,Inflow,OutFlow,NetBalance,DateFor,UserID,CreateDate,BR,CurID) values('RPRH',432000000,23500000,432000000+23500000,GETDATE(),10,GETDATE(),1,1)
+--insert into SBP_BlotterManualData(DataType,Inflow,OutFlow,NetBalance,DateFor,UserID,CreateDate,BR,CurID) values('TPOS',100000,90000,100000+90000,GETDATE(),10,GETDATE(),1,1)
+--insert into SBP_BlotterManualData(DataType,Inflow,OutFlow,NetBalance,DateFor,UserID,CreateDate,BR,CurID) values('Bond',189520000,125840000,189520000+125840000,GETDATE(),10,GETDATE(),1,1)

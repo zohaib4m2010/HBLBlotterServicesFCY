@@ -12,7 +12,9 @@ namespace WebApiServices.Models
         public Nullable<System.DateTime> Clearing_Date { get; set; }
         public string ClearingCOde { get; set; }
         public Nullable<decimal> Clearing_InFlow { get; set; }
+        public Nullable<decimal> AdjClearing_InFlow { get; set; }
         public Nullable<decimal> Clearing_OutFLow { get; set; }
+        public Nullable<decimal> AdjClearing_OutFLow { get; set; }
         public string Note { get; set; }
         public int UserID { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
