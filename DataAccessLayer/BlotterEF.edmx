@@ -251,6 +251,23 @@
           <Property Name="CashOutFlow-14" Type="numeric" Precision="19" Scale="4" />
           <Property Name="BR" Type="varchar" MaxLength="2" />
         </EntityType>
+        <EntityType Name="SBP_BlotterManualData">
+          <Key>
+            <PropertyRef Name="SNo" />
+          </Key>
+          <Property Name="SNo" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DataType" Type="varchar" MaxLength="100" />
+          <Property Name="Inflow" Type="numeric" Precision="18" Scale="0" />
+          <Property Name="OutFlow" Type="numeric" Precision="18" Scale="0" />
+          <Property Name="NetBalance" Type="numeric" Precision="18" Scale="0" />
+          <Property Name="DateFor" Type="datetime" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="UpdateDate" Type="datetime" />
+          <Property Name="BR" Type="int" />
+          <Property Name="CurID" Type="int" Nullable="false" />
+          <Property Name="Flag" Type="varchar" MaxLength="2" />
+        </EntityType>
         <EntityType Name="SBP_BlotterManualDeals">
           <Key>
             <PropertyRef Name="SNo" />
@@ -474,6 +491,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SBP_BlotterManualData_UserID">
+          <End Role="SBP_LoginInfo" Type="Self.SBP_LoginInfo" Multiplicity="1" />
+          <End Role="SBP_BlotterManualData" Type="Self.SBP_BlotterManualData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SBP_LoginInfo">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SBP_BlotterManualData">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_SBP_BlotterTBO_BranchID">
           <End Role="Branches" Type="Self.Branches" Multiplicity="1" />
           <End Role="SBP_BlotterTBO" Type="Self.SBP_BlotterTBO" Multiplicity="*" />
@@ -613,6 +642,10 @@
         <Function Name="SP_GetNotListedUserPageRelations" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Roleid" Type="int" Mode="In" />
         </Function>
+        <Function Name="SP_GetOPICSManualData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="BR" Type="int" Mode="In" />
+          <Parameter Name="Date" Type="datetime" Mode="In" />
+        </Function>
         <Function Name="SP_GetSBPBlotterCRRFINCON" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UserID" Type="int" Mode="In" />
           <Parameter Name="BranchID" Type="int" Mode="In" />
@@ -671,6 +704,7 @@
           <EntitySet Name="SBP_BlotterCRRReportDaysWiseBal" EntityType="Self.SBP_BlotterCRRReportDaysWiseBal" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SBP_BlotterDTL" EntityType="Self.SBP_BlotterDTL" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SBP_BlotterDTLDaysWiseBal" EntityType="Self.SBP_BlotterDTLDaysWiseBal" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SBP_BlotterManualData" EntityType="Self.SBP_BlotterManualData" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SBP_BlotterManualDeals" EntityType="Self.SBP_BlotterManualDeals" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SBP_BlotterOpening" EntityType="Self.SBP_BlotterOpening" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SBP_BlotterSetup" EntityType="Self.SBP_BlotterSetup" Schema="dbo" store:Type="Tables" />
@@ -708,6 +742,10 @@
           <AssociationSet Name="FK_SBP_BlotterCRRReportCalcSetup_UserID" Association="Self.FK_SBP_BlotterCRRReportCalcSetup_UserID">
             <End Role="SBP_LoginInfo" EntitySet="SBP_LoginInfo" />
             <End Role="SBP_BlotterCRRReportCalcSetup" EntitySet="SBP_BlotterCRRReportCalcSetup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SBP_BlotterManualData_UserID" Association="Self.FK_SBP_BlotterManualData_UserID">
+            <End Role="SBP_LoginInfo" EntitySet="SBP_LoginInfo" />
+            <End Role="SBP_BlotterManualData" EntitySet="SBP_BlotterManualData" />
           </AssociationSet>
           <AssociationSet Name="FK_SBP_BlotterTBO_BranchID" Association="Self.FK_SBP_BlotterTBO_BranchID">
             <End Role="Branches" EntitySet="Branches" />
@@ -916,6 +954,15 @@
             <Parameter Name="BranchID" Mode="In" Type="Int32" />
             <Parameter Name="CurID" Mode="In" Type="Int32" />
             <Parameter Name="BR" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="SBP_BlotterManualData" EntityType="BlotterEF.SBP_BlotterManualData" />
+          <AssociationSet Name="FK_SBP_BlotterManualData_UserID" Association="BlotterEF.FK_SBP_BlotterManualData_UserID">
+            <End Role="SBP_LoginInfo" EntitySet="SBP_LoginInfo" />
+            <End Role="SBP_BlotterManualData" EntitySet="SBP_BlotterManualData" />
+          </AssociationSet>
+          <FunctionImport Name="SP_GetOPICSManualData" ReturnType="Collection(BlotterEF.SP_GetOPICSManualData_Result)">
+            <Parameter Name="BR" Mode="In" Type="Int32" />
+            <Parameter Name="Date" Mode="In" Type="DateTime" />
           </FunctionImport>
           </EntityContainer>        
         <ComplexType Name="SP_SBPBlotter_Result">
@@ -1169,6 +1216,7 @@
           <NavigationProperty Name="SBP_BlotterTBO" Relationship="BlotterEF.FK_SBP_BlotterTBO_UserID" FromRole="SBP_LoginInfo" ToRole="SBP_BlotterTBO" />
           <NavigationProperty Name="SBP_BlotterClearing" Relationship="BlotterEF.FK_SBP_BlotterClearing_UserID" FromRole="SBP_LoginInfo" ToRole="SBP_BlotterClearing" />
           <NavigationProperty Name="SBP_BlotterTrade" Relationship="BlotterEF.FK_SBP_BlotterTrade_UserID" FromRole="SBP_LoginInfo" ToRole="SBP_BlotterTrade" />
+          <NavigationProperty Name="SBP_BlotterManualData" Relationship="BlotterEF.FK_SBP_BlotterManualData_UserID" FromRole="SBP_LoginInfo" ToRole="SBP_BlotterManualData" />
           </EntityType>
         <Association Name="FK_URRUserID">
           <End Type="BlotterEF.SBP_LoginInfo" Role="SBP_LoginInfo" Multiplicity="1" />
@@ -1763,6 +1811,44 @@
           <Property Type="Int32" Name="BID" Nullable="false" />
           <Property Type="Int32" Name="CurID" Nullable="false" />
           <Property Type="String" Name="Flag" Nullable="true" MaxLength="2" />
+        </ComplexType>
+        <EntityType Name="SBP_BlotterManualData">
+          <Key>
+            <PropertyRef Name="SNo" />
+          </Key>
+          <Property Name="SNo" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DataType" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Inflow" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="OutFlow" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="NetBalance" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="DateFor" Type="DateTime" Precision="3" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="3" />
+          <Property Name="BR" Type="Int32" />
+          <Property Name="CurID" Type="Int32" Nullable="false" />
+          <Property Name="Flag" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="SBP_LoginInfo" Relationship="BlotterEF.FK_SBP_BlotterManualData_UserID" FromRole="SBP_BlotterManualData" ToRole="SBP_LoginInfo" />
+        </EntityType>
+        <Association Name="FK_SBP_BlotterManualData_UserID">
+          <End Type="BlotterEF.SBP_LoginInfo" Role="SBP_LoginInfo" Multiplicity="1" />
+          <End Type="BlotterEF.SBP_BlotterManualData" Role="SBP_BlotterManualData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SBP_LoginInfo">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SBP_BlotterManualData">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="SP_GetOPICSManualData_Result">
+          <Property Type="Int64" Name="SNo" Nullable="false" />
+          <Property Type="String" Name="DataType" Nullable="true" MaxLength="100" />
+          <Property Type="Decimal" Name="Inflow" Nullable="true" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="OutFlow" Nullable="true" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="NetBalance" Nullable="true" Precision="18" Scale="0" />
+          <Property Type="DateTime" Name="DateFor" Nullable="true" Precision="23" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -2493,6 +2579,36 @@
                 <ScalarProperty Name="BID" ColumnName="BID" />
                 <ScalarProperty Name="CurID" ColumnName="CurID" />
                 <ScalarProperty Name="Flag" ColumnName="Flag" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="SBP_BlotterManualData">
+            <EntityTypeMapping TypeName="BlotterEF.SBP_BlotterManualData">
+              <MappingFragment StoreEntitySet="SBP_BlotterManualData">
+                <ScalarProperty Name="Flag" ColumnName="Flag" />
+                <ScalarProperty Name="CurID" ColumnName="CurID" />
+                <ScalarProperty Name="BR" ColumnName="BR" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="DateFor" ColumnName="DateFor" />
+                <ScalarProperty Name="NetBalance" ColumnName="NetBalance" />
+                <ScalarProperty Name="OutFlow" ColumnName="OutFlow" />
+                <ScalarProperty Name="Inflow" ColumnName="Inflow" />
+                <ScalarProperty Name="DataType" ColumnName="DataType" />
+                <ScalarProperty Name="SNo" ColumnName="SNo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SP_GetOPICSManualData" FunctionName="BlotterEF.Store.SP_GetOPICSManualData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BlotterEF.SP_GetOPICSManualData_Result">
+                <ScalarProperty Name="SNo" ColumnName="SNo" />
+                <ScalarProperty Name="DataType" ColumnName="DataType" />
+                <ScalarProperty Name="Inflow" ColumnName="Inflow" />
+                <ScalarProperty Name="OutFlow" ColumnName="OutFlow" />
+                <ScalarProperty Name="NetBalance" ColumnName="NetBalance" />
+                <ScalarProperty Name="DateFor" ColumnName="DateFor" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

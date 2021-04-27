@@ -96,6 +96,9 @@
     <Compile Include="SBP_BlotterDTLDaysWiseBal.cs">
       <DependentUpon>BlotterEF.tt</DependentUpon>
     </Compile>
+    <Compile Include="SBP_BlotterManualData.cs">
+      <DependentUpon>BlotterEF.tt</DependentUpon>
+    </Compile>
     <Compile Include="SBP_BlotterManualDeals.cs">
       <DependentUpon>BlotterEF.tt</DependentUpon>
     </Compile>
@@ -145,6 +148,9 @@
       <DependentUpon>BlotterEF.tt</DependentUpon>
     </Compile>
     <Compile Include="SP_GetNotListedUserPageRelations_Result.cs">
+      <DependentUpon>BlotterEF.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SP_GetOPICSManualData_Result.cs">
       <DependentUpon>BlotterEF.tt</DependentUpon>
     </Compile>
     <Compile Include="SP_GetSBPBlotterCRRFINCON_Result.cs">

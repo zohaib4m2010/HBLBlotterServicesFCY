@@ -48,6 +48,33 @@ Constraint PK_Branches primary key clustered(BID)
 select* From Branches
 
 
+--insert into Branches(BranchCode,BranchName) values('1002','Hyderabad')
+
+--insert into Branches(BranchCode,BranchName) values('1003','Sukkur')
+
+--insert into Branches(BranchCode,BranchName) values('1004','Lahore')
+
+--insert into Branches(BranchCode,BranchName) values('1005','Faisalabad')
+
+--insert into Branches(BranchCode,BranchName) values('1006','Gujranwala')
+
+--insert into Branches(BranchCode,BranchName) values('1007','Multan')
+
+--insert into Branches(BranchCode,BranchName) values('1008','Sialkot')
+
+--insert into Branches(BranchCode,BranchName) values('1009','Islamabad')
+
+--insert into Branches(BranchCode,BranchName) values('1010','RawalPindi')
+
+--insert into Branches(BranchCode,BranchName) values('1011','Peshawar')
+
+--insert into Branches(BranchCode,BranchName) values('1012','Bahawalpur')
+
+--insert into Branches(BranchCode,BranchName) values('1013','Muzafarabad')
+
+--insert into Branches(BranchCode,BranchName) values('1014','DIKhan')
+
+--insert into Branches(BranchCode,BranchName) values('1015','Quetta')
 
 
 --Drop Table if exists  Currencies
@@ -98,6 +125,8 @@ URID int not null COnstraint FK_URURID Foreign key References UserRole(URID),
 )
 
 select * from UserRoleRelation
+
+--update UserRoleRelation set URID=3 where URRID > 1
 
 
 --Drop Table if exists  WebPages;
@@ -1183,7 +1212,7 @@ UserID int not null Constraint FK_SBP_BlotterCRRReportCalcSetup_UserID Foreign k
 --insert into SBP_BlotterCRRReportCalcSetup(CalcVal1,CalcVal2,isActive,CreatedDate,UserID) values(3,5,1,GETDATE(),10)
 
 
-
+--truncate table SBP_BlotterManualData
 --drop table SBP_BlotterManualData
 create table SBP_BlotterManualData(
 SNo bigint identity not null,
@@ -1209,3 +1238,8 @@ select* from SBP_BlotterManualData
 --insert into SBP_BlotterManualData(DataType,Inflow,OutFlow,NetBalance,DateFor,UserID,CreateDate,BR,CurID) values('RPRH',432000000,23500000,432000000+23500000,GETDATE(),10,GETDATE(),1,1)
 --insert into SBP_BlotterManualData(DataType,Inflow,OutFlow,NetBalance,DateFor,UserID,CreateDate,BR,CurID) values('TPOS',100000,90000,100000+90000,GETDATE(),10,GETDATE(),1,1)
 --insert into SBP_BlotterManualData(DataType,Inflow,OutFlow,NetBalance,DateFor,UserID,CreateDate,BR,CurID) values('Bond',189520000,125840000,189520000+125840000,GETDATE(),10,GETDATE(),1,1)
+
+
+alter proc SP_GetOPICSManualData(@BR int,@Date Datetime)
+as
+select SNo,DataType,Inflow,OutFlow,NetBalance,DateFor From SBP_BlotterManualData where cast(DateFor as date)=cast(@Date as date) and BR=@BR

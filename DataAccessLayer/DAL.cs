@@ -27,6 +27,12 @@ namespace DataAccessLayer
             var results = DbContextB.SP_GETLatestBlotterDTLReportDayWise(BR).ToList();
             return results;
         }
+
+        public static List<SP_GetOPICSManualData_Result> GetOPICSManualData(int BR,DateTime Date)
+        {
+            var results = DbContextB.SP_GetOPICSManualData(BR,Date).ToList();
+            return results;
+        }
         public static BlotterSumEmail GetAllBlotterDataSum(String BrCode)
         {
             var results = DbContextB.SP_SBPBlotter(BrCode);

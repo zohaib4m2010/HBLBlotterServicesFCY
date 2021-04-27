@@ -39,6 +39,8 @@
         <AssociationConnector Association="BlotterEF.FK_SBP_BlotterTrade_BranchID" />
         <AssociationConnector Association="BlotterEF.FK_SBP_BlotterClearing_UserID" />
         <AssociationConnector Association="BlotterEF.FK_SBP_BlotterTrade_UserID" />
+        <EntityTypeShape EntityType="BlotterEF.SBP_BlotterManualData" Width="1.5" PointX="12.875" PointY="13.75" />
+        <AssociationConnector Association="BlotterEF.FK_SBP_BlotterManualData_UserID" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

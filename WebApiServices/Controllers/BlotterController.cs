@@ -58,5 +58,22 @@ namespace WebApiServices.Controllers
 
 
         }
+
+        // GET:   
+        [HttpGet]
+        public JsonResult<List<Models.SP_GetOPICSManualData_Result>> GetOPICSManualData(int BR,string Date)
+        {
+
+            EntityMapperBlotter<DataAccessLayer.SP_GetOPICSManualData_Result, Models.SP_GetOPICSManualData_Result> mapObj = new EntityMapperBlotter<DataAccessLayer.SP_GetOPICSManualData_Result, Models.SP_GetOPICSManualData_Result>();
+            List<DataAccessLayer.SP_GetOPICSManualData_Result> dalEmail = DAL.GetOPICSManualData(BR,Convert.ToDateTime(Date));
+            List<Models.SP_GetOPICSManualData_Result> SumForEmail = new List<Models.SP_GetOPICSManualData_Result>();
+            foreach (var item in dalEmail)
+            {
+                SumForEmail.Add(mapObj.Translate(item));
+            }
+            return Json<List<Models.SP_GetOPICSManualData_Result>>(SumForEmail);
+
+
+        }
     }
 }

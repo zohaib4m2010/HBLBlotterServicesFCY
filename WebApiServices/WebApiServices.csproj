@@ -177,6 +177,7 @@
     <Compile Include="Models\BlotterSumEmail.cs" />
     <Compile Include="Models\Branches.cs" />
     <Compile Include="Models\NostroBank.cs" />
+    <Compile Include="Models\OPICSManualDataPram.cs" />
     <Compile Include="Models\SBP_BlotterBreakups.cs" />
     <Compile Include="Models\SBP_BlotterClearing.cs" />
     <Compile Include="Models\SBP_BlotterCRRFINCON.cs" />
@@ -198,6 +199,7 @@
     <Compile Include="Models\SP_GetAll_SBPBlotterTrade_Result.cs" />
     <Compile Include="Models\SP_GETLatestBlotterDTLReportDayWise_Result.cs" />
     <Compile Include="Models\SP_GetLatestBreakup_Result.cs" />
+    <Compile Include="Models\SP_GetOPICSManualData_Result.cs" />
     <Compile Include="Models\SP_SBPBlotterRunningBal.cs" />
     <Compile Include="Models\SP_SBPGetLoginInfo_Result.cs" />
     <Compile Include="Models\SP_SBPOpicsSystemDate_Result.cs" />

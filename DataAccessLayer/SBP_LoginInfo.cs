@@ -24,6 +24,7 @@ namespace DataAccessLayer
             this.SBP_BlotterTBO = new HashSet<SBP_BlotterTBO>();
             this.SBP_BlotterClearing = new HashSet<SBP_BlotterClearing>();
             this.SBP_BlotterTrade = new HashSet<SBP_BlotterTrade>();
+            this.SBP_BlotterManualData = new HashSet<SBP_BlotterManualData>();
         }
     
         public int Id { get; set; }
@@ -59,5 +60,7 @@ namespace DataAccessLayer
         public virtual ICollection<SBP_BlotterClearing> SBP_BlotterClearing { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SBP_BlotterTrade> SBP_BlotterTrade { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SBP_BlotterManualData> SBP_BlotterManualData { get; set; }
     }
 }
