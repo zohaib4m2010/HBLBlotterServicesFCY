@@ -37,7 +37,6 @@ namespace DataAccessLayer
         public virtual DbSet<UserRoleRelation> UserRoleRelations { get; set; }
         public virtual DbSet<WebPages> WebPages { get; set; }
         public virtual DbSet<UserPageRelation> UserPageRelations { get; set; }
-        public virtual DbSet<SBP_LoginInfo> SBP_LoginInfo { get; set; }
         public virtual DbSet<SBP_BlotterDTLDaysWiseBal> SBP_BlotterDTLDaysWiseBal { get; set; }
         public virtual DbSet<SBP_BlotterCRRReportCalcSetup> SBP_BlotterCRRReportCalcSetup { get; set; }
         public virtual DbSet<SBP_BlotterCRRFINCON> SBP_BlotterCRRFINCON { get; set; }
@@ -47,6 +46,7 @@ namespace DataAccessLayer
         public virtual DbSet<SBP_BlotterClearing> SBP_BlotterClearing { get; set; }
         public virtual DbSet<SBP_BlotterTrade> SBP_BlotterTrade { get; set; }
         public virtual DbSet<SBP_BlotterManualData> SBP_BlotterManualData { get; set; }
+        public virtual DbSet<SBP_LoginInfo> SBP_LoginInfo { get; set; }
     
         public virtual ObjectResult<SP_SBPBlotter_Result> SP_SBPBlotter(string br)
         {
@@ -106,42 +106,6 @@ namespace DataAccessLayer
                 new ObjectParameter("UPRID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetUserPageRelationById_Result>("SP_GetUserPageRelationById", uPRIDParameter);
-        }
-    
-        public virtual ObjectResult<sp_GetAllUsers_Result> sp_GetAllUsers()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetAllUsers_Result>("sp_GetAllUsers");
-        }
-    
-        public virtual ObjectResult<sp_GetUserById_Result> sp_GetUserById(Nullable<int> id)
-        {
-            var idParameter = id.HasValue ?
-                new ObjectParameter("id", id) :
-                new ObjectParameter("id", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetUserById_Result>("sp_GetUserById", idParameter);
-        }
-    
-        public virtual ObjectResult<SP_SBPGetLoginInfo_Result> SP_SBPGetLoginInfo(string userName, string password)
-        {
-            var userNameParameter = userName != null ?
-                new ObjectParameter("UserName", userName) :
-                new ObjectParameter("UserName", typeof(string));
-    
-            var passwordParameter = password != null ?
-                new ObjectParameter("Password", password) :
-                new ObjectParameter("Password", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SBPGetLoginInfo_Result>("SP_SBPGetLoginInfo", userNameParameter, passwordParameter);
-        }
-    
-        public virtual ObjectResult<SP_SBPGetLoginInfoById_Result> SP_SBPGetLoginInfoById(Nullable<int> id)
-        {
-            var idParameter = id.HasValue ?
-                new ObjectParameter("id", id) :
-                new ObjectParameter("id", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SBPGetLoginInfoById_Result>("SP_SBPGetLoginInfoById", idParameter);
         }
     
         public virtual int SP_InsertLoginInfo(string userName, string password, string contactNo, string email, Nullable<int> branchID, Nullable<bool> isActive, Nullable<bool> isConventional, Nullable<bool> isislamic, Nullable<System.DateTime> createDate, Nullable<int> uRID)
@@ -373,6 +337,42 @@ namespace DataAccessLayer
                 new ObjectParameter("Date", typeof(System.DateTime));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetOPICSManualData_Result>("SP_GetOPICSManualData", bRParameter, dateParameter);
+        }
+    
+        public virtual ObjectResult<SP_SBPGetLoginInfo_Result> SP_SBPGetLoginInfo(string userName, string password)
+        {
+            var userNameParameter = userName != null ?
+                new ObjectParameter("UserName", userName) :
+                new ObjectParameter("UserName", typeof(string));
+    
+            var passwordParameter = password != null ?
+                new ObjectParameter("Password", password) :
+                new ObjectParameter("Password", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SBPGetLoginInfo_Result>("SP_SBPGetLoginInfo", userNameParameter, passwordParameter);
+        }
+    
+        public virtual ObjectResult<SP_SBPGetLoginInfoById_Result> SP_SBPGetLoginInfoById(Nullable<int> id)
+        {
+            var idParameter = id.HasValue ?
+                new ObjectParameter("id", id) :
+                new ObjectParameter("id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SBPGetLoginInfoById_Result>("SP_SBPGetLoginInfoById", idParameter);
+        }
+    
+        public virtual ObjectResult<sp_GetAllUsers_Result> sp_GetAllUsers()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetAllUsers_Result>("sp_GetAllUsers");
+        }
+    
+        public virtual ObjectResult<sp_GetUserById_Result> sp_GetUserById(Nullable<int> id)
+        {
+            var idParameter = id.HasValue ?
+                new ObjectParameter("id", id) :
+                new ObjectParameter("id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetUserById_Result>("sp_GetUserById", idParameter);
         }
     }
 }

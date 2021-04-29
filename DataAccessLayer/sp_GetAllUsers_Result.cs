@@ -19,8 +19,7 @@ namespace DataAccessLayer
         public string Email { get; set; }
         public string RoleName { get; set; }
         public string BranchName { get; set; }
-        public Nullable<bool> isConventional { get; set; }
-        public Nullable<bool> isislamic { get; set; }
+        public string BlotterType { get; set; }
         public Nullable<bool> isActive { get; set; }
     }
 }

@@ -31,6 +31,7 @@ namespace DataAccessLayer
         public string DefaultPage { get; set; }
         public Nullable<bool> isConventional { get; set; }
         public Nullable<bool> isislamic { get; set; }
+        public string BlotterType { get; set; }
         public int URID { get; set; }
     }
 }

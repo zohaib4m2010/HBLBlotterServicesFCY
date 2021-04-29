@@ -23,6 +23,13 @@ CREATE TABLE [dbo].[SBP_LoginInfo](
 --alter table [SBP_LoginInfo] 
 --add isislamic bit 
 
+
+--alter table SBP_LoginInfo
+--add BlotterType varchar(3)
+
+
+--update SBP_LoginInfo set BlotterType='LCY'
+
 --update [SBP_LoginInfo] set isConventional=1,isislamic=0
 
 
@@ -1243,3 +1250,18 @@ select* from SBP_BlotterManualData
 alter proc SP_GetOPICSManualData(@BR int,@Date Datetime)
 as
 select SNo,DataType,Inflow,OutFlow,NetBalance,DateFor From SBP_BlotterManualData where cast(DateFor as date)=cast(@Date as date) and BR=@BR
+
+--drop table SBP_BlotterTransactionsTotal
+create table SBP_BlotterTransactionsTotal(
+SNo bigint identity not null,
+InFlow numeric,
+OutFlow numeric,
+ClosingBal numeric,
+DateFor Datetime,
+BR int,
+Constraint PK_SBP_BlotterTransactionsTotal_SNo primary key  clustered (SNo)
+)
+
+
+
+

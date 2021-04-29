@@ -23,6 +23,7 @@ namespace DataAccessLayer
         public Nullable<bool> isislamic { get; set; }
         public string UserExists { get; set; }
         public string DefaultPage { get; set; }
+        public string BlotterType { get; set; }
         public string Currencies { get; set; }
         public string Pages { get; set; }
     }

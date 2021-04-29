@@ -26,5 +26,6 @@ namespace WebApiServices.Models
         public Nullable<bool> isislamic { get; set; }
         public int URID { get; set; }
         public string DefaultPage { get; set; }
+        public string BlotterType { get; set; }
     }
 }

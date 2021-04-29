@@ -18,29 +18,29 @@
         <EntityTypeShape EntityType="BlotterEF.UserPageRelation" Width="1.5" PointX="19.875" PointY="4.375" />
         <AssociationConnector Association="BlotterEF.FK_UPRUserRoleID" />
         <AssociationConnector Association="BlotterEF.FK_URRWPID" />
-        <EntityTypeShape EntityType="BlotterEF.SBP_LoginInfo" Width="1.5" PointX="10.625" PointY="0.5" />
-        <AssociationConnector Association="BlotterEF.FK_URRUserID" />
         <EntityTypeShape EntityType="BlotterEF.SBP_BlotterDTLDaysWiseBal" Width="1.5" PointX="0.75" PointY="3.75" />
         <EntityTypeShape EntityType="BlotterEF.SBP_BlotterCRRReportCalcSetup" Width="1.5" PointX="12.875" PointY="10.125" />
-        <AssociationConnector Association="BlotterEF.FK_SBP_BlotterCRRReportCalcSetup_UserID" />
         <EntityTypeShape EntityType="BlotterEF.SBP_BlotterCRRFINCON" Width="1.5" PointX="17.625" PointY="5.5" />
         <AssociationConnector Association="BlotterEF.FK_BlotterCRRFINCON_BranchID" />
-        <AssociationConnector Association="BlotterEF.FK_SBP_BlotterCRRFINCON_UserID" />
         <EntityTypeShape EntityType="BlotterEF.SBP_BlotterCRRReportDaysWiseBal" Width="1.5" PointX="8.375" PointY="10.75" />
         <EntityTypeShape EntityType="BlotterEF.SBP_BlotterBreakups" Width="1.5" PointX="2.5" PointY="4.75" />
         <AssociationConnector Association="BlotterEF.FK_SBP_BlotterBreakups_BranchID" />
-        <AssociationConnector Association="BlotterEF.FK_SBP_BlotterBreakups_UserID" />
         <EntityTypeShape EntityType="BlotterEF.SBP_BlotterTBO" Width="1.5" PointX="6.375" PointY="4.5" />
         <AssociationConnector Association="BlotterEF.FK_SBP_BlotterTBO_BranchID" />
-        <AssociationConnector Association="BlotterEF.FK_SBP_BlotterTBO_UserID" />
         <EntityTypeShape EntityType="BlotterEF.SBP_BlotterClearing" Width="1.5" PointX="14.625" PointY="0.75" />
         <EntityTypeShape EntityType="BlotterEF.SBP_BlotterTrade" Width="1.5" PointX="17.625" PointY="0.75" />
         <AssociationConnector Association="BlotterEF.FK_SBP_BlotterClearing_BranchID" />
         <AssociationConnector Association="BlotterEF.FK_SBP_BlotterTrade_BranchID" />
-        <AssociationConnector Association="BlotterEF.FK_SBP_BlotterClearing_UserID" />
-        <AssociationConnector Association="BlotterEF.FK_SBP_BlotterTrade_UserID" />
         <EntityTypeShape EntityType="BlotterEF.SBP_BlotterManualData" Width="1.5" PointX="12.875" PointY="13.75" />
+        <EntityTypeShape EntityType="BlotterEF.SBP_LoginInfo" Width="1.5" PointX="0.75" PointY="5.875" />
+        <AssociationConnector Association="BlotterEF.FK_SBP_BlotterBreakups_UserID" />
+        <AssociationConnector Association="BlotterEF.FK_SBP_BlotterClearing_UserID" />
+        <AssociationConnector Association="BlotterEF.FK_SBP_BlotterCRRFINCON_UserID" />
+        <AssociationConnector Association="BlotterEF.FK_SBP_BlotterCRRReportCalcSetup_UserID" />
         <AssociationConnector Association="BlotterEF.FK_SBP_BlotterManualData_UserID" />
+        <AssociationConnector Association="BlotterEF.FK_SBP_BlotterTBO_UserID" />
+        <AssociationConnector Association="BlotterEF.FK_SBP_BlotterTrade_UserID" />
+        <AssociationConnector Association="BlotterEF.FK_URRUserID" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
