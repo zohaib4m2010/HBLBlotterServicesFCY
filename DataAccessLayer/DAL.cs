@@ -843,7 +843,7 @@ namespace DataAccessLayer
                 if (Items != null)
                 {
                     Items.OpeningBalActual = Item.OpeningBalActual;
-                    Items.EstimatedCLossingBal = Item.OpeningBalActual + (Items.HOKRemittance_inFlow + Items.FoodPayment_inFlow + Items.Miscellaneous_inflow + Items.ERF_inflow+Items.SBPChequeDeposite_inflow)-(Items.CashWithdrawbySBPCheques_outFlow+Items.DSC_outFlow+Items.ERF_outflow+Items.Miscellaneous_outflow+Items.SBPCheqGivenToOtherBank_outFlow+Items.RemitanceToHOK_outFlow);
+                    Items.EstimatedCLossingBal = Item.OpeningBalActual + (Items.HOKRemittance_inFlow + Items.FoodPayment_inFlow + Items.Miscellaneous_inflow + Items.ERF_inflow+Items.SBPChequeDeposite_inflow)+(Items.CashWithdrawbySBPCheques_outFlow+Items.DSC_outFlow+Items.ERF_outflow+Items.Miscellaneous_outflow+Items.SBPCheqGivenToOtherBank_outFlow+Items.RemitanceToHOK_outFlow);
                     Items.UpdateDate = Item.UpdateDate;
                     DbContextB.SaveChanges();
                 }
