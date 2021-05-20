@@ -44,5 +44,27 @@ namespace WebApiServices.Controllers
             return Json<List<Models.SP_SBPGetLoginInfo_Result>>(blotter);
         }
 
+        [HttpPost]
+        public void SessionStart(SP_ADD_SessionStart SS)
+        {
+
+            DAL.SessionStart(SS.pSessionID, SS.pUserID, SS.pIP, SS.pLoginGUID, SS.pLoginTime, SS.pExpires);
+        }
+
+
+
+        [HttpPost]
+        public void ActivityMonitor(SP_ADD_SessionStart SS)
+        {
+
+            DAL.ActivityMonitor(SS.pSessionID, SS.pUserID, SS.pIP, SS.pLoginGUID,SS.pData, SS.pActivity,SS.pURL);
+        }
+
+        [HttpPost]
+        public void SessionStop(SP_ADD_SessionStart SS)
+        {
+
+            DAL.SessionStop(SS.pSessionID, SS.pUserID);
+        }
     }
 }

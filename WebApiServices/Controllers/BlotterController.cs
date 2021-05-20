@@ -59,6 +59,23 @@ namespace WebApiServices.Controllers
 
         }
 
+
+        // GET:   
+        [HttpGet]
+        public JsonResult<Models.SP_GETLatestBlotterDTLReportDayWise_Result> GetLatestBlotterDTLReportForToday(int BR)
+        {
+
+            EntityMapperBlotter<DataAccessLayer.SP_GETLatestBlotterDTLReportForToday_Result, Models.SP_GETLatestBlotterDTLReportDayWise_Result> mapObj = new EntityMapperBlotter<DataAccessLayer.SP_GETLatestBlotterDTLReportForToday_Result, Models.SP_GETLatestBlotterDTLReportDayWise_Result>();
+            DataAccessLayer.SP_GETLatestBlotterDTLReportForToday_Result dalEmail = DAL.GetLatestBlotterDTLForToday(BR);
+            Models.SP_GETLatestBlotterDTLReportDayWise_Result SumForEmail = new Models.SP_GETLatestBlotterDTLReportDayWise_Result();
+            
+                SumForEmail = mapObj.Translate(dalEmail);
+            
+            return Json<Models.SP_GETLatestBlotterDTLReportDayWise_Result>(SumForEmail);
+
+
+        }
+
         // GET:   
         [HttpGet]
         public JsonResult<List<Models.SP_GetOPICSManualData_Result>> GetOPICSManualData(int BR,string Date)

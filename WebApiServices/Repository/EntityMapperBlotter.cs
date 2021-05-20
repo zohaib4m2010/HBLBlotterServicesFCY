@@ -30,6 +30,9 @@ namespace WebApiServices.Repository
             Mapper.CreateMap<Models.SP_GETLatestBlotterDTLReportDayWise_Result, DataAccessLayer.SP_GETLatestBlotterDTLReportDayWise_Result>();
             Mapper.CreateMap<DataAccessLayer.SP_GETLatestBlotterDTLReportDayWise_Result, Models.SP_GETLatestBlotterDTLReportDayWise_Result>();
 
+            Mapper.CreateMap<Models.SP_GETLatestBlotterDTLReportDayWise_Result, DataAccessLayer.SP_GETLatestBlotterDTLReportForToday_Result>();
+            Mapper.CreateMap<DataAccessLayer.SP_GETLatestBlotterDTLReportForToday_Result, Models.SP_GETLatestBlotterDTLReportDayWise_Result>();
+
 
             Mapper.CreateMap<Models.SP_GetOPICSManualData_Result, DataAccessLayer.SP_GetOPICSManualData_Result>();
             Mapper.CreateMap<DataAccessLayer.SP_GetOPICSManualData_Result, Models.SP_GetOPICSManualData_Result>();

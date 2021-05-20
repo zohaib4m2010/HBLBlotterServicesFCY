@@ -46,6 +46,7 @@ namespace DataAccessLayer
         public Nullable<bool> isConventional { get; set; }
         public Nullable<bool> isislamic { get; set; }
         public string BlotterType { get; set; }
+        public Nullable<bool> isLoggedIn { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SBP_BlotterBreakups> SBP_BlotterBreakups { get; set; }

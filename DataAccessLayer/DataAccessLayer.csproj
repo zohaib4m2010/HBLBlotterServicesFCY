@@ -144,6 +144,9 @@
     <Compile Include="SP_GETLatestBlotterDTLReportDayWise_Result.cs">
       <DependentUpon>BlotterEF.tt</DependentUpon>
     </Compile>
+    <Compile Include="SP_GETLatestBlotterDTLReportForToday_Result.cs">
+      <DependentUpon>BlotterEF.tt</DependentUpon>
+    </Compile>
     <Compile Include="SP_GetLatestBreakup_Result.cs">
       <DependentUpon>BlotterEF.tt</DependentUpon>
     </Compile>

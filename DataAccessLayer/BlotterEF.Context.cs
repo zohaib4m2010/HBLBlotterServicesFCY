@@ -108,51 +108,6 @@ namespace DataAccessLayer
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetUserPageRelationById_Result>("SP_GetUserPageRelationById", uPRIDParameter);
         }
     
-        public virtual int SP_InsertLoginInfo(string userName, string password, string contactNo, string email, Nullable<int> branchID, Nullable<bool> isActive, Nullable<bool> isConventional, Nullable<bool> isislamic, Nullable<System.DateTime> createDate, Nullable<int> uRID)
-        {
-            var userNameParameter = userName != null ?
-                new ObjectParameter("UserName", userName) :
-                new ObjectParameter("UserName", typeof(string));
-    
-            var passwordParameter = password != null ?
-                new ObjectParameter("Password", password) :
-                new ObjectParameter("Password", typeof(string));
-    
-            var contactNoParameter = contactNo != null ?
-                new ObjectParameter("ContactNo", contactNo) :
-                new ObjectParameter("ContactNo", typeof(string));
-    
-            var emailParameter = email != null ?
-                new ObjectParameter("Email", email) :
-                new ObjectParameter("Email", typeof(string));
-    
-            var branchIDParameter = branchID.HasValue ?
-                new ObjectParameter("BranchID", branchID) :
-                new ObjectParameter("BranchID", typeof(int));
-    
-            var isActiveParameter = isActive.HasValue ?
-                new ObjectParameter("isActive", isActive) :
-                new ObjectParameter("isActive", typeof(bool));
-    
-            var isConventionalParameter = isConventional.HasValue ?
-                new ObjectParameter("isConventional", isConventional) :
-                new ObjectParameter("isConventional", typeof(bool));
-    
-            var isislamicParameter = isislamic.HasValue ?
-                new ObjectParameter("isislamic", isislamic) :
-                new ObjectParameter("isislamic", typeof(bool));
-    
-            var createDateParameter = createDate.HasValue ?
-                new ObjectParameter("CreateDate", createDate) :
-                new ObjectParameter("CreateDate", typeof(System.DateTime));
-    
-            var uRIDParameter = uRID.HasValue ?
-                new ObjectParameter("URID", uRID) :
-                new ObjectParameter("URID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_InsertLoginInfo", userNameParameter, passwordParameter, contactNoParameter, emailParameter, branchIDParameter, isActiveParameter, isConventionalParameter, isislamicParameter, createDateParameter, uRIDParameter);
-        }
-    
         public virtual int SP_SBPBlotterRunningBal(string br, Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate)
         {
             var brParameter = br != null ?
@@ -339,6 +294,78 @@ namespace DataAccessLayer
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetOPICSManualData_Result>("SP_GetOPICSManualData", bRParameter, dateParameter);
         }
     
+        public virtual ObjectResult<sp_GetAllUsers_Result> sp_GetAllUsers()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetAllUsers_Result>("sp_GetAllUsers");
+        }
+    
+        public virtual ObjectResult<sp_GetUserById_Result> sp_GetUserById(Nullable<int> id)
+        {
+            var idParameter = id.HasValue ?
+                new ObjectParameter("id", id) :
+                new ObjectParameter("id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetUserById_Result>("sp_GetUserById", idParameter);
+        }
+    
+        public virtual ObjectResult<SP_GETLatestBlotterDTLReportForToday_Result> SP_GETLatestBlotterDTLReportForToday(Nullable<int> bR)
+        {
+            var bRParameter = bR.HasValue ?
+                new ObjectParameter("BR", bR) :
+                new ObjectParameter("BR", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GETLatestBlotterDTLReportForToday_Result>("SP_GETLatestBlotterDTLReportForToday", bRParameter);
+        }
+    
+        public virtual int SP_InsertLoginInfo(string userName, string password, string contactNo, string email, Nullable<int> branchID, Nullable<bool> isActive, Nullable<bool> isConventional, Nullable<bool> isislamic, Nullable<System.DateTime> createDate, string blotterType, Nullable<int> uRID)
+        {
+            var userNameParameter = userName != null ?
+                new ObjectParameter("UserName", userName) :
+                new ObjectParameter("UserName", typeof(string));
+    
+            var passwordParameter = password != null ?
+                new ObjectParameter("Password", password) :
+                new ObjectParameter("Password", typeof(string));
+    
+            var contactNoParameter = contactNo != null ?
+                new ObjectParameter("ContactNo", contactNo) :
+                new ObjectParameter("ContactNo", typeof(string));
+    
+            var emailParameter = email != null ?
+                new ObjectParameter("Email", email) :
+                new ObjectParameter("Email", typeof(string));
+    
+            var branchIDParameter = branchID.HasValue ?
+                new ObjectParameter("BranchID", branchID) :
+                new ObjectParameter("BranchID", typeof(int));
+    
+            var isActiveParameter = isActive.HasValue ?
+                new ObjectParameter("isActive", isActive) :
+                new ObjectParameter("isActive", typeof(bool));
+    
+            var isConventionalParameter = isConventional.HasValue ?
+                new ObjectParameter("isConventional", isConventional) :
+                new ObjectParameter("isConventional", typeof(bool));
+    
+            var isislamicParameter = isislamic.HasValue ?
+                new ObjectParameter("isislamic", isislamic) :
+                new ObjectParameter("isislamic", typeof(bool));
+    
+            var createDateParameter = createDate.HasValue ?
+                new ObjectParameter("CreateDate", createDate) :
+                new ObjectParameter("CreateDate", typeof(System.DateTime));
+    
+            var blotterTypeParameter = blotterType != null ?
+                new ObjectParameter("BlotterType", blotterType) :
+                new ObjectParameter("BlotterType", typeof(string));
+    
+            var uRIDParameter = uRID.HasValue ?
+                new ObjectParameter("URID", uRID) :
+                new ObjectParameter("URID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_InsertLoginInfo", userNameParameter, passwordParameter, contactNoParameter, emailParameter, branchIDParameter, isActiveParameter, isConventionalParameter, isislamicParameter, createDateParameter, blotterTypeParameter, uRIDParameter);
+        }
+    
         public virtual ObjectResult<SP_SBPGetLoginInfo_Result> SP_SBPGetLoginInfo(string userName, string password)
         {
             var userNameParameter = userName != null ?
@@ -361,18 +388,79 @@ namespace DataAccessLayer
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SBPGetLoginInfoById_Result>("SP_SBPGetLoginInfoById", idParameter);
         }
     
-        public virtual ObjectResult<sp_GetAllUsers_Result> sp_GetAllUsers()
+        public virtual int SP_ADD_SessionStart(string pSessionID, Nullable<int> pUserID, string pIP, string pLoginGUID, Nullable<System.DateTime> pLoginTime, Nullable<System.DateTime> pExpires)
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetAllUsers_Result>("sp_GetAllUsers");
+            var pSessionIDParameter = pSessionID != null ?
+                new ObjectParameter("pSessionID", pSessionID) :
+                new ObjectParameter("pSessionID", typeof(string));
+    
+            var pUserIDParameter = pUserID.HasValue ?
+                new ObjectParameter("pUserID", pUserID) :
+                new ObjectParameter("pUserID", typeof(int));
+    
+            var pIPParameter = pIP != null ?
+                new ObjectParameter("pIP", pIP) :
+                new ObjectParameter("pIP", typeof(string));
+    
+            var pLoginGUIDParameter = pLoginGUID != null ?
+                new ObjectParameter("pLoginGUID", pLoginGUID) :
+                new ObjectParameter("pLoginGUID", typeof(string));
+    
+            var pLoginTimeParameter = pLoginTime.HasValue ?
+                new ObjectParameter("pLoginTime", pLoginTime) :
+                new ObjectParameter("pLoginTime", typeof(System.DateTime));
+    
+            var pExpiresParameter = pExpires.HasValue ?
+                new ObjectParameter("pExpires", pExpires) :
+                new ObjectParameter("pExpires", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_ADD_SessionStart", pSessionIDParameter, pUserIDParameter, pIPParameter, pLoginGUIDParameter, pLoginTimeParameter, pExpiresParameter);
         }
     
-        public virtual ObjectResult<sp_GetUserById_Result> sp_GetUserById(Nullable<int> id)
+        public virtual int SP_SBPSessionStop(string pSessionID, Nullable<int> pUserID)
         {
-            var idParameter = id.HasValue ?
-                new ObjectParameter("id", id) :
-                new ObjectParameter("id", typeof(int));
+            var pSessionIDParameter = pSessionID != null ?
+                new ObjectParameter("pSessionID", pSessionID) :
+                new ObjectParameter("pSessionID", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetUserById_Result>("sp_GetUserById", idParameter);
+            var pUserIDParameter = pUserID.HasValue ?
+                new ObjectParameter("pUserID", pUserID) :
+                new ObjectParameter("pUserID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_SBPSessionStop", pSessionIDParameter, pUserIDParameter);
+        }
+    
+        public virtual int SP_ADD_ActivityMonitor(string pSessionID, Nullable<int> pUserID, string pIP, string pLoginGUID, string pData, string pActivity, string pURL)
+        {
+            var pSessionIDParameter = pSessionID != null ?
+                new ObjectParameter("pSessionID", pSessionID) :
+                new ObjectParameter("pSessionID", typeof(string));
+    
+            var pUserIDParameter = pUserID.HasValue ?
+                new ObjectParameter("pUserID", pUserID) :
+                new ObjectParameter("pUserID", typeof(int));
+    
+            var pIPParameter = pIP != null ?
+                new ObjectParameter("pIP", pIP) :
+                new ObjectParameter("pIP", typeof(string));
+    
+            var pLoginGUIDParameter = pLoginGUID != null ?
+                new ObjectParameter("pLoginGUID", pLoginGUID) :
+                new ObjectParameter("pLoginGUID", typeof(string));
+    
+            var pDataParameter = pData != null ?
+                new ObjectParameter("pData", pData) :
+                new ObjectParameter("pData", typeof(string));
+    
+            var pActivityParameter = pActivity != null ?
+                new ObjectParameter("pActivity", pActivity) :
+                new ObjectParameter("pActivity", typeof(string));
+    
+            var pURLParameter = pURL != null ?
+                new ObjectParameter("pURL", pURL) :
+                new ObjectParameter("pURL", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_ADD_ActivityMonitor", pSessionIDParameter, pUserIDParameter, pIPParameter, pLoginGUIDParameter, pDataParameter, pActivityParameter, pURLParameter);
         }
     }
 }

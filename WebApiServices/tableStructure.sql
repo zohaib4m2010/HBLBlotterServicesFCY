@@ -27,13 +27,15 @@ CREATE TABLE [dbo].[SBP_LoginInfo](
 --alter table SBP_LoginInfo
 --add BlotterType varchar(3)
 
+--alter table SBP_LoginInfo
+--add isLoggedIn bit
 
 --update SBP_LoginInfo set BlotterType='LCY'
 
 --update [SBP_LoginInfo] set isConventional=1,isislamic=0
 
 
-select* From [SBP_LoginInfo] where UserName='Wasim' and Password='rKVDpGilJ0sGHalu0U4bhA==' and isActive=1
+select* From [SBP_LoginInfo] where UserName='Wasim' and Password='WkAhCV0uZrLilmxNYOHHPA==' and isActive=1
 
 
 
@@ -99,17 +101,6 @@ Constraint PK_Currencies primary key clustered(CID)
 --insert into Currencies(Symbol,Currency,Country,isActive,CreateDate) values('PKR','Pak Rupee','Pakistan',1,GETDATE())
 --insert into Currencies(Symbol,Currency,Country,isActive,CreateDate) values('USD','US Dollar','United States',1,GETDATE())
 
---Drop Table if exists  UserCurrencyRelation
-create table UserCurrencyRelation(
-UCRID int identity not null,
-UserID int not null Constraint FK_UserCurrencyRelation_UserID Foreign key References SBP_LoginInfo(ID),
-CID int not null Constraint FK_UserCurrencyRelation_CID Foreign key References Currencies(CID),
-)
-
-select * from UserCurrencyRelation
-
---insert into UserCurrencyRelation(UserID,CID) values(10,1)
---insert into UserCurrencyRelation(UserID,CID) values(10,2)
 
 --Drop Table if exists  UserRole;
 create table UserRole(
@@ -405,18 +396,13 @@ select * from SBP_BlotterCRRFINCON --where cast(StartDate as date) <= cast(GETDA
 --create proc SP_SBPGetLoginInfoById(@id int)
 --as
 --		SELECT 
---   ID,UserName,Email,c.RoleName,f.BID BranchID,f.BranchName,'Success' AS UserExists ,
---   STUFF((SELECT ', '  + cast(C.CID as nvarchar(5)) + '~' +C.Symbol
---          FROM UserCurrencyRelation CR inner join  Currencies C on CR.CID=C.CID
---          WHERE CR.UserID = a.ID and C.isActive=1
---          ORDER BY Symbol
---          FOR XML PATH('')), 1, 1, '') [Currencies],
+--   ID,UserName,Email,c.RoleName,f.BID BranchID,f.BranchName,'Success' AS UserExists 
 --   STUFF((SELECT ', ' + US.DisplayName +'~' + US.PageName  + '~'+US.ControllerName+'~'+cast(USS.DateChangeAccess as varchar(1))+'~'+cast(USS.EditAccess as varchar(1))+'~'+cast(USS.DeleteAccess as varchar(1))
 --          FROM UserPageRelation USS inner join  WebPages US on USS.WPID=US.WPID
 --          WHERE USS.URID = d.URID and US.isActive=1
 --          ORDER BY PageName
 --          FOR XML PATH('')), 1, 1, '') [Pages]
---FROM SBP_LoginInfo a inner join UserRoleRelation b on a.Id=b.UserId inner join UserRole c on b.URRID=c.URID inner join UserPageRelation d on b.URRID=d.URID inner join WebPages e on d.WPID=e.WPID inner join Branches f on a.BranchId=f.BID
+--FROM SBP_LoginInfo a inner join UserRoleRelation b on a.Id=b.UserId inner join UserRole c on b.URID=c.URID inner join UserPageRelation d on b.URID=d.URID inner join WebPages e on d.WPID=e.WPID inner join Branches f on a.BranchId=f.BID
 --WHERE a.isActive=1 and a.Id= @id
 --GROUP BY ID,UserName,Email,c.RoleName,f.BID,f.BranchName,d.URID
 --ORDER BY 1
@@ -514,27 +500,30 @@ where a.BID=@BranchID and a.CurID=@CurID and a.BR=@BR and cast(a.BreakupDate as 
 --select a.*,b.URID From [SBP_LoginInfo] a inner join UserRoleRelation b on b.UserId=a.Id where id=@id
 
 
---drop proc  SP_InsertLoginInfo
---create proc SP_InsertLoginInfo(
---	@UserName [nvarchar](50) ,
---	@Password [nvarchar](260) ,
---	@ContactNo [nvarchar](12) , 
---	@Email [nvarchar](50) , 
---	@BranchID int ,
---	@isActive bit,
---	@isConventional bit ,
---	@isislamic bit,
---	@CreateDate datetime,
---	@URID int )
---as
---begin
---insert into SBP_LoginInfo([UserName],[Password],[ContactNo],[Email],[BranchID],[isActive],[CreateDate],[isConventional],[isislamic])
---select @UserName,@Password,@ContactNo,@Email,@BranchID,@isActive,@CreateDate,@isConventional,@isislamic
+drop proc  SP_InsertLoginInfo
+alter proc SP_InsertLoginInfo(
+	@UserName [nvarchar](50) ,
+	@Password [nvarchar](260) ,
+	@ContactNo [nvarchar](12) , 
+	@Email [nvarchar](50) , 
+	@BranchID int ,
+	@isActive bit,
+	@isConventional bit ,
+	@isislamic bit,
+	@CreateDate datetime, 
+	@BlotterType [nvarchar](50) , 
+	@URID int )
+as
+begin
+Declare @CurrencyID int;
+insert into SBP_LoginInfo([UserName],[Password],[ContactNo],[Email],[BranchID],[isActive],[CreateDate],[isConventional],[isislamic],BlotterType)
+select @UserName,@Password,@ContactNo,@Email,@BranchID,@isActive,@CreateDate,@isConventional,@isislamic,@BlotterType
 
---declare @ID int = SCOPE_IDENTITY();
---insert into UserRoleRelation(URID,UserId)
---select @URID,@ID 
---end
+declare @ID int = SCOPE_IDENTITY();
+insert into UserRoleRelation(URID,UserId)
+select @URID,@ID 
+
+end
 
 
 --alter table [SBP_LoginInfo]
@@ -767,6 +756,40 @@ createDate,
 UpdateDate From SBP_BlotterCRRReportDaysWiseBal where CRRFinconId=(select top 1 SNo from SBP_BlotterCRRFINCON order by SNo DESC)
 
 
+create proc SP_GETLatestBlotterDTLReportForToday(@BR int)
+as
+select Id,
+CRRFinconId,
+cast(ReportDate as date)ReportDate,
+WeekDays,
+isnull(KarachiTotal,0)KarachiTotal,
+isnull(HyderabadTotal,0) HyderabadTotal,
+isnull(SukkurTotal,0)SukkurTotal,
+isnull(LahoreTotal,0)LahoreTotal,
+isnull(FaisalabadTotal,0)FaisalabadTotal,
+isnull(GWalaTotal,0)GWalaTotal,
+isnull(MultanTotal,0)MultanTotal,
+isnull(SialkotTotal,0)SialkotTotal,
+isnull(Isalamabad,0)Isalamabad,
+isnull(PindiTotal,0)PindiTotal,
+isnull(PeshawarTotal,0)PeshawarTotal,
+isnull(BhawalpurTotal,0)BhawalpurTotal,
+isnull(MuzafarbadTotal,0)MuzafarbadTotal,
+isnull(DIKhanTotal,0)DIKhanTotal,
+isnull(QuettaTotal,0)QuettaTotal,
+isnull(GawadarTotal,0)GawadarTotal,
+isnull(OtherTotal,0)OtherTotal,
+isnull(PakistanToTal,0)PakistanToTal,
+isnull(CRR3PcrReq,0)CRR3PcrReq,
+isnull(CRR5PcrReq,0)CRR5PcrReq,
+isnull(BalMaintain3Pcr,0)BalMaintain3Pcr,
+isnull(BalMaintain5Pcr,0)BalMaintain5Pcr,
+isnull(Penalty,0)Penalty,
+Remarks,
+BR,
+createDate,
+UpdateDate From SBP_BlotterCRRReportDaysWiseBal where cast(ReportDate as date)=cast(GETDATE() as date)
+
 
 --drop table SBP_BlotterCRRReportCalcSetup
 create table SBP_BlotterCRRReportCalcSetup(
@@ -842,3 +865,110 @@ select* From SBP_BlotterTransactionsTotal
 --insert into SBP_BlotterTransactionsTotal(InFlow,OutFlow,ClosingBal,DateFor,BR) values(0,0,91475970000,'2021-03-30',1)
 --insert into SBP_BlotterTransactionsTotal(InFlow,OutFlow,ClosingBal,DateFor,BR) values(0,0,112480600000,'2021-03-31',1)
 --insert into SBP_BlotterTransactionsTotal(InFlow,OutFlow,ClosingBal,DateFor,BR) values(0,0,134200000000,'2021-04-01',1)
+
+
+
+drop table SBP_BlotterSessionDetails
+CREATE TABLE SBP_BlotterSessionDetails(
+	[ID] [bigint] IDENTITY(1,1) NOT NULL,
+	[SessionID] [varchar](500) NULL,
+	[UserID] [int] NOT NULL  Constraint FK_SBP_BlotterSessionDetails_UserID Foreign key References SBP_LoginInfo(ID),
+	[IP] [nvarchar](100) NULL,
+	[Status] [varchar](50) NULL,
+	[URL] [nvarchar](100) NULL,
+	[Activity]  [nvarchar](100) NULL,
+	[ActivityTime] [datetime] NULL,
+	[Data] [nvarchar](MAX) NULL,
+	[SessionStart] [datetime] NULL,
+	[SessionEnd] [datetime] NULL,
+	[LoginStatus] [bit] NULL,
+	[LoginGUID] [nvarchar](100) NULL)
+
+	Select* from SBP_BlotterSessionDetails order by ID
+
+creaTE PROCEDURE [dbo].[SP_ADD_SessionStart]
+(
+@pSessionID VARCHAR(500),
+@pUserID INT,
+@pIP VARCHAR(100),
+@pLoginGUID VARCHAR(50),
+@pLoginTime DATETIME = NULL,
+@pExpires DATETIME = NULL
+)
+AS
+
+BEGIN
+
+	
+		--INSERT tbl_Session (SessionID, UserID, [IP], ActivityTime, SessionStart, SessionEnd, LoginStatus, LoginGUID)
+		--VALUES (@pSessionID, @pUserID, @pIP, GetDate(), @pLoginTime, @pExpires, 1, @pLoginGUID)
+
+		INSERT SBP_BlotterSessionDetails (SessionID, UserID, [IP], ActivityTime, SessionStart, LoginStatus, LoginGUID)
+		VALUES (@pSessionID, @pUserID, @pIP, GetDate(), @pExpires, 1, @pLoginGUID)
+	
+		UPDATE SBP_LoginInfo
+			SET 
+				isLoggedIn = 1
+			Where 
+				ID = @pUserID;
+
+
+END;
+
+
+alter PROCEDURE [dbo].[SP_SBPSessionStop]
+(
+@pSessionID VARCHAR(500),
+@pUserID INT
+)
+AS
+
+BEGIN
+
+		--INSERT tbl_session (SessionID, UserID, IP, ActivityTime, SessionStart, LoginStatus, LoginGUID)
+		--VALUES (@pSessionID, @pUserID, @pIP, GetDate(), GetDate(), 1, @pLoginGUID)
+
+		UPDATE SBP_LoginInfo
+			SET 
+				isLoggedIn = 0
+			Where 
+				ID = @pUserID;
+
+
+		UPDATE SBP_BlotterSessionDetails
+			SET 
+				LoginStatus = 0,
+				SessionEnd = GetDate()
+			Where 
+				UserID = @pUserID AND
+				ID = (Select Max(ID) From SBP_BlotterSessionDetails Where UserID = @pUserID)
+
+END;
+
+
+alter PROCEDURE [dbo].[SP_ADD_ActivityMonitor]
+(
+@pSessionID VARCHAR(500),
+@pUserID INT,
+@pIP NVARCHAR(100),
+@pLoginGUID VARCHAR(50),
+@pData VARCHAR(MAX),
+@pActivity  VARCHAR(50),
+@pURL NVARCHAR(100)
+)
+AS
+
+BEGIN
+
+
+
+		INSERT SBP_BlotterSessionDetails (SessionID, UserID, [IP],LoginGUID,[Activity], ActivityTime,[URL],[Data])
+		VALUES (@pSessionID, @pUserID, @pIP, @pLoginGUID,@pActivity, GetDate(),@pURL,@pData)
+
+
+
+END;
+
+
+
+

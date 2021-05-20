@@ -27,6 +27,11 @@ namespace DataAccessLayer
             var results = DbContextB.SP_GETLatestBlotterDTLReportDayWise(BR).ToList();
             return results;
         }
+        public static SP_GETLatestBlotterDTLReportForToday_Result GetLatestBlotterDTLForToday(int BR)
+        {
+            var results = DbContextB.SP_GETLatestBlotterDTLReportForToday(BR).FirstOrDefault();
+            return results;
+        }
 
         public static List<SP_GetOPICSManualData_Result> GetOPICSManualData(int BR,DateTime Date)
         {
@@ -742,7 +747,7 @@ namespace DataAccessLayer
             bool status;
             try
             {
-                DbContextB.SP_InsertLoginInfo(item.UserName, item.Password, item.ContactNo, item.Email, item.BranchId, item.isActive, item.isConventional, item.isislamic, item.CreateDate, item.URID);
+                DbContextB.SP_InsertLoginInfo(item.UserName, item.Password, item.ContactNo, item.Email, item.BranchId, item.isActive, item.isConventional, item.isislamic, item.CreateDate,item.BlotterType, item.URID);
                 DbContextB.SaveChanges();
                 status = true;
             }
@@ -769,6 +774,7 @@ namespace DataAccessLayer
                     Items.isActive = Item.isActive;
                     Items.isConventional = Item.isConventional;
                     Items.isislamic = Item.isislamic;
+                    Items.BlotterType = Item.BlotterType;
                     Items.UpdateDate = Item.UpdateDate;
                     Items.DefaultPage = Item.DefaultPage;
                     DbContextB.SaveChanges();
@@ -1409,6 +1415,23 @@ namespace DataAccessLayer
         {
             var results = DbContextB.SP_SBPGetLoginInfoById(id).ToList();
             return results;
+        }
+
+        public static void SessionStart(string pSessionID, int pUserID, string pIP, string pLoginGUID, Nullable<DateTime> pLoginTime, Nullable<DateTime> pExpires)
+        {
+            DbContextB.SP_ADD_SessionStart(pSessionID, pUserID, pIP, pLoginGUID, pLoginTime, pExpires);
+            
+        }
+        public static void ActivityMonitor(string pSessionID, int pUserID, string pIP, string pLoginGUID,string Data, string Activity,string URL)
+        {
+            DbContextB.SP_ADD_ActivityMonitor(pSessionID, pUserID, pIP, pLoginGUID,Data,Activity,URL);
+
+        }
+
+        public static void SessionStop(string pSessionID, int pUserID)
+        {
+            DbContextB.SP_SBPSessionStop(pSessionID, pUserID);
+
         }
         //*****************************************************
         //USER Login Producers

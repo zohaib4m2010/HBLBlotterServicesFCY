@@ -184,6 +184,7 @@
     <Compile Include="Models\SBP_BlotterTrade.cs" />
     <Compile Include="Models\SBP_LoginInfo.cs" />
     <Compile Include="Models\SBP_LoginInfoWithRoleId.cs" />
+    <Compile Include="Models\SP_ADD_SessionStart.cs" />
     <Compile Include="Models\SP_GETAllTransactionTitles_Result.cs" />
     <Compile Include="Models\SBP_BlotterDTL.cs" />
     <Compile Include="Models\SBP_BlotterDTLDaysWiseBal.cs" />

@@ -32,7 +32,7 @@
         <AssociationConnector Association="BlotterEF.FK_SBP_BlotterClearing_BranchID" />
         <AssociationConnector Association="BlotterEF.FK_SBP_BlotterTrade_BranchID" />
         <EntityTypeShape EntityType="BlotterEF.SBP_BlotterManualData" Width="1.5" PointX="12.875" PointY="13.75" />
-        <EntityTypeShape EntityType="BlotterEF.SBP_LoginInfo" Width="1.5" PointX="0.75" PointY="5.875" />
+        <EntityTypeShape EntityType="BlotterEF.SBP_LoginInfo" Width="1.5" PointX="22" PointY="1.375" />
         <AssociationConnector Association="BlotterEF.FK_SBP_BlotterBreakups_UserID" />
         <AssociationConnector Association="BlotterEF.FK_SBP_BlotterClearing_UserID" />
         <AssociationConnector Association="BlotterEF.FK_SBP_BlotterCRRFINCON_UserID" />
