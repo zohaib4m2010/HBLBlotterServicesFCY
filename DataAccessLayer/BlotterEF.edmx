@@ -693,6 +693,10 @@
           <Parameter Name="BlotterType" Type="nvarchar" Mode="In" />
           <Parameter Name="URID" Type="int" Mode="In" />
         </Function>
+        <Function Name="SP_ReconcileOPICSManualData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="BR" Type="int" Mode="In" />
+          <Parameter Name="Date" Type="datetime" Mode="In" />
+        </Function>
         <Function Name="SP_SBPBlotter" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Br" Type="varchar" Mode="In" />
         </Function>
@@ -1015,6 +1019,10 @@
             <Parameter Name="pData" Mode="In" Type="String" />
             <Parameter Name="pActivity" Mode="In" Type="String" />
             <Parameter Name="pURL" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SP_ReconcileOPICSManualData" ReturnType="Collection(BlotterEF.SP_ReconcileOPICSManualData_Result)">
+            <Parameter Name="BR" Mode="In" Type="Int32" />
+            <Parameter Name="Date" Mode="In" Type="DateTime" />
           </FunctionImport>
           </EntityContainer>        
         <ComplexType Name="SP_SBPBlotter_Result">
@@ -1939,6 +1947,14 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="SP_ReconcileOPICSManualData_Result">
+          <Property Type="Int64" Name="SNo" Nullable="false" />
+          <Property Type="String" Name="DataType" Nullable="true" MaxLength="100" />
+          <Property Type="Decimal" Name="Inflow" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="OutFlow" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="NetBalance" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="DateTime" Name="DateFor" Nullable="true" Precision="23" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2745,6 +2761,18 @@
           <FunctionImportMapping FunctionImportName="SP_ADD_SessionStart" FunctionName="BlotterEF.Store.SP_ADD_SessionStart" />
           <FunctionImportMapping FunctionImportName="SP_SBPSessionStop" FunctionName="BlotterEF.Store.SP_SBPSessionStop" />
           <FunctionImportMapping FunctionImportName="SP_ADD_ActivityMonitor" FunctionName="BlotterEF.Store.SP_ADD_ActivityMonitor" />
+          <FunctionImportMapping FunctionImportName="SP_ReconcileOPICSManualData" FunctionName="BlotterEF.Store.SP_ReconcileOPICSManualData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BlotterEF.SP_ReconcileOPICSManualData_Result">
+                <ScalarProperty Name="SNo" ColumnName="SNo" />
+                <ScalarProperty Name="DataType" ColumnName="DataType" />
+                <ScalarProperty Name="Inflow" ColumnName="Inflow" />
+                <ScalarProperty Name="OutFlow" ColumnName="OutFlow" />
+                <ScalarProperty Name="NetBalance" ColumnName="NetBalance" />
+                <ScalarProperty Name="DateFor" ColumnName="DateFor" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

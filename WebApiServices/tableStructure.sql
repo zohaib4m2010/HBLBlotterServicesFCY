@@ -835,7 +835,7 @@ select* from SBP_BlotterManualData
 
 alter proc SP_GetOPICSManualData(@BR int,@Date Datetime)
 as
-select SNo,DataType,Inflow,OutFlow,NetBalance,DateFor From SBP_BlotterManualData where cast(DateFor as date)=cast(@Date as date) and BR=@BR
+select SNo,DataType,isnull(Inflow,0.00)Inflow,isnull(OutFlow,0.00)OutFlow,isnull(NetBalance,0.00)NetBalance,DateFor From SBP_BlotterManualData where cast(DateFor as date)=cast(@Date as date) and BR=@BR
 
 --drop table SBP_BlotterTransactionsTotal
 create table SBP_BlotterTransactionsTotal(

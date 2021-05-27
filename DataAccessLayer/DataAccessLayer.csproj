@@ -165,6 +165,9 @@
     <Compile Include="SP_GetUserPageRelationById_Result.cs">
       <DependentUpon>BlotterEF.tt</DependentUpon>
     </Compile>
+    <Compile Include="SP_ReconcileOPICSManualData_Result.cs">
+      <DependentUpon>BlotterEF.tt</DependentUpon>
+    </Compile>
     <Compile Include="SP_SBPBlotterRunningBal.cs">
       <DependentUpon>BlotterEF.tt</DependentUpon>
     </Compile>
