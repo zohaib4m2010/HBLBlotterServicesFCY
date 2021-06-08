@@ -45,5 +45,8 @@ namespace DataAccessLayer
         public Nullable<int> BR { get; set; }
         public Nullable<System.DateTime> createDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
+        public Nullable<decimal> AvgForRemDays { get; set; }
+        public Nullable<decimal> ReserveSurplus { get; set; }
+        public Nullable<double> Reserve { get; set; }
     }
 }

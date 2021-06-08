@@ -66,21 +66,6 @@ namespace WebApiServices.Controllers
 
         }
 
-        [HttpPut]
-        public bool UpdateBreakupsOpngBal(Models.SBP_BlotterBreakups item)
-        {
-            bool status = false;
-            if (ModelState.IsValid)
-            {
-                EntityMapperBlotterBreakups<Models.SBP_BlotterBreakups, DataAccessLayer.SBP_BlotterBreakups> mapObj = new EntityMapperBlotterBreakups<Models.SBP_BlotterBreakups, DataAccessLayer.SBP_BlotterBreakups>();
-                DataAccessLayer.SBP_BlotterBreakups SBP_BlotterBreakupsObj = new DataAccessLayer.SBP_BlotterBreakups();
-                SBP_BlotterBreakupsObj = mapObj.Translate(item);
-                status = DAL.UpdateBreakupsOpngBal(SBP_BlotterBreakupsObj);
-            }
-            return status;
-
-        }
-
         [HttpDelete]
         public bool DeleteBlotterBreakups(int id)
         {

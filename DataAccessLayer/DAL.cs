@@ -16,9 +16,9 @@ namespace DataAccessLayer
             DbContextB = new BlotterEntities();
 
         }
-        public static List<SP_SBPBlotter_Result> GetAllBlotterData(String Br)
+        public static List<SP_SBPBlotter_Result> GetAllBlotterData(String Br, String DataType)
         {
-            var results = DbContextB.SP_SBPBlotter(Br).ToList();
+            var results = DbContextB.SP_SBPBlotter(Br, DataType).ToList();
             return results;
         }
 
@@ -46,26 +46,26 @@ namespace DataAccessLayer
         }
         public static BlotterSumEmail GetAllBlotterDataSum(String BrCode)
         {
-            var results = DbContextB.SP_SBPBlotter(BrCode);
-            decimal TotalAmount=0;
-            decimal inAmt1 = 0;
-            decimal inAmt2 = 0;
-            decimal inAmt3 = 0;
-            decimal TInflow = 0;
-            decimal TOutFlow = 0;
+            //var results = DbContextB.SP_SBPBlotter(BrCode);
+            //decimal TotalAmount=0;
+            //decimal inAmt1 = 0;
+            //decimal inAmt2 = 0;
+            //decimal inAmt3 = 0;
+            //decimal TInflow = 0;
+            //decimal TOutFlow = 0;
             BlotterSumEmail Bmail = new BlotterSumEmail();
-            foreach (var Amt in results)
-            {
-                inAmt1 = Convert.ToDecimal(Amt.Inflow);
-                inAmt2 = Convert.ToDecimal(Amt.Outflow);
-                inAmt3 = Convert.ToDecimal(Amt.OpeningBalance);
-                TInflow = TInflow + inAmt1;
-                TOutFlow = TOutFlow + inAmt2;
-                TotalAmount = TotalAmount + inAmt1 + inAmt2 + inAmt3;                      
-            }
-            Bmail.Balance = TotalAmount/1000000;
-            Bmail.InFlow = TInflow/1000000;
-            Bmail.OutFlow = TOutFlow/1000000;
+            //foreach (var Amt in results)
+            //{
+            //    inAmt1 = Convert.ToDecimal(Amt.Inflow);
+            //    inAmt2 = Convert.ToDecimal(Amt.Outflow);
+            //    inAmt3 = Convert.ToDecimal(Amt.OpeningBalance);
+            //    TInflow = TInflow + inAmt1;
+            //    TOutFlow = TOutFlow + inAmt2;
+            //    TotalAmount = TotalAmount + inAmt1 + inAmt2 + inAmt3;                      
+            //}
+            //Bmail.Balance = TotalAmount/1000000;
+            //Bmail.InFlow = TInflow/1000000;
+            //Bmail.OutFlow = TOutFlow/1000000;
             return Bmail;
         }
         //*****************************************************
@@ -845,28 +845,7 @@ namespace DataAccessLayer
             }
             return status;
         }
-
-        public static bool UpdateBreakupsOpngBal(SBP_BlotterBreakups Item)
-        {
-            bool status;
-            try
-            {
-                SBP_BlotterBreakups Items = DbContextB.SBP_BlotterBreakups.Where(p => p.SNo == Item.SNo).FirstOrDefault();
-                if (Items != null)
-                {
-                    Items.OpeningBalActual = Item.OpeningBalActual;
-                    Items.EstimatedCLossingBal = Item.OpeningBalActual + (Items.HOKRemittance_inFlow + Items.FoodPayment_inFlow + Items.Miscellaneous_inflow + Items.ERF_inflow+Items.SBPChequeDeposite_inflow)+(Items.CashWithdrawbySBPCheques_outFlow+Items.DSC_outFlow+Items.ERF_outflow+Items.Miscellaneous_outflow+Items.SBPCheqGivenToOtherBank_outFlow+Items.RemitanceToHOK_outFlow);
-                    Items.UpdateDate = Item.UpdateDate;
-                    DbContextB.SaveChanges();
-                }
-                status = true;
-            }
-            catch (Exception)
-            {
-                status = false;
-            }
-            return status;
-        }
+        
         public static bool UpdateBlotterBreakups(SBP_BlotterBreakups Item)
         {
             bool status;
@@ -875,7 +854,6 @@ namespace DataAccessLayer
                 SBP_BlotterBreakups Items = DbContextB.SBP_BlotterBreakups.Where(p => p.SNo == Item.SNo).FirstOrDefault();
                 if (Items != null)
                 {
-                    Items.OpeningBalActual = Item.OpeningBalActual;
                     Items.FoodPayment_inFlow = Item.FoodPayment_inFlow;
                     Items.HOKRemittance_inFlow = Item.HOKRemittance_inFlow;
                     Items.ERF_inflow = Item.ERF_inflow;
@@ -887,7 +865,6 @@ namespace DataAccessLayer
                     Items.RemitanceToHOK_outFlow = Item.RemitanceToHOK_outFlow;
                     Items.SBPCheqGivenToOtherBank_outFlow = Item.SBPCheqGivenToOtherBank_outFlow;
                     Items.Miscellaneous_outflow = Item.Miscellaneous_outflow;
-                    Items.EstimatedCLossingBal = Item.EstimatedCLossingBal;
                     Items.UpdateDate = Item.UpdateDate;
                     DbContextB.SaveChanges();
                 }
@@ -1000,6 +977,196 @@ namespace DataAccessLayer
                 if (ClearingItem != null)
                 {
                     DbContextB.SBP_BlotterClearing.Remove(ClearingItem);
+                    DbContextB.SaveChanges();
+                }
+                status = true;
+            }
+            catch (Exception)
+            {
+                status = false;
+            }
+            return status;
+        }
+
+
+        //*****************************************************
+        //RTGS Producers
+        //*****************************************************
+        public static List<SP_GETAllRTGSTransactionTitles_Result> GetAllRTGSTransactionTitles()
+        {
+            return DbContextB.SP_GETAllRTGSTransactionTitles().ToList();
+        }
+        public static List<SP_GetAll_SBPBlotterRTGS_Result> GetAllBlotterRTGS(int UserID, int BranchID, int CurID, int BR)
+        {
+            return DbContextB.SP_GetAll_SBPBlotterRTGS(UserID, BranchID, CurID, BR).ToList();
+        }
+        public static SBP_BlotterRTGS GetRTGSItem(int RTGSId)
+        {
+            return DbContextB.SBP_BlotterRTGS.Where(p => p.SNo == RTGSId).FirstOrDefault();
+        }
+        public static bool InsertRTGS(SBP_BlotterRTGS RTGSItem)
+        {
+            bool status;
+            try
+            {
+                List<SBP_BlotterRTGS> GetCount = DbContextB.SBP_BlotterRTGS.Where(p => p.TTID == RTGSItem.TTID && p.RTGS_Date == RTGSItem.RTGS_Date).ToList();
+                if (GetCount.Count > 0)
+                {
+                    status = false;
+                }
+                else
+                {
+                    DbContextB.SBP_BlotterRTGS.Add(RTGSItem);
+                    DbContextB.SaveChanges();
+                    status = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine(ex.Message.ToString());
+                status = false;
+            }
+            return status;
+        }
+
+        public static bool UpdateRTGS(SBP_BlotterRTGS RTGSItem)
+        {
+            bool status;
+            try
+            {
+                List<SBP_BlotterRTGS> GetCount = DbContextB.SBP_BlotterRTGS.Where(p => p.SNo != RTGSItem.SNo && p.TTID == RTGSItem.TTID && p.RTGS_Date == RTGSItem.RTGS_Date).ToList();
+                if (GetCount.Count > 0)
+                {
+                    status = false;
+                }
+                else
+                {
+                    SBP_BlotterRTGS TboItems = DbContextB.SBP_BlotterRTGS.Where(p => p.SNo == RTGSItem.SNo).FirstOrDefault();
+                    if (TboItems != null)
+                    {
+                        TboItems.RTGS_InFlow = RTGSItem.RTGS_InFlow;
+                        TboItems.RTGS_OutFLow = RTGSItem.RTGS_OutFLow;
+                        TboItems.Note = RTGSItem.Note;
+                        TboItems.UpdateDate = RTGSItem.UpdateDate;
+                        DbContextB.SaveChanges();
+                    }
+                    status = true;
+                }
+            }
+            catch (Exception)
+            {
+                status = false;
+            }
+            return status;
+        }
+
+        public static bool DeleteRTGS(int id)
+        {
+            bool status;
+            try
+            {
+                SBP_BlotterRTGS RTGSItem = DbContextB.SBP_BlotterRTGS.Where(p => p.SNo == id).FirstOrDefault();
+                if (RTGSItem != null)
+                {
+                    DbContextB.SBP_BlotterRTGS.Remove(RTGSItem);
+                    DbContextB.SaveChanges();
+                }
+                status = true;
+            }
+            catch (Exception)
+            {
+                status = false;
+            }
+            return status;
+        }
+
+
+
+        //*****************************************************
+        //Opening Balance Producers
+        //*****************************************************
+        
+        public static List<SP_GetAllOpeningBalance_Result> GetAllBlotterOpenBal(int UserID, int BranchID, int CurID, int BR)
+        {
+            return DbContextB.SP_GetAllOpeningBalance(UserID, BranchID, CurID, BR).ToList();
+        }
+        public static SBP_BlotterOpeningBalance GetOpenBalItem(int OpnBalId)
+        {
+            return DbContextB.SBP_BlotterOpeningBalance.Where(p => p.Id == OpnBalId).FirstOrDefault();
+        }
+        public static bool InsertOpenBal(SBP_BlotterOpeningBalance OpnBalItem)
+        {
+            bool status;
+            try
+            {
+                List<SBP_BlotterOpeningBalance> GetCount = DbContextB.SBP_BlotterOpeningBalance.Where(p => p.BalDate == OpnBalItem.BalDate).ToList();
+                if (GetCount.Count > 0)
+                {
+                    status = false;
+                }
+                else
+                {
+                    DbContextB.SBP_BlotterOpeningBalance.Add(OpnBalItem);
+                    DbContextB.SaveChanges();
+                    status = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine(ex.Message.ToString());
+                status = false;
+            }
+            return status;
+        }
+
+        public static bool UpdateOpenBal(SBP_BlotterOpeningBalance OpenBalItem)
+        {
+            bool status;
+            try
+            {
+                List<SBP_BlotterOpeningBalance> GetCount = DbContextB.SBP_BlotterOpeningBalance.Where(p => p.Id != OpenBalItem.Id && p.BalDate == OpenBalItem.BalDate).ToList();
+                if (GetCount.Count > 0)
+                {
+                    SBP_BlotterOpeningBalance OpenBalItems = DbContextB.SBP_BlotterOpeningBalance.Where(p => p.Id == OpenBalItem.Id && p.BalDate == OpenBalItem.BalDate).FirstOrDefault();
+                    if (OpenBalItems != null)
+                    {
+                        OpenBalItems.OpenBalActual = OpenBalItem.OpenBalActual;
+                        OpenBalItems.AdjOpenBal = OpenBalItem.AdjOpenBal;
+                        OpenBalItems.UpdateDate = OpenBalItem.UpdateDate;
+                        DbContextB.SaveChanges();
+                    }
+                    status = true;
+                }
+                else
+                {
+                    SBP_BlotterOpeningBalance OpenBalItems = DbContextB.SBP_BlotterOpeningBalance.Where(p => p.Id == OpenBalItem.Id).FirstOrDefault();
+                    if (OpenBalItems != null)
+                    {
+                        OpenBalItems.OpenBalActual = OpenBalItem.OpenBalActual;
+                        OpenBalItems.AdjOpenBal = OpenBalItem.AdjOpenBal;
+                        OpenBalItems.BalDate = OpenBalItem.BalDate;
+                        OpenBalItems.UpdateDate = OpenBalItem.UpdateDate;
+                        DbContextB.SaveChanges();
+                    }
+                    status = true;
+                }
+            }
+            catch (Exception)
+            {
+                status = false;
+            }
+            return status;
+        }
+
+        public static bool DeleteOpenBal(int id)
+        {
+            bool status;
+            try
+            {
+                SBP_BlotterOpeningBalance OpenBalItem = DbContextB.SBP_BlotterOpeningBalance.Where(p => p.Id == id).FirstOrDefault();
+                if (OpenBalItem != null)
+                {
+                    DbContextB.SBP_BlotterOpeningBalance.Remove(OpenBalItem);
                     DbContextB.SaveChanges();
                 }
                 status = true;

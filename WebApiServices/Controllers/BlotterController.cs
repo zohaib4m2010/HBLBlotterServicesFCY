@@ -15,12 +15,12 @@ namespace WebApiServices.Controllers
     {
         // GET:   
         [HttpGet]
-        public JsonResult<List<Models.SP_SBPBlotter_Result>> GetAllBlotterList(String BrCode)
+        public JsonResult<List<Models.SP_SBPBlotter_Result>> GetAllBlotterList(String BrCode, String DataType)
         {
             //String BrCode = "02";
             EntityMapperBlotter<DataAccessLayer.SP_SBPBlotter_Result, Models.SP_SBPBlotter_Result> mapObj = new EntityMapperBlotter<DataAccessLayer.SP_SBPBlotter_Result, Models.SP_SBPBlotter_Result>();
 
-            List<DataAccessLayer.SP_SBPBlotter_Result> blotterList = DAL.GetAllBlotterData(BrCode);
+            List<DataAccessLayer.SP_SBPBlotter_Result> blotterList = DAL.GetAllBlotterData(BrCode, DataType);
             List<Models.SP_SBPBlotter_Result> blotter = new List<Models.SP_SBPBlotter_Result>();
             foreach (var item in blotterList)
             {
@@ -28,6 +28,8 @@ namespace WebApiServices.Controllers
             }
             return Json<List<Models.SP_SBPBlotter_Result>>(blotter);
         }
+
+        
         // GET:   
         [HttpGet]
         public JsonResult<Models.BlotterSumEmail> GetBlotterSum(String BrCode)        {

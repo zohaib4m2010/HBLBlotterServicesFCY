@@ -15,8 +15,6 @@ namespace DataAccessLayer
     public partial class SBP_BlotterBreakups
     {
         public long SNo { get; set; }
-        public Nullable<decimal> OpeningBalActual { get; set; }
-        public Nullable<decimal> AdjOpeningBalActual { get; set; }
         public Nullable<decimal> FoodPayment_inFlow { get; set; }
         public Nullable<decimal> AdjFoodPayment_inFlow { get; set; }
         public Nullable<decimal> HOKRemittance_inFlow { get; set; }
@@ -39,10 +37,7 @@ namespace DataAccessLayer
         public Nullable<decimal> AdjSBPCheqGivenToOtherBank_outFlow { get; set; }
         public Nullable<decimal> Miscellaneous_outflow { get; set; }
         public Nullable<decimal> AdjMiscellaneous_outflow { get; set; }
-        public Nullable<decimal> EstimatedCLossingBal { get; set; }
-        public Nullable<decimal> AdjEstimatedCLossingBal { get; set; }
         public Nullable<System.DateTime> BreakupDate { get; set; }
-        public Nullable<System.DateTime> AdjDate { get; set; }
         public int UserID { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }

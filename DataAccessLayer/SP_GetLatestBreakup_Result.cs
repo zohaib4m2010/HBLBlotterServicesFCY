@@ -14,7 +14,6 @@ namespace DataAccessLayer
     public partial class SP_GetLatestBreakup_Result
     {
         public long SNo { get; set; }
-        public Nullable<decimal> OpeningBalActual { get; set; }
         public Nullable<decimal> FoodPayment_inFlow { get; set; }
         public Nullable<decimal> HOKRemittance_inFlow { get; set; }
         public Nullable<decimal> ERF_inflow { get; set; }
@@ -26,7 +25,6 @@ namespace DataAccessLayer
         public Nullable<decimal> RemitanceToHOK_outFlow { get; set; }
         public Nullable<decimal> SBPCheqGivenToOtherBank_outFlow { get; set; }
         public Nullable<decimal> Miscellaneous_outflow { get; set; }
-        public Nullable<decimal> EstimatedCLossingBal { get; set; }
         public int UserID { get; set; }
         public string BranchName { get; set; }
         public int CurID { get; set; }
