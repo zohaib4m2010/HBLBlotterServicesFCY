@@ -8,6 +8,7 @@ namespace WebApiServices.Models
     public class SBP_BlotterOpeningBalance
     {
         public long Id { get; set; }
+        public Nullable<decimal> EstimatedOpenBal { get; set; }
         public Nullable<decimal> OpenBalActual { get; set; }
         public Nullable<decimal> AdjOpenBal { get; set; }
         public Nullable<System.DateTime> BalDate { get; set; }

@@ -14,6 +14,7 @@ namespace DataAccessLayer
     public partial class SP_GetAllOpeningBalance_Result
     {
         public long Id { get; set; }
+        public Nullable<decimal> EstimatedOpenBal { get; set; }
         public Nullable<decimal> OpenBalActual { get; set; }
         public Nullable<decimal> AdjOpenBal { get; set; }
         public Nullable<System.DateTime> BalDate { get; set; }
