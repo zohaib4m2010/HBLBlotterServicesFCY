@@ -44,10 +44,9 @@
         <EntityTypeShape EntityType="BlotterEF.SBP_BlotterCRRReportDaysWiseBal" Width="1.5" PointX="8.375" PointY="5.75" />
         <EntityTypeShape EntityType="BlotterEF.WebPages" Width="1.5" PointX="10.375" PointY="6" />
         <AssociationConnector Association="BlotterEF.FK_URRWPID" />
-        <EntityTypeShape EntityType="BlotterEF.SBP_BlotterCRD" Width="1.5" PointX="8.625" PointY="19.875" />
-        <EntityTypeShape EntityType="BlotterEF.SBP_BlotterRECON" Width="1.5" PointX="8.625" PointY="15" />
-        <AssociationConnector Association="BlotterEF.FK__SBP_Blott__Nostr__7D8391DF" />
-        <AssociationConnector Association="BlotterEF.FK__SBP_Blott__Nostr__7E77B618" />
+        <EntityTypeShape EntityType="BlotterEF.SBP_BlotterOpeningBalance" Width="1.5" PointX="27.125" PointY="2.375" />
+        <AssociationConnector Association="BlotterEF.FK_SBP_BlotterOpeningBalance_BranchID" />
+        <AssociationConnector Association="BlotterEF.FK_SBP_BlotterOpeningBalance_UserID" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

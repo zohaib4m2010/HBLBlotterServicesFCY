@@ -48,8 +48,7 @@ namespace DataAccessLayer
         public virtual DbSet<SBP_BlotterBreakups> SBP_BlotterBreakups { get; set; }
         public virtual DbSet<SBP_BlotterCRRReportDaysWiseBal> SBP_BlotterCRRReportDaysWiseBal { get; set; }
         public virtual DbSet<WebPages> WebPages { get; set; }
-        public virtual DbSet<SBP_BlotterCRD> SBP_BlotterCRD { get; set; }
-        public virtual DbSet<SBP_BlotterRECON> SBP_BlotterRECON { get; set; }
+        public virtual DbSet<SBP_BlotterOpeningBalance> SBP_BlotterOpeningBalance { get; set; }
     
         public virtual ObjectResult<SP_SBPOpicsSystemDate_Result> SP_SBPOpicsSystemDate(string brCode)
         {
@@ -509,30 +508,7 @@ namespace DataAccessLayer
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GETLatestBlotterDTLReportDayWise_Result>("SP_GETLatestBlotterDTLReportDayWise", bRParameter);
         }
     
-        public virtual ObjectResult<SP_GetAllBlotterCurrencyById_Result> SP_GetAllBlotterCurrencyById(Nullable<int> userid)
-        {
-            var useridParameter = userid.HasValue ?
-                new ObjectParameter("userid", userid) :
-                new ObjectParameter("userid", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetAllBlotterCurrencyById_Result>("SP_GetAllBlotterCurrencyById", useridParameter);
-        }
-    
-        public virtual ObjectResult<SP_GetAllNostroBankList_Result> SP_GetAllNostroBankList(Nullable<int> currencyId)
-        {
-            var currencyIdParameter = currencyId.HasValue ?
-                new ObjectParameter("currencyId", currencyId) :
-                new ObjectParameter("currencyId", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetAllNostroBankList_Result>("SP_GetAllNostroBankList", currencyIdParameter);
-        }
-    
-        public virtual ObjectResult<SP_GETAllNostroBanks_Result> SP_GETAllNostroBanks()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GETAllNostroBanks_Result>("SP_GETAllNostroBanks");
-        }
-    
-        public virtual ObjectResult<SP_GetSBPBlotterCRD_Result> SP_GetSBPBlotterCRD(Nullable<int> userID, Nullable<int> branchID, Nullable<int> curID, Nullable<int> bR)
+        public virtual ObjectResult<SP_GetAllOpeningBalance_Result> SP_GetAllOpeningBalance(Nullable<int> userID, Nullable<int> branchID, Nullable<int> curID, Nullable<int> bR)
         {
             var userIDParameter = userID.HasValue ?
                 new ObjectParameter("UserID", userID) :
@@ -550,41 +526,7 @@ namespace DataAccessLayer
                 new ObjectParameter("BR", bR) :
                 new ObjectParameter("BR", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetSBPBlotterCRD_Result>("SP_GetSBPBlotterCRD", userIDParameter, branchIDParameter, curIDParameter, bRParameter);
-        }
-    
-        public virtual ObjectResult<SP_GetSBPBlotterRECON_Result> SP_GetSBPBlotterRECON(Nullable<int> userID, Nullable<int> branchID, Nullable<int> curID, Nullable<int> bR)
-        {
-            var userIDParameter = userID.HasValue ?
-                new ObjectParameter("UserID", userID) :
-                new ObjectParameter("UserID", typeof(int));
-    
-            var branchIDParameter = branchID.HasValue ?
-                new ObjectParameter("BranchID", branchID) :
-                new ObjectParameter("BranchID", typeof(int));
-    
-            var curIDParameter = curID.HasValue ?
-                new ObjectParameter("CurID", curID) :
-                new ObjectParameter("CurID", typeof(int));
-    
-            var bRParameter = bR.HasValue ?
-                new ObjectParameter("BR", bR) :
-                new ObjectParameter("BR", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetSBPBlotterRECON_Result>("SP_GetSBPBlotterRECON", userIDParameter, branchIDParameter, curIDParameter, bRParameter);
-        }
-    
-        public virtual ObjectResult<SP_SBPBlotter_FCY_Result> SP_SBPBlotter_FCY(string br, Nullable<int> curr)
-        {
-            var brParameter = br != null ?
-                new ObjectParameter("Br", br) :
-                new ObjectParameter("Br", typeof(string));
-    
-            var currParameter = curr.HasValue ?
-                new ObjectParameter("Curr", curr) :
-                new ObjectParameter("Curr", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SBPBlotter_FCY_Result>("SP_SBPBlotter_FCY", brParameter, currParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetAllOpeningBalance_Result>("SP_GetAllOpeningBalance", userIDParameter, branchIDParameter, curIDParameter, bRParameter);
         }
     }
 }
