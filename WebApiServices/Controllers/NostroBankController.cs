@@ -24,11 +24,11 @@ namespace WebApiServices.Controllers
             return Json<Models.NostroBank>(products);
         }
         [HttpGet]
-        public JsonResult<List<Models.NostroBank>> GetAllNostroBank()
+        public JsonResult<List<Models.NostroBank>> GetAllNostroBank(int currId)
         {
-            EntityMapperNostroBank<DataAccessLayer.NostroBank, Models.NostroBank> mapObj = new EntityMapperNostroBank<DataAccessLayer.NostroBank, Models.NostroBank>();
+            EntityMapperNostroBank<DataAccessLayer.SP_GetAllNostroBankList_Result, Models.NostroBank> mapObj = new EntityMapperNostroBank<DataAccessLayer.SP_GetAllNostroBankList_Result, Models.NostroBank>();
 
-            List<DataAccessLayer.NostroBank> NostroBankList = DAL.GetAllNostroBank();
+            List<DataAccessLayer.SP_GetAllNostroBankList_Result> NostroBankList = DAL.GetAllNostroBankList(currId);
             List<Models.NostroBank> blotterNostroBank = new List<Models.NostroBank>();
             foreach (var item in NostroBankList)
             {

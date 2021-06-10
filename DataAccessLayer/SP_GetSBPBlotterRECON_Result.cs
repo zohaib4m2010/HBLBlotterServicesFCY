@@ -10,15 +10,17 @@
 namespace DataAccessLayer
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class SBP_BlotterOpeningBalance
+    public partial class SP_GetSBPBlotterRECON_Result
     {
-        public long Id { get; set; }
-        public Nullable<decimal> OpenBalActual { get; set; }
-        public Nullable<decimal> AdjOpenBal { get; set; }
-        public Nullable<System.DateTime> BalDate { get; set; }
-        public string DataType { get; set; }
+        public long ID { get; set; }
+        public long NostroBankId { get; set; }
+        public Nullable<System.DateTime> LastStatementDate { get; set; }
+        public string OurBooks { get; set; }
+        public string TheirBooks { get; set; }
+        public Nullable<decimal> ConversionRate { get; set; }
+        public Nullable<decimal> EquivalentUSD { get; set; }
+        public Nullable<decimal> LimitAvailable { get; set; }
         public int UserID { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
@@ -26,9 +28,6 @@ namespace DataAccessLayer
         public int BID { get; set; }
         public int CurID { get; set; }
         public string Flag { get; set; }
-        public Nullable<decimal> EstimatedOpenBal { get; set; }
-    
-        public virtual Branches Branch { get; set; }
-        public virtual SBP_LoginInfo SBP_LoginInfo { get; set; }
+        public string BankName { get; set; }
     }
 }

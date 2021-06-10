@@ -10,29 +10,16 @@
 namespace DataAccessLayer
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class NostroBank
+    public partial class SP_GetAllNostroBankList_Result
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public NostroBank()
-        {
-            this.SBP_BlotterRECON = new HashSet<SBP_BlotterRECON>();
-            this.SBP_BlotterCRD = new HashSet<SBP_BlotterCRD>();
-        }
-    
         public long ID { get; set; }
         public string BankName { get; set; }
         public Nullable<decimal> NostroLimit { get; set; }
         public string NostroDescription { get; set; }
         public Nullable<bool> isActive { get; set; }
+        public Nullable<int> CurId { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
-        public Nullable<int> CurId { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SBP_BlotterRECON> SBP_BlotterRECON { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SBP_BlotterCRD> SBP_BlotterCRD { get; set; }
     }
 }

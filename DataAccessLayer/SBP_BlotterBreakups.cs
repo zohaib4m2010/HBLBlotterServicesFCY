@@ -45,6 +45,7 @@ namespace DataAccessLayer
         public int BID { get; set; }
         public int CurID { get; set; }
         public string Flag { get; set; }
+        public string OpeningBalActual { get; set; }
     
         public virtual Branches Branch { get; set; }
         public virtual SBP_LoginInfo SBP_LoginInfo { get; set; }

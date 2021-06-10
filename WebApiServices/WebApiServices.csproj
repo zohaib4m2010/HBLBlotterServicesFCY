@@ -48,7 +48,7 @@
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="AutoMapper">
-      <HintPath>..\packages\AutoMapper.dll</HintPath>
+      <HintPath>..\..\..\..\HBL\AutoMapper.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
@@ -155,7 +155,9 @@
     <Compile Include="Controllers\BlotterCashFlowController.cs" />
     <Compile Include="Controllers\BlotterClearingController.cs" />
     <Compile Include="Controllers\BlotterController.cs" />
+    <Compile Include="Controllers\BlotterCRDController.cs" />
     <Compile Include="Controllers\BlotterCRRFINCONController.cs" />
+    <Compile Include="Controllers\BlotterCurrencyController.cs" />
     <Compile Include="Controllers\BlotterDTController.cs" />
     <Compile Include="Controllers\BlotterDTLController.cs" />
     <Compile Include="Controllers\BlotterDTLDBController.cs" />
@@ -163,6 +165,7 @@
     <Compile Include="Controllers\BlotterManualDealsController.cs" />
     <Compile Include="Controllers\BlotterOpenBalController.cs" />
     <Compile Include="Controllers\BlotterOpeningController.cs" />
+    <Compile Include="Controllers\BlotterRECONController.cs" />
     <Compile Include="Controllers\BlotterRTGSController.cs" />
     <Compile Include="Controllers\BlotterSetupController.cs" />
     <Compile Include="Controllers\BlotterTBOController.cs" />
@@ -183,13 +186,17 @@
     <Compile Include="Models\OPICSManualDataPram.cs" />
     <Compile Include="Models\SBP_BlotterBreakups.cs" />
     <Compile Include="Models\SBP_BlotterClearing.cs" />
+    <Compile Include="Models\SBP_BlotterCRD.cs" />
     <Compile Include="Models\SBP_BlotterCRRFINCON.cs" />
     <Compile Include="Models\SBP_BlotterOpeningBalance.cs" />
+    <Compile Include="Models\SBP_BlotterRECON.cs" />
     <Compile Include="Models\SBP_BlotterRTGS.cs" />
     <Compile Include="Models\SBP_BlotterTrade.cs" />
     <Compile Include="Models\SBP_LoginInfo.cs" />
     <Compile Include="Models\SBP_LoginInfoWithRoleId.cs" />
     <Compile Include="Models\SP_ADD_SessionStart.cs" />
+    <Compile Include="Models\SP_GetAllBlotterCurrencyById_Result.cs" />
+    <Compile Include="Models\SP_GETAllNostroBanks_Result.cs" />
     <Compile Include="Models\SP_GETAllTransactionTitles_Result.cs" />
     <Compile Include="Models\SBP_BlotterDTL.cs" />
     <Compile Include="Models\SBP_BlotterDTLDaysWiseBal.cs" />
@@ -207,7 +214,10 @@
     <Compile Include="Models\SP_GETLatestBlotterDTLReportDayWise_Result.cs" />
     <Compile Include="Models\SP_GetLatestBreakup_Result.cs" />
     <Compile Include="Models\SP_GetOPICSManualData_Result.cs" />
+    <Compile Include="Models\SP_GetSBPBlotterCRD_Result.cs" />
+    <Compile Include="Models\SP_GetSBPBlotterRECON_Result.cs" />
     <Compile Include="Models\SP_SBPBlotterRunningBal.cs" />
+    <Compile Include="Models\SP_SBPBlotter_FCY_Result.cs" />
     <Compile Include="Models\SP_SBPGetLoginInfo_Result.cs" />
     <Compile Include="Models\SP_SBPOpicsSystemDate_Result.cs" />
     <Compile Include="Models\UserPageRelation.cs" />
@@ -215,9 +225,12 @@
     <Compile Include="Models\UserRole.cs" />
     <Compile Include="Models\WebPages.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\EntitiyMapperBlotterCRD.cs" />
     <Compile Include="Repository\EntitiyMapperBlotterCRRFINCON.cs" />
+    <Compile Include="Repository\EntitiyMapperBlotterRECON.cs" />
     <Compile Include="Repository\EntitiyMapperBlotterTBO.cs" />
     <Compile Include="Repository\EntityMapperBlotterBreakups.cs" />
+    <Compile Include="Repository\EntityMapperBlotterFCY.cs" />
     <Compile Include="Repository\EntityMapperBlotterOpenBal.cs" />
     <Compile Include="Repository\EntityMapperBlotterRTGS.cs" />
     <Compile Include="Repository\EntityMapperBlotterTrade.cs" />
@@ -231,6 +244,7 @@
     <Compile Include="Repository\EntityMapperBlotterLogin.cs" />
     <Compile Include="Repository\EntityMapperBlotterManual.cs" />
     <Compile Include="Repository\EntityMapperBranches.cs" />
+    <Compile Include="Repository\EntityMapperCurrencies.cs" />
     <Compile Include="Repository\EntityMapperNostroBank.cs" />
     <Compile Include="Repository\EntityMapperUserPageRelation.cs" />
     <Compile Include="Repository\EntityMapperUserRole.cs" />

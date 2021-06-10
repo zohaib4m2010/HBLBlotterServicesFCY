@@ -11,6 +11,7 @@ namespace WebApiServices.Models
         public string BankName { get; set; }
         public Nullable<decimal> NostroLimit { get; set; }
         public string NostroDescription { get; set; }
+        public Nullable<int> CurId { get; set; }
         public Nullable<bool> isActive { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }

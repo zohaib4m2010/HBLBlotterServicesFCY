@@ -29,7 +29,22 @@ namespace WebApiServices.Controllers
             return Json<List<Models.SP_SBPBlotter_Result>>(blotter);
         }
 
-        
+        [HttpGet]
+        public JsonResult<List<Models.SP_SBPBlotter_FCY_Result>> GetAllBlotterFCYList(String BrCode, int CurrId)
+        {
+            //String BrCode = "02";
+            EntityMapperBlotterFCY<DataAccessLayer.SP_SBPBlotter_FCY_Result, Models.SP_SBPBlotter_FCY_Result> mapObj = new EntityMapperBlotterFCY<DataAccessLayer.SP_SBPBlotter_FCY_Result, Models.SP_SBPBlotter_FCY_Result>();
+
+            List<DataAccessLayer.SP_SBPBlotter_FCY_Result> blotterList = DAL.GetAllBlotterData_FCY(BrCode, CurrId);
+            List<Models.SP_SBPBlotter_FCY_Result> blotter = new List<Models.SP_SBPBlotter_FCY_Result>();
+            foreach (var item in blotterList)
+            {
+                blotter.Add(mapObj.Translate(item));
+            }
+            return Json<List<Models.SP_SBPBlotter_FCY_Result>>(blotter);
+        }
+
+
         // GET:   
         [HttpGet]
         public JsonResult<Models.BlotterSumEmail> GetBlotterSum(String BrCode)        {
