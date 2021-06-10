@@ -46,7 +46,6 @@ namespace DataAccessLayer
         public virtual DbSet<SBP_BlotterRTGS> SBP_BlotterRTGS { get; set; }
         public virtual DbSet<SBP_LoginInfo> SBP_LoginInfo { get; set; }
         public virtual DbSet<SBP_BlotterBreakups> SBP_BlotterBreakups { get; set; }
-        public virtual DbSet<SBP_BlotterOpeningBalance> SBP_BlotterOpeningBalance { get; set; }
         public virtual DbSet<SBP_BlotterCRRReportDaysWiseBal> SBP_BlotterCRRReportDaysWiseBal { get; set; }
         public virtual DbSet<WebPages> WebPages { get; set; }
         public virtual DbSet<SBP_BlotterCRD> SBP_BlotterCRD { get; set; }
@@ -465,27 +464,6 @@ namespace DataAccessLayer
         public virtual ObjectResult<SP_GETAllRTGSTransactionTitles_Result> SP_GETAllRTGSTransactionTitles()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GETAllRTGSTransactionTitles_Result>("SP_GETAllRTGSTransactionTitles");
-        }
-    
-        public virtual ObjectResult<SP_GetAllOpeningBalance_Result> SP_GetAllOpeningBalance(Nullable<int> userID, Nullable<int> branchID, Nullable<int> curID, Nullable<int> bR)
-        {
-            var userIDParameter = userID.HasValue ?
-                new ObjectParameter("UserID", userID) :
-                new ObjectParameter("UserID", typeof(int));
-    
-            var branchIDParameter = branchID.HasValue ?
-                new ObjectParameter("BranchID", branchID) :
-                new ObjectParameter("BranchID", typeof(int));
-    
-            var curIDParameter = curID.HasValue ?
-                new ObjectParameter("CurID", curID) :
-                new ObjectParameter("CurID", typeof(int));
-    
-            var bRParameter = bR.HasValue ?
-                new ObjectParameter("BR", bR) :
-                new ObjectParameter("BR", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetAllOpeningBalance_Result>("SP_GetAllOpeningBalance", userIDParameter, branchIDParameter, curIDParameter, bRParameter);
         }
     
         public virtual ObjectResult<SP_GetLatestBreakup_Result> SP_GetLatestBreakup(Nullable<int> userID, Nullable<int> branchID, Nullable<int> curID, Nullable<int> bR)

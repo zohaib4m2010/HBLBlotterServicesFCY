@@ -1233,12 +1233,25 @@
             <End Role="SBP_LoginInfo" EntitySet="SBP_LoginInfo" />
             <End Role="SBP_BlotterBreakups" EntitySet="SBP_BlotterBreakups" />
           </AssociationSet>
-          <FunctionImport Name="SP_GetAllOpeningBalance" ReturnType="Collection(BlotterEF.SP_GetAllOpeningBalance_Result)">
+          <FunctionImport Name="SP_GetLatestBreakup" ReturnType="Collection(BlotterEF.SP_GetLatestBreakup_Result)">
             <Parameter Name="UserID" Mode="In" Type="Int32" />
             <Parameter Name="BranchID" Mode="In" Type="Int32" />
             <Parameter Name="CurID" Mode="In" Type="Int32" />
             <Parameter Name="BR" Mode="In" Type="Int32" />
           </FunctionImport>
+          <FunctionImport Name="SP_SBPBlotter" ReturnType="Collection(BlotterEF.SP_SBPBlotter_Result)">
+            <Parameter Name="Br" Mode="In" Type="String" />
+            <Parameter Name="DataType" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="SBP_BlotterCRRReportDaysWiseBal" EntityType="BlotterEF.SBP_BlotterCRRReportDaysWiseBal" />
+          <FunctionImport Name="SP_GETLatestBlotterDTLReportDayWise" ReturnType="Collection(BlotterEF.SP_GETLatestBlotterDTLReportDayWise_Result)">
+          <Parameter Name="BR" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="WebPages" EntityType="BlotterEF.WebPages" />
+          <AssociationSet Name="FK_URRWPID" Association="BlotterEF.FK_URRWPID">
+            <End Role="WebPage" EntitySet="WebPages" />
+            <End Role="UserPageRelation" EntitySet="UserPageRelations" />
+          </AssociationSet>
           <EntitySet Name="SBP_BlotterOpeningBalance" EntityType="BlotterEF.SBP_BlotterOpeningBalance" />
           <AssociationSet Name="FK_SBP_BlotterOpeningBalance_BranchID" Association="BlotterEF.FK_SBP_BlotterOpeningBalance_BranchID">
             <End Role="Branches" EntitySet="Branches" />
@@ -1248,7 +1261,7 @@
             <End Role="SBP_LoginInfo" EntitySet="SBP_LoginInfo" />
             <End Role="SBP_BlotterOpeningBalance" EntitySet="SBP_BlotterOpeningBalance" />
           </AssociationSet>
-          <FunctionImport Name="SP_GetLatestBreakup" ReturnType="Collection(BlotterEF.SP_GetLatestBreakup_Result)">
+          <FunctionImport Name="SP_GetAllOpeningBalance" ReturnType="Collection(BlotterEF.SP_GetAllOpeningBalance_Result)">
             <Parameter Name="UserID" Mode="In" Type="Int32" />
             <Parameter Name="BranchID" Mode="In" Type="Int32" />
             <Parameter Name="CurID" Mode="In" Type="Int32" />
