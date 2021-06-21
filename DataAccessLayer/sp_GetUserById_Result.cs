@@ -24,14 +24,17 @@ namespace DataAccessLayer
         public string CustomerTimeZone { get; set; }
         public Nullable<System.DateTime> LastAccessedDate { get; set; }
         public Nullable<bool> AccountLocked { get; set; }
-        public Nullable<int> BranchId { get; set; }
+        public int BranchID { get; set; }
         public Nullable<bool> isActive { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
-        public string DefaultPage { get; set; }
         public Nullable<bool> isConventional { get; set; }
         public Nullable<bool> isislamic { get; set; }
+        public string DefaultPage { get; set; }
         public string BlotterType { get; set; }
+        public Nullable<bool> isLoggedIn { get; set; }
+        public string Department { get; set; }
+        public Nullable<bool> ChangePassword { get; set; }
         public int URID { get; set; }
     }
 }

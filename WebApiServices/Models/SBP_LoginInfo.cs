@@ -9,7 +9,7 @@ namespace WebApiServices.Models
     {
         public int Id { get; set; }
         public string UserName { get; set; }
-        public string Password { get; set; }
+        public byte[] Password { get; set; }
         public string ContactNo { get; set; }
         public string Email { get; set; }
         public Nullable<System.DateTime> LastLoginDate { get; set; }
@@ -27,5 +27,7 @@ namespace WebApiServices.Models
         public Nullable<bool> isislamic { get; set; }
         public string BlotterType { get; set; }
         public Nullable<bool> isLoggedIn { get; set; }
+        public string Department { get; set; }
+        public Nullable<bool> ChangePassword { get; set; }
     }
 }

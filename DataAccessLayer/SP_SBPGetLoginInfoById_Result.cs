@@ -24,6 +24,7 @@ namespace DataAccessLayer
         public string UserExists { get; set; }
         public string DefaultPage { get; set; }
         public string BlotterType { get; set; }
+        public Nullable<bool> ChangePassword { get; set; }
         public Nullable<int> CurrencyID { get; set; }
         public string Pages { get; set; }
     }
