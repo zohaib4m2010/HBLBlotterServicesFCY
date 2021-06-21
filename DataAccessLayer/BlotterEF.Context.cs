@@ -268,55 +268,6 @@ namespace DataAccessLayer
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GETLatestBlotterDTLReportForToday_Result>("SP_GETLatestBlotterDTLReportForToday", bRParameter);
         }
     
-        public virtual int SP_InsertLoginInfo(string userName, string password, string contactNo, string email, Nullable<int> branchID, Nullable<bool> isActive, Nullable<bool> isConventional, Nullable<bool> isislamic, Nullable<System.DateTime> createDate, string blotterType, Nullable<int> uRID)
-        {
-            var userNameParameter = userName != null ?
-                new ObjectParameter("UserName", userName) :
-                new ObjectParameter("UserName", typeof(string));
-    
-            var passwordParameter = password != null ?
-                new ObjectParameter("Password", password) :
-                new ObjectParameter("Password", typeof(string));
-    
-            var contactNoParameter = contactNo != null ?
-                new ObjectParameter("ContactNo", contactNo) :
-                new ObjectParameter("ContactNo", typeof(string));
-    
-            var emailParameter = email != null ?
-                new ObjectParameter("Email", email) :
-                new ObjectParameter("Email", typeof(string));
-    
-            var branchIDParameter = branchID.HasValue ?
-                new ObjectParameter("BranchID", branchID) :
-                new ObjectParameter("BranchID", typeof(int));
-    
-            var isActiveParameter = isActive.HasValue ?
-                new ObjectParameter("isActive", isActive) :
-                new ObjectParameter("isActive", typeof(bool));
-    
-            var isConventionalParameter = isConventional.HasValue ?
-                new ObjectParameter("isConventional", isConventional) :
-                new ObjectParameter("isConventional", typeof(bool));
-    
-            var isislamicParameter = isislamic.HasValue ?
-                new ObjectParameter("isislamic", isislamic) :
-                new ObjectParameter("isislamic", typeof(bool));
-    
-            var createDateParameter = createDate.HasValue ?
-                new ObjectParameter("CreateDate", createDate) :
-                new ObjectParameter("CreateDate", typeof(System.DateTime));
-    
-            var blotterTypeParameter = blotterType != null ?
-                new ObjectParameter("BlotterType", blotterType) :
-                new ObjectParameter("BlotterType", typeof(string));
-    
-            var uRIDParameter = uRID.HasValue ?
-                new ObjectParameter("URID", uRID) :
-                new ObjectParameter("URID", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_InsertLoginInfo", userNameParameter, passwordParameter, contactNoParameter, emailParameter, branchIDParameter, isActiveParameter, isConventionalParameter, isislamicParameter, createDateParameter, blotterTypeParameter, uRIDParameter);
-        }
-    
         public virtual int SP_ADD_SessionStart(string pSessionID, Nullable<int> pUserID, string pIP, string pLoginGUID, Nullable<System.DateTime> pLoginTime, Nullable<System.DateTime> pExpires)
         {
             var pSessionIDParameter = pSessionID != null ?
@@ -607,6 +558,116 @@ namespace DataAccessLayer
                 new ObjectParameter("id", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetUserById_Result>("sp_GetUserById", idParameter);
+        }
+    
+        public virtual int SP_InsertLoginInfo(string userName, string password, string contactNo, string email, string department, Nullable<int> branchID, Nullable<bool> isActive, Nullable<bool> isConventional, Nullable<bool> isislamic, Nullable<System.DateTime> createDate, string blotterType, Nullable<int> uRID)
+        {
+            var userNameParameter = userName != null ?
+                new ObjectParameter("UserName", userName) :
+                new ObjectParameter("UserName", typeof(string));
+    
+            var passwordParameter = password != null ?
+                new ObjectParameter("Password", password) :
+                new ObjectParameter("Password", typeof(string));
+    
+            var contactNoParameter = contactNo != null ?
+                new ObjectParameter("ContactNo", contactNo) :
+                new ObjectParameter("ContactNo", typeof(string));
+    
+            var emailParameter = email != null ?
+                new ObjectParameter("Email", email) :
+                new ObjectParameter("Email", typeof(string));
+    
+            var departmentParameter = department != null ?
+                new ObjectParameter("Department", department) :
+                new ObjectParameter("Department", typeof(string));
+    
+            var branchIDParameter = branchID.HasValue ?
+                new ObjectParameter("BranchID", branchID) :
+                new ObjectParameter("BranchID", typeof(int));
+    
+            var isActiveParameter = isActive.HasValue ?
+                new ObjectParameter("isActive", isActive) :
+                new ObjectParameter("isActive", typeof(bool));
+    
+            var isConventionalParameter = isConventional.HasValue ?
+                new ObjectParameter("isConventional", isConventional) :
+                new ObjectParameter("isConventional", typeof(bool));
+    
+            var isislamicParameter = isislamic.HasValue ?
+                new ObjectParameter("isislamic", isislamic) :
+                new ObjectParameter("isislamic", typeof(bool));
+    
+            var createDateParameter = createDate.HasValue ?
+                new ObjectParameter("CreateDate", createDate) :
+                new ObjectParameter("CreateDate", typeof(System.DateTime));
+    
+            var blotterTypeParameter = blotterType != null ?
+                new ObjectParameter("BlotterType", blotterType) :
+                new ObjectParameter("BlotterType", typeof(string));
+    
+            var uRIDParameter = uRID.HasValue ?
+                new ObjectParameter("URID", uRID) :
+                new ObjectParameter("URID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_InsertLoginInfo", userNameParameter, passwordParameter, contactNoParameter, emailParameter, departmentParameter, branchIDParameter, isActiveParameter, isConventionalParameter, isislamicParameter, createDateParameter, blotterTypeParameter, uRIDParameter);
+        }
+    
+        public virtual int SP_UpdateLoginInfo(Nullable<int> id, string userName, string password, string contactNo, string email, Nullable<int> branchID, string department, Nullable<bool> isActive, Nullable<bool> isConventional, Nullable<bool> isislamic, Nullable<System.DateTime> createDate, string blotterType, Nullable<int> uRID)
+        {
+            var idParameter = id.HasValue ?
+                new ObjectParameter("id", id) :
+                new ObjectParameter("id", typeof(int));
+    
+            var userNameParameter = userName != null ?
+                new ObjectParameter("UserName", userName) :
+                new ObjectParameter("UserName", typeof(string));
+    
+            var passwordParameter = password != null ?
+                new ObjectParameter("Password", password) :
+                new ObjectParameter("Password", typeof(string));
+    
+            var contactNoParameter = contactNo != null ?
+                new ObjectParameter("ContactNo", contactNo) :
+                new ObjectParameter("ContactNo", typeof(string));
+    
+            var emailParameter = email != null ?
+                new ObjectParameter("Email", email) :
+                new ObjectParameter("Email", typeof(string));
+    
+            var branchIDParameter = branchID.HasValue ?
+                new ObjectParameter("BranchID", branchID) :
+                new ObjectParameter("BranchID", typeof(int));
+    
+            var departmentParameter = department != null ?
+                new ObjectParameter("Department", department) :
+                new ObjectParameter("Department", typeof(string));
+    
+            var isActiveParameter = isActive.HasValue ?
+                new ObjectParameter("isActive", isActive) :
+                new ObjectParameter("isActive", typeof(bool));
+    
+            var isConventionalParameter = isConventional.HasValue ?
+                new ObjectParameter("isConventional", isConventional) :
+                new ObjectParameter("isConventional", typeof(bool));
+    
+            var isislamicParameter = isislamic.HasValue ?
+                new ObjectParameter("isislamic", isislamic) :
+                new ObjectParameter("isislamic", typeof(bool));
+    
+            var createDateParameter = createDate.HasValue ?
+                new ObjectParameter("CreateDate", createDate) :
+                new ObjectParameter("CreateDate", typeof(System.DateTime));
+    
+            var blotterTypeParameter = blotterType != null ?
+                new ObjectParameter("BlotterType", blotterType) :
+                new ObjectParameter("BlotterType", typeof(string));
+    
+            var uRIDParameter = uRID.HasValue ?
+                new ObjectParameter("URID", uRID) :
+                new ObjectParameter("URID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_UpdateLoginInfo", idParameter, userNameParameter, passwordParameter, contactNoParameter, emailParameter, branchIDParameter, departmentParameter, isActiveParameter, isConventionalParameter, isislamicParameter, createDateParameter, blotterTypeParameter, uRIDParameter);
         }
     }
 }

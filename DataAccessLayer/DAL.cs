@@ -757,9 +757,16 @@ namespace DataAccessLayer
             bool status;
             try
             {
-                DbContextB.SP_InsertLoginInfo(item.UserName, item.Password, item.ContactNo, item.Email, item.BranchID, item.isActive, item.isConventional, item.isislamic, item.CreateDate, item.BlotterType, item.URID);
-                DbContextB.SaveChanges();
-                status = true;
+                SBP_LoginInfo Items = DbContextB.SBP_LoginInfo.Where(p => p.Email == item.Email).FirstOrDefault();
+                if (Items != null)
+                {
+                    status = false;
+                }
+                else {
+                    DbContextB.SP_InsertLoginInfo(item.UserName, item.Password, item.ContactNo, item.Email,item.Department, item.BranchID, item.isActive, item.isConventional, item.isislamic, item.CreateDate, item.BlotterType, item.URID);
+                    DbContextB.SaveChanges();
+                    status = true;
+                }
             }
             catch (Exception ex)
             {
@@ -774,24 +781,30 @@ namespace DataAccessLayer
             bool status;
             try
             {
-                SBP_LoginInfo Items = DbContextB.SBP_LoginInfo.Where(p => p.Id == Item.Id).FirstOrDefault();
+                SBP_LoginInfo Items = DbContextB.SBP_LoginInfo.Where(p => p.Id != Item.Id && p.Email == Item.Email).FirstOrDefault();
                 if (Items != null)
                 {
-                    Items.UserName = Item.UserName;
-                    Items.Password = Encoding.UTF8.GetBytes(Item.Password);
-                    Items.ContactNo = Item.ContactNo;
-                    Items.Email = Item.Email;
-                    Items.Department = Item.Department;
-                    Items.isActive = Item.isActive;
-                    Items.isConventional = Item.isConventional;
-                    Items.isislamic = Item.isislamic;
-                    Items.BlotterType = Item.BlotterType;
-                    Items.ChangePassword = true;
-                    Items.UpdateDate = Item.UpdateDate;
-                    Items.DefaultPage = Item.DefaultPage;
-                    DbContextB.SaveChanges();
+                    //Items.UserName = Item.UserName;
+                    //Items.Password = Encoding.UTF8.GetBytes(Item.Password);
+                    //Items.ContactNo = Item.ContactNo;
+                    //Items.Email = Item.Email;
+                    //Items.Department = Item.Department;
+                    //Items.isActive = Item.isActive;
+                    //Items.isConventional = Item.isConventional;
+                    //Items.isislamic = Item.isislamic;
+                    //Items.BlotterType = Item.BlotterType;
+                    //Items.ChangePassword = true;
+                    //Items.UpdateDate = Item.UpdateDate;
+                    //Items.DefaultPage = Item.DefaultPage;
+                    //DbContextB.SaveChanges();
+
+                    status = false;
                 }
-                status = true;
+                else {
+                    DbContextB.SP_UpdateLoginInfo(Item.Id,Item.UserName, Item.Password, Item.ContactNo, Item.Email,Item.BranchID, Item.Department, Item.isActive, Item.isConventional, Item.isislamic, Item.CreateDate, Item.BlotterType, Item.URID);
+                    DbContextB.SaveChanges();
+                    status = true;
+                }
             }
             catch (Exception)
             {

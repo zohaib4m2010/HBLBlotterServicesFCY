@@ -58,7 +58,7 @@
           <Property Name="AdjSBPCheqGivenToOtherBank_outFlow" Type="numeric" Precision="18" Scale="0" />
           <Property Name="Miscellaneous_outflow" Type="numeric" Precision="18" Scale="0" />
           <Property Name="AdjMiscellaneous_outflow" Type="numeric" Precision="18" Scale="0" />
-          <Property Name="BreakupDate" Type="datetime" />
+          <Property Name="BreakupDate" Type="date" />
           <Property Name="UserID" Type="int" Nullable="false" />
           <Property Name="CreateDate" Type="datetime" />
           <Property Name="UpdateDate" Type="datetime" />
@@ -73,7 +73,7 @@
           </Key>
           <Property Name="SNo" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="TTID" Type="int" Nullable="false" />
-          <Property Name="Clearing_Date" Type="datetime" />
+          <Property Name="Clearing_Date" Type="date" />
           <Property Name="ClearingCOde" Type="nvarchar" MaxLength="20" />
           <Property Name="Clearing_InFlow" Type="numeric" Precision="18" Scale="0" />
           <Property Name="AdjClearing_InFlow" Type="numeric" Precision="18" Scale="0" />
@@ -94,7 +94,7 @@
           </Key>
           <Property Name="SNo" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Nostro_Account" Type="bigint" Nullable="false" />
-          <Property Name="ValueDate" Type="datetime" />
+          <Property Name="ValueDate" Type="date" />
           <Property Name="CRD_InFlow" Type="numeric" Precision="18" Scale="0" />
           <Property Name="CRD_OutFlow" Type="numeric" Precision="18" Scale="0" />
           <Property Name="UserID" Type="int" Nullable="false" />
@@ -110,8 +110,8 @@
             <PropertyRef Name="SNo" />
           </Key>
           <Property Name="SNo" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="StartDate" Type="datetime" />
-          <Property Name="EndDate" Type="datetime" />
+          <Property Name="StartDate" Type="date" />
+          <Property Name="EndDate" Type="date" />
           <Property Name="DemandTimeLiablities" Type="numeric" Precision="18" Scale="0" />
           <Property Name="TimeLiablitiesOverOneYear" Type="numeric" Precision="18" Scale="0" />
           <Property Name="DemandTimeLiablitiesTotal" Type="numeric" Precision="18" Scale="0" />
@@ -151,7 +151,7 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CRRFinconId" Type="int" Nullable="false" />
-          <Property Name="ReportDate" Type="datetime" Nullable="false" />
+          <Property Name="ReportDate" Type="date" Nullable="false" />
           <Property Name="WeekDays" Type="varchar" MaxLength="20" />
           <Property Name="KarachiTotal" Type="numeric" Precision="18" Scale="0" />
           <Property Name="HyderabadTotal" Type="numeric" Precision="18" Scale="0" />
@@ -276,7 +276,7 @@
           <Property Name="Inflow" Type="numeric" Precision="18" Scale="0" />
           <Property Name="OutFlow" Type="numeric" Precision="18" Scale="0" />
           <Property Name="NetBalance" Type="numeric" Precision="18" Scale="0" />
-          <Property Name="DateFor" Type="datetime" />
+          <Property Name="DateFor" Type="date" />
           <Property Name="UserID" Type="int" Nullable="false" />
           <Property Name="CreateDate" Type="datetime" />
           <Property Name="UpdateDate" Type="datetime" />
@@ -330,7 +330,7 @@
           </Key>
           <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="NostroBankId" Type="bigint" Nullable="false" />
-          <Property Name="LastStatementDate" Type="datetime" />
+          <Property Name="LastStatementDate" Type="date" />
           <Property Name="OurBooks" Type="nvarchar" MaxLength="100" />
           <Property Name="TheirBooks" Type="nvarchar" MaxLength="100" />
           <Property Name="ConversionRate" Type="numeric" Precision="18" Scale="0" />
@@ -350,7 +350,7 @@
           </Key>
           <Property Name="SNo" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="TTID" Type="int" Nullable="false" />
-          <Property Name="RTGS_Date" Type="datetime" />
+          <Property Name="RTGS_Date" Type="date" />
           <Property Name="RTGSCOde" Type="nvarchar" MaxLength="20" />
           <Property Name="RTGS_InFlow" Type="numeric" Precision="18" Scale="0" />
           <Property Name="RTGS_OutFLow" Type="numeric" Precision="18" Scale="0" />
@@ -378,7 +378,7 @@
           </Key>
           <Property Name="SNo" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="TTID" Type="int" Nullable="false" />
-          <Property Name="TBO_Date" Type="datetime" />
+          <Property Name="TBO_Date" Type="date" />
           <Property Name="TBOCOde" Type="nvarchar" MaxLength="20" />
           <Property Name="TBO_InFlow" Type="numeric" Precision="18" Scale="0" />
           <Property Name="AdjTBO_InFlow" Type="numeric" Precision="18" Scale="0" />
@@ -399,7 +399,7 @@
           </Key>
           <Property Name="SNo" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="TTID" Type="int" Nullable="false" />
-          <Property Name="Trade_Date" Type="datetime" />
+          <Property Name="Trade_Date" Type="date" />
           <Property Name="TradeCOde" Type="nvarchar" MaxLength="20" />
           <Property Name="Trade_InFlow" Type="numeric" Precision="18" Scale="0" />
           <Property Name="AdjTrade_InFlow" Type="numeric" Precision="18" Scale="0" />
@@ -861,9 +861,10 @@
         </Function>
         <Function Name="SP_InsertLoginInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UserName" Type="nvarchar" Mode="In" />
-          <Parameter Name="Password" Type="nvarchar" Mode="In" />
+          <Parameter Name="Password" Type="varchar" Mode="In" />
           <Parameter Name="ContactNo" Type="nvarchar" Mode="In" />
           <Parameter Name="Email" Type="nvarchar" Mode="In" />
+          <Parameter Name="Department" Type="nvarchar" Mode="In" />
           <Parameter Name="BranchID" Type="int" Mode="In" />
           <Parameter Name="isActive" Type="bit" Mode="In" />
           <Parameter Name="isConventional" Type="bit" Mode="In" />
@@ -908,6 +909,21 @@
           <Parameter Name="StartDate" Type="datetime" Mode="In" />
           <Parameter Name="EndDate" Type="datetime" Mode="In" />
           <Parameter Name="BR" Type="int" Mode="In" />
+        </Function>
+        <Function Name="SP_UpdateLoginInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id" Type="int" Mode="In" />
+          <Parameter Name="UserName" Type="nvarchar" Mode="In" />
+          <Parameter Name="Password" Type="varchar" Mode="In" />
+          <Parameter Name="ContactNo" Type="nvarchar" Mode="In" />
+          <Parameter Name="Email" Type="nvarchar" Mode="In" />
+          <Parameter Name="BranchID" Type="int" Mode="In" />
+          <Parameter Name="Department" Type="nvarchar" Mode="In" />
+          <Parameter Name="isActive" Type="bit" Mode="In" />
+          <Parameter Name="isConventional" Type="bit" Mode="In" />
+          <Parameter Name="isislamic" Type="bit" Mode="In" />
+          <Parameter Name="CreateDate" Type="datetime" Mode="In" />
+          <Parameter Name="BlotterType" Type="nvarchar" Mode="In" />
+          <Parameter Name="URID" Type="int" Mode="In" />
         </Function>
         <EntityContainer Name="BlotterEFStoreContainer">
           <EntitySet Name="Branches" EntityType="Self.Branches" Schema="dbo" store:Type="Tables" />
@@ -1131,19 +1147,6 @@
           <FunctionImport Name="SP_GETLatestBlotterDTLReportForToday" ReturnType="Collection(BlotterEF.SP_GETLatestBlotterDTLReportForToday_Result)">
           <Parameter Name="BR" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="SP_InsertLoginInfo">
-            <Parameter Name="UserName" Mode="In" Type="String" />
-            <Parameter Name="Password" Mode="In" Type="String" />
-            <Parameter Name="ContactNo" Mode="In" Type="String" />
-            <Parameter Name="Email" Mode="In" Type="String" />
-            <Parameter Name="BranchID" Mode="In" Type="Int32" />
-            <Parameter Name="isActive" Mode="In" Type="Boolean" />
-            <Parameter Name="isConventional" Mode="In" Type="Boolean" />
-            <Parameter Name="isislamic" Mode="In" Type="Boolean" />
-            <Parameter Name="CreateDate" Mode="In" Type="DateTime" />
-            <Parameter Name="BlotterType" Mode="In" Type="String" />
-            <Parameter Name="URID" Mode="In" Type="Int32" />
-          </FunctionImport>
           <FunctionImport Name="SP_ADD_SessionStart">
             <Parameter Name="pSessionID" Mode="In" Type="String" />
             <Parameter Name="pUserID" Mode="In" Type="Int32" />
@@ -1252,9 +1255,6 @@
           <FunctionImport Name="SP_SBPGetLoginInfoById" ReturnType="Collection(BlotterEF.SP_SBPGetLoginInfoById_Result)">
           <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="sp_GetUserById" ReturnType="Collection(BlotterEF.sp_GetUserById_Result)">
-          <Parameter Name="id" Mode="In" Type="Int32" />
-          </FunctionImport>
           <EntitySet Name="SBP_LoginInfo" EntityType="BlotterEF.SBP_LoginInfo" />
           <AssociationSet Name="FK_SBP_BlotterBreakups_UserID" Association="BlotterEF.FK_SBP_BlotterBreakups_UserID">
             <End Role="SBP_LoginInfo" EntitySet="SBP_LoginInfo" />
@@ -1301,6 +1301,38 @@
             <End Role="SBP_LoginInfo" EntitySet="SBP_LoginInfo" />
             <End Role="SBP_BlotterOpeningBalance" EntitySet="SBP_BlotterOpeningBalance" />
           </AssociationSet>
+          <FunctionImport Name="sp_GetUserById" ReturnType="Collection(BlotterEF.sp_GetUserById_Result)">
+          <Parameter Name="id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SP_InsertLoginInfo">
+            <Parameter Name="UserName" Mode="In" Type="String" />
+            <Parameter Name="Password" Mode="In" Type="String" />
+            <Parameter Name="ContactNo" Mode="In" Type="String" />
+            <Parameter Name="Email" Mode="In" Type="String" />
+            <Parameter Name="Department" Mode="In" Type="String" />
+            <Parameter Name="BranchID" Mode="In" Type="Int32" />
+            <Parameter Name="isActive" Mode="In" Type="Boolean" />
+            <Parameter Name="isConventional" Mode="In" Type="Boolean" />
+            <Parameter Name="isislamic" Mode="In" Type="Boolean" />
+            <Parameter Name="CreateDate" Mode="In" Type="DateTime" />
+            <Parameter Name="BlotterType" Mode="In" Type="String" />
+            <Parameter Name="URID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SP_UpdateLoginInfo">
+            <Parameter Name="id" Mode="In" Type="Int32" />
+            <Parameter Name="UserName" Mode="In" Type="String" />
+            <Parameter Name="Password" Mode="In" Type="String" />
+            <Parameter Name="ContactNo" Mode="In" Type="String" />
+            <Parameter Name="Email" Mode="In" Type="String" />
+            <Parameter Name="BranchID" Mode="In" Type="Int32" />
+            <Parameter Name="Department" Mode="In" Type="String" />
+            <Parameter Name="isActive" Mode="In" Type="Boolean" />
+            <Parameter Name="isConventional" Mode="In" Type="Boolean" />
+            <Parameter Name="isislamic" Mode="In" Type="Boolean" />
+            <Parameter Name="CreateDate" Mode="In" Type="DateTime" />
+            <Parameter Name="BlotterType" Mode="In" Type="String" />
+            <Parameter Name="URID" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="SP_SBPOpicsSystemDate_Result">
           <Property Type="DateTime" Name="OpicsCurrentDate" Nullable="true" Precision="23" />
@@ -1583,8 +1615,8 @@
             <PropertyRef Name="SNo" />
           </Key>
           <Property Name="SNo" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="StartDate" Type="DateTime" Precision="3" />
-          <Property Name="EndDate" Type="DateTime" Precision="3" />
+          <Property Name="StartDate" Type="DateTime" Precision="0" />
+          <Property Name="EndDate" Type="DateTime" Precision="0" />
           <Property Name="DemandTimeLiablities" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="TimeLiablitiesOverOneYear" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="DemandTimeLiablitiesTotal" Type="Decimal" Precision="18" Scale="0" />
@@ -1651,7 +1683,7 @@
           </Key>
           <Property Name="SNo" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="TTID" Type="Int32" Nullable="false" />
-          <Property Name="TBO_Date" Type="DateTime" Precision="3" />
+          <Property Name="TBO_Date" Type="DateTime" Precision="0" />
           <Property Name="TBOCOde" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="TBO_InFlow" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="AdjTBO_InFlow" Type="Decimal" Precision="18" Scale="0" />
@@ -1701,7 +1733,7 @@
           </Key>
           <Property Name="SNo" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="TTID" Type="Int32" Nullable="false" />
-          <Property Name="Clearing_Date" Type="DateTime" Precision="3" />
+          <Property Name="Clearing_Date" Type="DateTime" Precision="0" />
           <Property Name="ClearingCOde" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="Clearing_InFlow" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="AdjClearing_InFlow" Type="Decimal" Precision="18" Scale="0" />
@@ -1724,7 +1756,7 @@
           </Key>
           <Property Name="SNo" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="TTID" Type="Int32" Nullable="false" />
-          <Property Name="Trade_Date" Type="DateTime" Precision="3" />
+          <Property Name="Trade_Date" Type="DateTime" Precision="0" />
           <Property Name="TradeCOde" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="Trade_InFlow" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="AdjTrade_InFlow" Type="Decimal" Precision="18" Scale="0" />
@@ -1806,7 +1838,7 @@
           <Property Name="Inflow" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="OutFlow" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="NetBalance" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="DateFor" Type="DateTime" Precision="3" />
+          <Property Name="DateFor" Type="DateTime" Precision="0" />
           <Property Name="UserID" Type="Int32" Nullable="false" />
           <Property Name="CreateDate" Type="DateTime" Precision="3" />
           <Property Name="UpdateDate" Type="DateTime" Precision="3" />
@@ -1911,7 +1943,7 @@
           <Property Name="AdjSBPCheqGivenToOtherBank_outFlow" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="Miscellaneous_outflow" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="AdjMiscellaneous_outflow" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="BreakupDate" Type="DateTime" Precision="3" />
+          <Property Name="BreakupDate" Type="DateTime" Precision="0" />
           <Property Name="UserID" Type="Int32" Nullable="false" />
           <Property Name="CreateDate" Type="DateTime" Precision="3" />
           <Property Name="UpdateDate" Type="DateTime" Precision="3" />
@@ -1970,7 +2002,7 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CRRFinconId" Type="Int32" Nullable="false" />
-          <Property Name="ReportDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ReportDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="WeekDays" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="KarachiTotal" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="HyderabadTotal" Type="Decimal" Precision="18" Scale="0" />
@@ -2086,7 +2118,7 @@
           </Key>
           <Property Name="SNo" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Nostro_Account" Type="Int64" Nullable="false" />
-          <Property Name="ValueDate" Type="DateTime" Precision="3" />
+          <Property Name="ValueDate" Type="DateTime" Precision="0" />
           <Property Name="CRD_InFlow" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="CRD_OutFlow" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="UserID" Type="Int32" Nullable="false" />
@@ -2104,7 +2136,7 @@
           </Key>
           <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="NostroBankId" Type="Int64" Nullable="false" />
-          <Property Name="LastStatementDate" Type="DateTime" Precision="3" />
+          <Property Name="LastStatementDate" Type="DateTime" Precision="0" />
           <Property Name="OurBooks" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="TheirBooks" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="ConversionRate" Type="Decimal" Precision="18" Scale="0" />
@@ -2212,7 +2244,7 @@
           </Key>
           <Property Name="SNo" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="TTID" Type="Int32" Nullable="false" />
-          <Property Name="RTGS_Date" Type="DateTime" Precision="3" />
+          <Property Name="RTGS_Date" Type="DateTime" Precision="0" />
           <Property Name="RTGSCOde" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="RTGS_InFlow" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="RTGS_OutFLow" Type="Decimal" Precision="18" Scale="0" />
@@ -2283,31 +2315,6 @@
           <Property Type="Boolean" Name="ChangePassword" Nullable="true" />
           <Property Type="Int32" Name="CurrencyID" Nullable="true" />
           <Property Type="String" Name="Pages" Nullable="true" />
-        </ComplexType>
-        <ComplexType Name="sp_GetUserById_Result">
-          <Property Type="Int32" Name="Id" Nullable="false" />
-          <Property Type="String" Name="UserName" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="Password" Nullable="true" MaxLength="260" />
-          <Property Type="String" Name="ContactNo" Nullable="true" MaxLength="12" />
-          <Property Type="String" Name="Email" Nullable="true" MaxLength="50" />
-          <Property Type="DateTime" Name="LastLoginDate" Nullable="true" Precision="23" />
-          <Property Type="Int32" Name="LoginFailedCount" Nullable="true" />
-          <Property Type="String" Name="LoginIPAddress" Nullable="true" MaxLength="20" />
-          <Property Type="String" Name="CustomerTimeZone" Nullable="true" MaxLength="20" />
-          <Property Type="DateTime" Name="LastAccessedDate" Nullable="true" Precision="23" />
-          <Property Type="Boolean" Name="AccountLocked" Nullable="true" />
-          <Property Type="Int32" Name="BranchID" Nullable="false" />
-          <Property Type="Boolean" Name="isActive" Nullable="true" />
-          <Property Type="DateTime" Name="CreateDate" Nullable="true" Precision="23" />
-          <Property Type="DateTime" Name="UpdateDate" Nullable="true" Precision="23" />
-          <Property Type="Boolean" Name="isConventional" Nullable="true" />
-          <Property Type="Boolean" Name="isislamic" Nullable="true" />
-          <Property Type="String" Name="DefaultPage" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="BlotterType" Nullable="true" MaxLength="3" />
-          <Property Type="Boolean" Name="isLoggedIn" Nullable="true" />
-          <Property Type="String" Name="Department" Nullable="true" MaxLength="120" />
-          <Property Type="Boolean" Name="ChangePassword" Nullable="true" />
-          <Property Type="Int32" Name="URID" Nullable="false" />
         </ComplexType>
         <EntityType Name="SBP_LoginInfo">
           <Key>
@@ -2498,6 +2505,31 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="sp_GetUserById_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="UserName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Password" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="ContactNo" Nullable="true" MaxLength="12" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="LastLoginDate" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="LoginFailedCount" Nullable="true" />
+          <Property Type="String" Name="LoginIPAddress" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="CustomerTimeZone" Nullable="true" MaxLength="20" />
+          <Property Type="DateTime" Name="LastAccessedDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="AccountLocked" Nullable="true" />
+          <Property Type="Int32" Name="BranchID" Nullable="false" />
+          <Property Type="Boolean" Name="isActive" Nullable="true" />
+          <Property Type="DateTime" Name="CreateDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="UpdateDate" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="isConventional" Nullable="true" />
+          <Property Type="Boolean" Name="isislamic" Nullable="true" />
+          <Property Type="String" Name="DefaultPage" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="BlotterType" Nullable="true" MaxLength="3" />
+          <Property Type="Boolean" Name="isLoggedIn" Nullable="true" />
+          <Property Type="String" Name="Department" Nullable="true" MaxLength="120" />
+          <Property Type="Boolean" Name="ChangePassword" Nullable="true" />
+          <Property Type="Int32" Name="URID" Nullable="false" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3027,7 +3059,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="SP_InsertLoginInfo" FunctionName="BlotterEF.Store.SP_InsertLoginInfo" />
           <FunctionImportMapping FunctionImportName="SP_ADD_SessionStart" FunctionName="BlotterEF.Store.SP_ADD_SessionStart" />
           <FunctionImportMapping FunctionImportName="SP_SBPSessionStop" FunctionName="BlotterEF.Store.SP_SBPSessionStop" />
           <FunctionImportMapping FunctionImportName="SP_ADD_ActivityMonitor" FunctionName="BlotterEF.Store.SP_ADD_ActivityMonitor" />
@@ -3462,35 +3493,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="sp_GetUserById" FunctionName="BlotterEF.Store.sp_GetUserById">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="BlotterEF.sp_GetUserById_Result">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="UserName" ColumnName="UserName" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="ContactNo" ColumnName="ContactNo" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="LastLoginDate" ColumnName="LastLoginDate" />
-                <ScalarProperty Name="LoginFailedCount" ColumnName="LoginFailedCount" />
-                <ScalarProperty Name="LoginIPAddress" ColumnName="LoginIPAddress" />
-                <ScalarProperty Name="CustomerTimeZone" ColumnName="CustomerTimeZone" />
-                <ScalarProperty Name="LastAccessedDate" ColumnName="LastAccessedDate" />
-                <ScalarProperty Name="AccountLocked" ColumnName="AccountLocked" />
-                <ScalarProperty Name="BranchID" ColumnName="BranchID" />
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
-                <ScalarProperty Name="isConventional" ColumnName="isConventional" />
-                <ScalarProperty Name="isislamic" ColumnName="isislamic" />
-                <ScalarProperty Name="DefaultPage" ColumnName="DefaultPage" />
-                <ScalarProperty Name="BlotterType" ColumnName="BlotterType" />
-                <ScalarProperty Name="isLoggedIn" ColumnName="isLoggedIn" />
-                <ScalarProperty Name="Department" ColumnName="Department" />
-                <ScalarProperty Name="ChangePassword" ColumnName="ChangePassword" />
-                <ScalarProperty Name="URID" ColumnName="URID" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <EntitySetMapping Name="SBP_LoginInfo">
             <EntityTypeMapping TypeName="BlotterEF.SBP_LoginInfo">
               <MappingFragment StoreEntitySet="SBP_LoginInfo">
@@ -3538,6 +3540,37 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetUserById" FunctionName="BlotterEF.Store.sp_GetUserById">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BlotterEF.sp_GetUserById_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="ContactNo" ColumnName="ContactNo" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="LastLoginDate" ColumnName="LastLoginDate" />
+                <ScalarProperty Name="LoginFailedCount" ColumnName="LoginFailedCount" />
+                <ScalarProperty Name="LoginIPAddress" ColumnName="LoginIPAddress" />
+                <ScalarProperty Name="CustomerTimeZone" ColumnName="CustomerTimeZone" />
+                <ScalarProperty Name="LastAccessedDate" ColumnName="LastAccessedDate" />
+                <ScalarProperty Name="AccountLocked" ColumnName="AccountLocked" />
+                <ScalarProperty Name="BranchID" ColumnName="BranchID" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="isConventional" ColumnName="isConventional" />
+                <ScalarProperty Name="isislamic" ColumnName="isislamic" />
+                <ScalarProperty Name="DefaultPage" ColumnName="DefaultPage" />
+                <ScalarProperty Name="BlotterType" ColumnName="BlotterType" />
+                <ScalarProperty Name="isLoggedIn" ColumnName="isLoggedIn" />
+                <ScalarProperty Name="Department" ColumnName="Department" />
+                <ScalarProperty Name="ChangePassword" ColumnName="ChangePassword" />
+                <ScalarProperty Name="URID" ColumnName="URID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_InsertLoginInfo" FunctionName="BlotterEF.Store.SP_InsertLoginInfo" />
+          <FunctionImportMapping FunctionImportName="SP_UpdateLoginInfo" FunctionName="BlotterEF.Store.SP_UpdateLoginInfo" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
