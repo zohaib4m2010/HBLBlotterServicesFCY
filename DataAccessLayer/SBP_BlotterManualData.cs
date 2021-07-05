@@ -26,6 +26,8 @@ namespace DataAccessLayer
         public Nullable<int> BR { get; set; }
         public int CurID { get; set; }
         public string Flag { get; set; }
+        public Nullable<decimal> AdjBalance { get; set; }
+        public Nullable<bool> isAdjusted { get; set; }
     
         public virtual SBP_LoginInfo SBP_LoginInfo { get; set; }
     }

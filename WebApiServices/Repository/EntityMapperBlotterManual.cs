@@ -17,7 +17,10 @@ namespace WebApiServices.Repository
             Mapper.CreateMap<Models.SBP_BlotterManualDeals, DataAccessLayer.SBP_BlotterManualDeals>();
             Mapper.CreateMap<DataAccessLayer.SBP_BlotterManualDeals, Models.SBP_BlotterManualDeals>();
 
-           
+
+            Mapper.CreateMap<Models.SBP_BlotterManualEstBalance, DataAccessLayer.SBP_BlotterManualEstBalance>();
+            Mapper.CreateMap<DataAccessLayer.SBP_BlotterManualEstBalance, Models.SBP_BlotterManualEstBalance>();
+
         }
 
         public TDestination Translate(TSource obj)

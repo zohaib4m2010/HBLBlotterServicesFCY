@@ -16,9 +16,9 @@ namespace DataAccessLayer
             DbContextB = new BlotterEntities();
 
         }
-        public static List<SP_SBPBlotter_Result> GetAllBlotterData(String Br, String DataType)
+        public static List<SP_SBPBlotter_Result> GetAllBlotterData(String Br, String DataType, String CurrentDate)
         {
-            var results = DbContextB.SP_SBPBlotter(Br, DataType).ToList();
+            var results = DbContextB.SP_SBPBlotter(Br, DataType,Convert.ToDateTime(CurrentDate)).ToList();
             return results;
         }
 
@@ -172,7 +172,7 @@ namespace DataAccessLayer
             bool status;
             try
             {
-                List<SBP_BlotterCRRFINCON> GetCount = DbContextB.SBP_BlotterCRRFINCON.Where(p => CRRFINCONItem.StartDate >= p.StartDate && CRRFINCONItem.StartDate <= p.EndDate).ToList();
+                List<SBP_BlotterCRRFINCON> GetCount = DbContextB.SBP_BlotterCRRFINCON.Where(p => CRRFINCONItem.StartDate >= p.StartDate && CRRFINCONItem.StartDate <= p.EndDate && p.BR == CRRFINCONItem.BR && p.CurID==CRRFINCONItem.CurID).ToList();
                 if (GetCount.Count > 0)
                 {
                     status = false;
@@ -180,7 +180,7 @@ namespace DataAccessLayer
                 else
                 {
 
-                    List<SBP_BlotterCRRFINCON> GetCount2 = DbContextB.SBP_BlotterCRRFINCON.Where(p => CRRFINCONItem.EndDate >= p.StartDate && CRRFINCONItem.EndDate <= p.EndDate).ToList();
+                    List<SBP_BlotterCRRFINCON> GetCount2 = DbContextB.SBP_BlotterCRRFINCON.Where(p => CRRFINCONItem.EndDate >= p.StartDate && CRRFINCONItem.EndDate <= p.EndDate && p.BR == CRRFINCONItem.BR && p.CurID == CRRFINCONItem.CurID).ToList();
                     if (GetCount2.Count > 0)
                     {
                         status = false;
@@ -207,7 +207,7 @@ namespace DataAccessLayer
             bool status;
             try
             {
-                List<SBP_BlotterCRRFINCON> GetCount = DbContextB.SBP_BlotterCRRFINCON.Where(p => p.SNo == CRRFINCONItem.SNo && p.StartDate >= p.StartDate && p.EndDate <= p.EndDate).ToList();
+                List<SBP_BlotterCRRFINCON> GetCount = DbContextB.SBP_BlotterCRRFINCON.Where(p => p.SNo == CRRFINCONItem.SNo && p.StartDate >= p.StartDate && p.EndDate <= p.EndDate && p.BR == CRRFINCONItem.BR && p.CurID == CRRFINCONItem.CurID).ToList();
                 if (GetCount.Count > 0)
                 {
                     SBP_BlotterCRRFINCON CRRFINCONItems = DbContextB.SBP_BlotterCRRFINCON.Where(p => p.SNo == CRRFINCONItem.SNo).FirstOrDefault();
@@ -314,6 +314,7 @@ namespace DataAccessLayer
                 SBP_BlotterTBO TboItems = DbContextB.SBP_BlotterTBO.Where(p => p.SNo == TBOItem.SNo).FirstOrDefault();
                 if (TboItems != null)
                 {
+                    TboItems.DataType = TBOItem.DataType;
                     TboItems.TTID = TBOItem.TTID;
                     TboItems.TBO_InFlow = TBOItem.TBO_InFlow;
                     TboItems.TBO_OutFLow = TBOItem.TBO_OutFLow;
@@ -972,7 +973,9 @@ namespace DataAccessLayer
                     SBP_BlotterClearing CLRItems = DbContextB.SBP_BlotterClearing.Where(p => p.SNo == ClearingItem.SNo).FirstOrDefault();
                     if (CLRItems != null)
                     {
-                        CLRItems.TTID = ClearingItem.TTID;
+
+                    CLRItems.DataType = ClearingItem.DataType;
+                    CLRItems.TTID = ClearingItem.TTID;
                         CLRItems.Clearing_InFlow = ClearingItem.Clearing_InFlow;
                         CLRItems.Clearing_OutFLow = ClearingItem.Clearing_OutFLow;
                         CLRItems.Note = ClearingItem.Note;
@@ -1010,6 +1013,317 @@ namespace DataAccessLayer
             return status;
         }
 
+
+        //*****************************************************
+        //FundsTransfer Producers
+        //*****************************************************
+
+
+        public static List<SBP_BlotterFundsTransfer> GetAllBlotterFundsTransfer(int UserID, int BranchID, int CurID, int BR)
+        {
+            return DbContextB.SBP_BlotterFundsTransfer.Where(p => p.UserID== UserID && p.BID== BranchID && p.CurID== CurID && p.BR== BR).ToList();
+        }
+        public static SBP_BlotterFundsTransfer GetFundsTransferItem(int FundsTransferId)
+        {
+            return DbContextB.SBP_BlotterFundsTransfer.Where(p => p.SNo == FundsTransferId).FirstOrDefault();
+        }
+        public static bool InsertFundsTransfer(SBP_BlotterFundsTransfer FundsTransferItem)
+        {
+            bool status;
+            try
+            {
+                //List<SBP_BlotterFundsTransfer> GetCount = DbContextB.SBP_BlotterFundsTransfer.Where(p => p.TTID == FundsTransferItem.TTID && p.FundsTransfer_Date == FundsTransferItem.FundsTransfer_Date).ToList();
+                //if (GetCount.Count > 0)
+                //{
+                //    status = false;
+                //}
+                //else
+                //{
+                DbContextB.SBP_BlotterFundsTransfer.Add(FundsTransferItem);
+                DbContextB.SaveChanges();
+
+                if (FundsTransferItem.DataType == "SBP")
+                {
+
+                    FundsTransferItem.DataType = "HBLC";
+                    if (FundsTransferItem.FT_InFlow != 0)
+                    {
+                        FundsTransferItem.FT_OutFLow = FundsTransferItem.FT_InFlow * -1;
+                        FundsTransferItem.FT_InFlow = 0;
+                    }
+                    else
+                    {
+                        FundsTransferItem.FT_InFlow = FundsTransferItem.FT_OutFLow * -1;
+                        FundsTransferItem.FT_OutFLow = 0;
+                    }
+                    DbContextB.SBP_BlotterFundsTransfer.Add(FundsTransferItem);
+                    DbContextB.SaveChanges();
+
+
+                }
+                else {
+                    FundsTransferItem.DataType = "SBP";
+                    if (FundsTransferItem.FT_InFlow != 0)
+                    {
+                        FundsTransferItem.FT_OutFLow = FundsTransferItem.FT_InFlow * -1;
+                        FundsTransferItem.FT_InFlow = 0;
+                    }
+                    else
+                    {
+                        FundsTransferItem.FT_InFlow = FundsTransferItem.FT_OutFLow * -1;
+                        FundsTransferItem.FT_OutFLow = 0;
+                    }
+                    DbContextB.SBP_BlotterFundsTransfer.Add(FundsTransferItem);
+                    DbContextB.SaveChanges();
+                }
+
+                status = true;
+                //}
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine(ex.Message.ToString());
+                status = false;
+            }
+            return status;
+        }
+
+        public static bool UpdateFundsTransfer(SBP_BlotterFundsTransfer FundsTransferItem)
+        {
+            bool status;
+            try
+            {
+                //List<SBP_BlotterFundsTransfer> GetCount = DbContextB.SBP_BlotterFundsTransfer.Where(p => p.SNo != FundsTransferItem.SNo && p.TTID == FundsTransferItem.TTID && p.FundsTransfer_Date == FundsTransferItem.FundsTransfer_Date).ToList();
+                //if (GetCount.Count > 0)
+                //{
+                //    status = false;
+                //}
+                //else
+                //{
+                SBP_BlotterFundsTransfer CLRItems1 = DbContextB.SBP_BlotterFundsTransfer.Where(p => p.SNo == FundsTransferItem.SNo && p.FT_Date== FundsTransferItem.FT_Date).FirstOrDefault();
+                if (CLRItems1 != null)
+                {
+
+                    CLRItems1.DataType = FundsTransferItem.DataType;
+                    CLRItems1.FT_InFlow = FundsTransferItem.FT_InFlow;
+                    CLRItems1.FT_OutFLow = FundsTransferItem.FT_OutFLow;
+                    CLRItems1.Note = FundsTransferItem.Note;
+                    CLRItems1.CurID = FundsTransferItem.CurID;
+                    CLRItems1.UpdateDate = FundsTransferItem.UpdateDate;
+                    DbContextB.SaveChanges();
+                }
+
+                if (FundsTransferItem.DataType == "SBP")
+                {
+
+                    FundsTransferItem.DataType = "HBLC";
+                    if (FundsTransferItem.FT_InFlow != 0)
+                    {
+                        FundsTransferItem.FT_OutFLow = FundsTransferItem.FT_InFlow * -1;
+                        FundsTransferItem.FT_InFlow = 0;
+                    }
+                    else
+                    {
+                        FundsTransferItem.FT_InFlow = FundsTransferItem.FT_OutFLow * -1;
+                        FundsTransferItem.FT_OutFLow = 0;
+                    }
+                }
+                else {
+                    FundsTransferItem.DataType = "SBP";
+                    if (FundsTransferItem.FT_InFlow != 0)
+                    {
+                        FundsTransferItem.FT_OutFLow = FundsTransferItem.FT_InFlow * -1;
+                        FundsTransferItem.FT_InFlow = 0;
+                    }
+                    else
+                    {
+                        FundsTransferItem.FT_InFlow = FundsTransferItem.FT_OutFLow * -1;
+                        FundsTransferItem.FT_OutFLow = 0;
+                    }
+                }
+                SBP_BlotterFundsTransfer CLRItems2 = DbContextB.SBP_BlotterFundsTransfer.Where(p => p.SNo != FundsTransferItem.SNo && p.FT_Date == FundsTransferItem.FT_Date).FirstOrDefault();
+                if (CLRItems2 != null)
+                {
+
+                    CLRItems2.DataType = FundsTransferItem.DataType;
+                    CLRItems2.FT_InFlow = FundsTransferItem.FT_InFlow;
+                    CLRItems2.FT_OutFLow = FundsTransferItem.FT_OutFLow;
+                    CLRItems2.Note = FundsTransferItem.Note;
+                    CLRItems2.CurID = FundsTransferItem.CurID;
+                    CLRItems2.UpdateDate = FundsTransferItem.UpdateDate;
+                    DbContextB.SaveChanges();
+                }
+                status = true;
+                //}
+            }
+            catch (Exception)
+            {
+                status = false;
+            }
+            return status;
+        }
+
+        public static bool DeleteFundsTransfer(int id)
+        {
+            bool status;
+            try
+            {
+                SBP_BlotterFundsTransfer CLRItems2 = DbContextB.SBP_BlotterFundsTransfer.Where(p => p.SNo == id).FirstOrDefault();
+                if (CLRItems2 != null)
+                {
+                    List<SBP_BlotterFundsTransfer> FundsTransferItem;
+                    if (CLRItems2.FT_InFlow != 0)
+                    {
+                        FundsTransferItem = DbContextB.SBP_BlotterFundsTransfer.Where(p => p.FT_Date == CLRItems2.FT_Date && p.FT_InFlow == CLRItems2.FT_InFlow).ToList();
+                        if (FundsTransferItem.Count > 0)
+                        {
+                            foreach (var item in FundsTransferItem)
+                            {
+
+                                DbContextB.SBP_BlotterFundsTransfer.Remove(item);
+                                DbContextB.SaveChanges();
+                            }
+                        }
+                    }
+                    else {
+                        FundsTransferItem = DbContextB.SBP_BlotterFundsTransfer.Where(p => p.FT_Date == CLRItems2.FT_Date && p.FT_OutFLow == CLRItems2.FT_OutFLow).ToList();
+                        if (FundsTransferItem.Count > 0)
+                        {
+                            foreach (var item in FundsTransferItem)
+                            {
+
+                                DbContextB.SBP_BlotterFundsTransfer.Remove(item);
+                                DbContextB.SaveChanges();
+                            }
+                        }
+                    }
+                }
+                status = true;
+            }
+            catch (Exception)
+            {
+                status = false;
+            }
+            return status;
+        }
+
+
+        //*****************************************************
+        //Bai_Muajjal Producers
+        //*****************************************************
+
+        public static List<SBP_BlotterBai_Muajjal> GetAllBlotterBai_Muajjal(int UserID, int BranchID, int CurID, int BR)
+        {
+            return DbContextB.SBP_BlotterBai_Muajjal.Where(p => p.UserID==UserID && p.BID == BranchID && p.CurID == CurID && p.BR == BR).ToList();
+        }
+        public static SBP_BlotterBai_Muajjal GetBai_MuajjalItem(int Bai_MuajjalId)
+        {
+            return DbContextB.SBP_BlotterBai_Muajjal.Where(p => p.SNo == Bai_MuajjalId).FirstOrDefault();
+        }
+        public static bool InsertBai_Muajjal(SBP_BlotterBai_Muajjal Bai_MuajjalItem)
+        {
+            bool status;
+            try
+            {
+                //List<SBP_BlotterBai_Muajjal> GetCount = DbContextB.SBP_BlotterBai_Muajjal.Where(p => p.TTID == Bai_MuajjalItem.TTID && p.Bai_Muajjal_Date == Bai_MuajjalItem.Bai_Muajjal_Date).ToList();
+                //if (GetCount.Count > 0)
+                //{
+                //    status = false;
+                //}
+                //else
+                //{
+                DbContextB.SBP_BlotterBai_Muajjal.Add(Bai_MuajjalItem);
+                DbContextB.SaveChanges();
+                status = true;
+                //}
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine(ex.Message.ToString());
+                status = false;
+            }
+            return status;
+        }
+
+        public static bool UpdateBai_Muajjal(SBP_BlotterBai_Muajjal Bai_MuajjalItem)
+        {
+            bool status;
+            try
+            {
+                //List<SBP_BlotterBai_Muajjal> GetCount = DbContextB.SBP_BlotterBai_Muajjal.Where(p => p.SNo != Bai_MuajjalItem.SNo && p.TTID == Bai_MuajjalItem.TTID && p.Bai_Muajjal_Date == Bai_MuajjalItem.Bai_Muajjal_Date).ToList();
+                //if (GetCount.Count > 0)
+                //{
+                //    status = false;
+                //}
+                //else
+                //{
+                SBP_BlotterBai_Muajjal CLRItems = DbContextB.SBP_BlotterBai_Muajjal.Where(p => p.SNo == Bai_MuajjalItem.SNo).FirstOrDefault();
+                if (CLRItems != null)
+                {
+
+                    CLRItems.DataType = Bai_MuajjalItem.DataType;
+                    CLRItems.BM_InFlow = Bai_MuajjalItem.BM_InFlow;
+                    CLRItems.BM_OutFLow = Bai_MuajjalItem.BM_OutFLow;
+                    CLRItems.Note = Bai_MuajjalItem.Note;
+                    CLRItems.CurID = Bai_MuajjalItem.CurID;
+                    CLRItems.UpdateDate = Bai_MuajjalItem.UpdateDate;
+                    DbContextB.SaveChanges();
+                }
+                status = true;
+                //}
+            }
+            catch (Exception)
+            {
+                status = false;
+            }
+            return status;
+        }
+
+        public static bool DeleteBai_Muajjal(int id)
+        {
+            bool status;
+            try
+            {
+                SBP_BlotterBai_Muajjal Bai_MuajjalItem = DbContextB.SBP_BlotterBai_Muajjal.Where(p => p.SNo == id).FirstOrDefault();
+                if (Bai_MuajjalItem != null)
+                {
+                    DbContextB.SBP_BlotterBai_Muajjal.Remove(Bai_MuajjalItem);
+                    DbContextB.SaveChanges();
+                }
+                status = true;
+            }
+            catch (Exception)
+            {
+                status = false;
+            }
+            return status;
+        }
+
+        //*****************************************************
+        //Change Password Producers
+        //*****************************************************
+
+        public static bool UpdateUserPassword(int UserId,string OldPassword,string NewPassword)
+        {
+            bool status;
+            try
+            {
+
+                if (Convert.ToBoolean(DbContextB.SP_UpdateUserPassword(UserId, OldPassword, NewPassword).FirstOrDefault()))
+                {
+                    status = true;
+                }
+                else
+                {
+                    status = false;
+                }
+            }
+            catch (Exception)
+            {
+                status = false;
+            }
+            return status;
+        }
 
         //*****************************************************
         //RTGS Producers
@@ -1065,8 +1379,9 @@ namespace DataAccessLayer
                 //{
                     SBP_BlotterRTGS RTGSItems = DbContextB.SBP_BlotterRTGS.Where(p => p.SNo == RTGSItem.SNo).FirstOrDefault();
                     if (RTGSItems != null)
-                    {
-                        RTGSItems.TTID = RTGSItem.TTID;
+                {
+                    RTGSItems.DataType = RTGSItem.DataType;
+                    RTGSItems.TTID = RTGSItem.TTID;
                         RTGSItems.RTGS_InFlow = RTGSItem.RTGS_InFlow;
                         RTGSItems.RTGS_OutFLow = RTGSItem.RTGS_OutFLow;
                         RTGSItems.CurID = RTGSItem.CurID;
@@ -1213,6 +1528,140 @@ namespace DataAccessLayer
             return status;
         }
 
+
+
+
+
+
+        //*****************************************************
+        //Opening Balance Producers
+        //*****************************************************
+
+        public static List<SBP_BlotterManualEstBalance> GetAllBlotterEstAdjBal(int UserID, int BranchID, int CurID, int BR)
+        {
+            return DbContextB.SBP_BlotterManualEstBalance.Where(p => p.UserID == UserID && p.BID==BranchID && p.CurID==CurID && p.BR==BR && p.isAdjusted==true).ToList();
+        }
+        public static SBP_BlotterManualEstBalance GetEstAdjBalById(int EstAdjBalId)
+        {
+            return DbContextB.SBP_BlotterManualEstBalance.Where(p => p.SNo == EstAdjBalId).FirstOrDefault();
+        }
+        public static bool InsertEstAdjBal(SBP_BlotterManualEstBalance EstAdjBalItem)
+        {
+            bool status;
+            try
+            {
+                List<SBP_BlotterManualEstBalance> GetCount = DbContextB.SBP_BlotterManualEstBalance.Where(p => p.DataType == EstAdjBalItem.DataType && p.AdjDate == EstAdjBalItem.AdjDate && p.BR == EstAdjBalItem.BR).ToList();
+                if (GetCount.Count > 0)
+                {
+                    SBP_BlotterManualEstBalance EstAdjBalItems = DbContextB.SBP_BlotterManualEstBalance.Where(p => p.DataType == EstAdjBalItem.DataType && p.AdjDate == EstAdjBalItem.AdjDate && p.BR == EstAdjBalItem.BR).FirstOrDefault();
+                    if (EstAdjBalItems != null)
+                    {
+                        EstAdjBalItems.EstAdjBalance = EstAdjBalItem.EstAdjBalance;
+                        EstAdjBalItems.isAdjusted = EstAdjBalItem.isAdjusted;
+                        EstAdjBalItems.CurID = EstAdjBalItem.CurID;
+                        EstAdjBalItems.UpdateDate = EstAdjBalItem.UpdateDate;
+                        DbContextB.SaveChanges();
+                    }
+                    status = true;
+                }
+                else
+                {
+                    DbContextB.SBP_BlotterManualEstBalance.Add(EstAdjBalItem);
+                    DbContextB.SaveChanges();
+                    status = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine(ex.Message.ToString());
+                status = false;
+            }
+            return status;
+        }
+
+        public static bool UpdateEstAdjBal(SBP_BlotterManualEstBalance EstAdjBalItem)
+        {
+            bool status;
+            try
+            {
+                List<SBP_BlotterManualEstBalance> GetCount = DbContextB.SBP_BlotterManualEstBalance.Where(p => p.DataType == EstAdjBalItem.DataType && p.AdjDate == EstAdjBalItem.AdjDate && p.BR == EstAdjBalItem.BR).ToList();
+                if (GetCount.Count > 0)
+                {
+                    SBP_BlotterManualEstBalance EstAdjBalItems = DbContextB.SBP_BlotterManualEstBalance.Where(p => p.DataType == EstAdjBalItem.DataType && p.AdjDate == EstAdjBalItem.AdjDate && p.BR == EstAdjBalItem.BR).FirstOrDefault();
+                    if (EstAdjBalItems != null)
+                    {
+                        EstAdjBalItems.EstAdjBalance = EstAdjBalItem.EstAdjBalance;
+                        EstAdjBalItems.isAdjusted = EstAdjBalItem.isAdjusted;
+                        EstAdjBalItems.CurID = EstAdjBalItem.CurID;
+                        EstAdjBalItems.UpdateDate = EstAdjBalItem.UpdateDate;
+                        DbContextB.SaveChanges();
+                    }
+                    status = true;
+                }
+                else
+                {
+                    SBP_BlotterManualEstBalance EstAdjBalItems = DbContextB.SBP_BlotterManualEstBalance.Where(p => p.SNo == EstAdjBalItem.SNo).FirstOrDefault();
+                    if (EstAdjBalItems != null)
+                    {
+                        EstAdjBalItems.EstAdjBalance = EstAdjBalItem.EstAdjBalance;
+                        EstAdjBalItems.isAdjusted = EstAdjBalItem.isAdjusted;
+                        EstAdjBalItems.CurID = EstAdjBalItem.CurID;
+                        EstAdjBalItems.UpdateDate = EstAdjBalItem.UpdateDate;
+                        DbContextB.SaveChanges();
+                    }
+                    status = true;
+                }
+            }
+            catch (Exception)
+            {
+                status = false;
+            }
+            return status;
+        }
+
+        public static bool DeleteEstAdjBal(int id)
+        {
+            bool status;
+            try
+            {
+                SBP_BlotterManualEstBalance EstAdjBalItem = DbContextB.SBP_BlotterManualEstBalance.Where(p => p.SNo == id).FirstOrDefault();
+                if (EstAdjBalItem != null)
+                {
+                    DbContextB.SBP_BlotterManualEstBalance.Remove(EstAdjBalItem);
+                    DbContextB.SaveChanges();
+                }
+                status = true;
+            }
+            catch (Exception)
+            {
+                status = false;
+            }
+            return status;
+        }
+
+
+
+        public static bool ResetEstAdjBal(int id)
+        {
+            bool status;
+            try
+            {
+                SBP_BlotterManualEstBalance EstAdjBalItems = DbContextB.SBP_BlotterManualEstBalance.Where(p => p.SNo == id).FirstOrDefault();
+                if (EstAdjBalItems != null)
+                {
+                    EstAdjBalItems.isAdjusted = false;
+                    EstAdjBalItems.UpdateDate = DateTime.Now;
+                    DbContextB.SaveChanges();
+                }
+                status = true;
+            }
+            catch (Exception)
+            {
+                status = false;
+            }
+            return status;
+        }
+
         //*****************************************************
         //Trade Producers
         //*****************************************************
@@ -1255,6 +1704,7 @@ namespace DataAccessLayer
                 SBP_BlotterTrade TRDItems = DbContextB.SBP_BlotterTrade.Where(p => p.SNo == TradeItem.SNo).FirstOrDefault();
                 if (TRDItems != null)
                 {
+                    TRDItems.DataType = TradeItem.DataType;
                     TRDItems.TTID = TradeItem.TTID;
                     TRDItems.Trade_InFlow = TradeItem.Trade_InFlow;
                     TRDItems.Trade_OutFLow = TradeItem.Trade_OutFLow;

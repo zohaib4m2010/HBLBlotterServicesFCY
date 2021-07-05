@@ -151,6 +151,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\BlotterBai_MuajjalController.cs" />
     <Compile Include="Controllers\BlotterBreakupsController.cs" />
     <Compile Include="Controllers\BlotterCashFlowController.cs" />
     <Compile Include="Controllers\BlotterClearingController.cs" />
@@ -161,6 +162,7 @@
     <Compile Include="Controllers\BlotterDTController.cs" />
     <Compile Include="Controllers\BlotterDTLController.cs" />
     <Compile Include="Controllers\BlotterDTLDBController.cs" />
+    <Compile Include="Controllers\BlotterFundsTransferController.cs" />
     <Compile Include="Controllers\BlotterLoginController.cs" />
     <Compile Include="Controllers\BlotterManualDealsController.cs" />
     <Compile Include="Controllers\BlotterOpenBalController.cs" />
@@ -170,6 +172,7 @@
     <Compile Include="Controllers\BlotterSetupController.cs" />
     <Compile Include="Controllers\BlotterTBOController.cs" />
     <Compile Include="Controllers\BlotterTradeController.cs" />
+    <Compile Include="Controllers\ChangePasswordController.cs" />
     <Compile Include="Controllers\UserPageRelationController.cs" />
     <Compile Include="Controllers\UserRoleController.cs" />
     <Compile Include="Controllers\UsersProfileController.cs" />
@@ -181,13 +184,17 @@
     </Compile>
     <Compile Include="Models\BlotterSumEmail.cs" />
     <Compile Include="Models\Branches.cs" />
+    <Compile Include="Models\ChangePassword.cs" />
     <Compile Include="Models\GetBlotterMnualDataParam.cs" />
     <Compile Include="Models\NostroBank.cs" />
     <Compile Include="Models\OPICSManualDataPram.cs" />
+    <Compile Include="Models\SBP_BlotterBai_Muajjal.cs" />
     <Compile Include="Models\SBP_BlotterBreakups.cs" />
     <Compile Include="Models\SBP_BlotterClearing.cs" />
     <Compile Include="Models\SBP_BlotterCRD.cs" />
     <Compile Include="Models\SBP_BlotterCRRFINCON.cs" />
+    <Compile Include="Models\SBP_BlotterFundsTransfer.cs" />
+    <Compile Include="Models\SBP_BlotterManualEstBalance.cs" />
     <Compile Include="Models\SBP_BlotterOpeningBalance.cs" />
     <Compile Include="Models\SBP_BlotterRECON.cs" />
     <Compile Include="Models\SBP_BlotterRTGS.cs" />
@@ -229,8 +236,10 @@
     <Compile Include="Repository\EntitiyMapperBlotterCRRFINCON.cs" />
     <Compile Include="Repository\EntitiyMapperBlotterRECON.cs" />
     <Compile Include="Repository\EntitiyMapperBlotterTBO.cs" />
+    <Compile Include="Repository\EntityMapperBlotterBai_Muajjal.cs" />
     <Compile Include="Repository\EntityMapperBlotterBreakups.cs" />
     <Compile Include="Repository\EntityMapperBlotterFCY.cs" />
+    <Compile Include="Repository\EntityMapperBlotterFundsTransfer.cs" />
     <Compile Include="Repository\EntityMapperBlotterOpenBal.cs" />
     <Compile Include="Repository\EntityMapperBlotterRTGS.cs" />
     <Compile Include="Repository\EntityMapperBlotterTrade.cs" />

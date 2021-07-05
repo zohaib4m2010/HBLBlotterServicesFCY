@@ -8,6 +8,7 @@ namespace WebApiServices.Models
     public class SP_GetAll_SBPBlotterTBO_Result
     {
         public long SNo { get; set; }
+        public string DataType { get; set; }
         public int TTID { get; set; }
         public string TransactionType { get; set; }
         public Nullable<System.DateTime> TBO_Date { get; set; }

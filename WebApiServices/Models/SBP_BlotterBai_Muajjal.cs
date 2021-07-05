@@ -5,17 +5,17 @@ using System.Web;
 
 namespace WebApiServices.Models
 {
-    public class SP_GetAll_SBPBlotterRTGS_Result
+    public class SBP_BlotterBai_Muajjal
     {
         public long SNo { get; set; }
         public string DataType { get; set; }
-        public int TTID { get; set; }
-        public string TransactionType { get; set; }
-        public Nullable<System.DateTime> RTGS_Date { get; set; }
-        public string RTGSCOde { get; set; }
-        public Nullable<decimal> RTGS_InFlow { get; set; }
-        public Nullable<decimal> RTGS_OutFLow { get; set; }
+        public Nullable<System.DateTime> ValueDate { get; set; }
+        public Nullable<System.DateTime> MaturityDate { get; set; }
+        public string BMCOde { get; set; }
+        public Nullable<decimal> BM_InFlow { get; set; }
+        public Nullable<decimal> BM_OutFLow { get; set; }
         public string Note { get; set; }
+        public int UserID { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
         public int BR { get; set; }

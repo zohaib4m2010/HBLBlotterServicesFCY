@@ -14,6 +14,7 @@ namespace DataAccessLayer
     public partial class SP_GetAll_SBPBlotterClearing_Result
     {
         public long SNo { get; set; }
+        public string DataType { get; set; }
         public int TTID { get; set; }
         public string TransactionType { get; set; }
         public Nullable<System.DateTime> Clearing_Date { get; set; }
