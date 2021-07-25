@@ -162,6 +162,7 @@
     <Compile Include="Controllers\BlotterDTController.cs" />
     <Compile Include="Controllers\BlotterDTLController.cs" />
     <Compile Include="Controllers\BlotterDTLDBController.cs" />
+    <Compile Include="Controllers\BlotterFundingRepoController.cs" />
     <Compile Include="Controllers\BlotterFundsTransferController.cs" />
     <Compile Include="Controllers\BlotterLoginController.cs" />
     <Compile Include="Controllers\BlotterManualDealsController.cs" />
@@ -193,6 +194,7 @@
     <Compile Include="Models\SBP_BlotterClearing.cs" />
     <Compile Include="Models\SBP_BlotterCRD.cs" />
     <Compile Include="Models\SBP_BlotterCRRFINCON.cs" />
+    <Compile Include="Models\SBP_BlotterFundingRepo.cs" />
     <Compile Include="Models\SBP_BlotterFundsTransfer.cs" />
     <Compile Include="Models\SBP_BlotterManualEstBalance.cs" />
     <Compile Include="Models\SBP_BlotterOpeningBalance.cs" />
@@ -222,6 +224,7 @@
     <Compile Include="Models\SP_GetLatestBreakup_Result.cs" />
     <Compile Include="Models\SP_GetOPICSManualData_Result.cs" />
     <Compile Include="Models\SP_GetSBPBlotterCRD_Result.cs" />
+    <Compile Include="Models\SP_GetSBPBlotterFR_Result.cs" />
     <Compile Include="Models\SP_GetSBPBlotterRECON_Result.cs" />
     <Compile Include="Models\SP_SBPBlotterRunningBal.cs" />
     <Compile Include="Models\SP_SBPBlotter_FCY_Result.cs" />
@@ -234,6 +237,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\EntitiyMapperBlotterCRD.cs" />
     <Compile Include="Repository\EntitiyMapperBlotterCRRFINCON.cs" />
+    <Compile Include="Repository\EntitiyMapperBlotterFR.cs" />
     <Compile Include="Repository\EntitiyMapperBlotterRECON.cs" />
     <Compile Include="Repository\EntitiyMapperBlotterTBO.cs" />
     <Compile Include="Repository\EntityMapperBlotterBai_Muajjal.cs" />

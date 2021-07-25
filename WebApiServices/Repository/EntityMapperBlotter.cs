@@ -25,6 +25,9 @@ namespace WebApiServices.Repository
             Mapper.CreateMap<Models.SBP_BlotterOpening, DataAccessLayer.SBP_BlotterOpening>();
             Mapper.CreateMap<DataAccessLayer.SBP_BlotterOpening, Models.SBP_BlotterOpening>();
 
+            Mapper.CreateMap<Models.SBP_BlotterOpeningBalance, DataAccessLayer.SP_GetOpeningBalance_Result>();
+            Mapper.CreateMap<DataAccessLayer.SP_GetOpeningBalance_Result, Models.SBP_BlotterOpeningBalance>();
+
 
 
             Mapper.CreateMap<Models.SP_GETLatestBlotterDTLReportDayWise_Result, DataAccessLayer.SP_GETLatestBlotterDTLReportDayWise_Result>();

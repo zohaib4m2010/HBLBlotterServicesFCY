@@ -33,9 +33,17 @@ namespace DataAccessLayer
             return results;
         }
 
-        public static List<SP_GetOPICSManualData_Result> GetOPICSManualData(int BR, DateTime Date)
+        public static List<SP_GetOPICSManualData_Result> GetOPICSManualData(int BR, DateTime Date,string Flag)
         {
-            var results = DbContextB.SP_GetOPICSManualData(BR, Date).ToList();
+            var results = DbContextB.SP_GetOPICSManualData(BR, Date,Flag).ToList();
+            return results;
+        }
+
+
+
+        public static SP_GetOpeningBalance_Result GetOpeningBalance(int BR)
+        {
+            var results = DbContextB.SP_GetOpeningBalance(BR ,DateTime.Now.AddDays(-38)).FirstOrDefault();
             return results;
         }
 
@@ -228,6 +236,7 @@ namespace DataAccessLayer
                         CRRFINCONItems.RequirementExtBenefit = CRRFINCONItem.RequirementExtBenefit;
                         CRRFINCONItems.CurID = CRRFINCONItem.CurID;
                         CRRFINCONItems.UpdateDate = CRRFINCONItem.UpdateDate;
+                        CRRFINCONItems.UserID = CRRFINCONItem.UserID;
                         DbContextB.SaveChanges();
                         DbContextB.SP_UpdateDaysInBlotterReport(CRRFINCONItem.DemandTimeLiablitiesTotalForCRR, CRRFINCONItem.StartDate, CRRFINCONItem.EndDate, CRRFINCONItem.BR);
                     }
@@ -320,6 +329,7 @@ namespace DataAccessLayer
                     TboItems.TBO_OutFLow = TBOItem.TBO_OutFLow;
                     TboItems.Note = TBOItem.Note;
                     TboItems.CurID = TBOItem.CurID;
+                    TboItems.UserID = TBOItem.UserID;
                     TboItems.UpdateDate = TBOItem.UpdateDate;
                     DbContextB.SaveChanges();
                 }
@@ -887,6 +897,7 @@ namespace DataAccessLayer
                     Items.SBPCheqGivenToOtherBank_outFlow = Item.SBPCheqGivenToOtherBank_outFlow;
                     Items.Miscellaneous_outflow = Item.Miscellaneous_outflow;
                     Items.UpdateDate = Item.UpdateDate;
+                    Items.UserID = Item.UserID;
                     DbContextB.SaveChanges();
                 }
                 status = true;
@@ -981,7 +992,8 @@ namespace DataAccessLayer
                         CLRItems.Note = ClearingItem.Note;
                         CLRItems.CurID = ClearingItem.CurID;
                         CLRItems.UpdateDate = ClearingItem.UpdateDate;
-                        DbContextB.SaveChanges();
+                    CLRItems.UserID = ClearingItem.UserID;
+                    DbContextB.SaveChanges();
                     }
                     status = true;
                 //}
@@ -1110,6 +1122,7 @@ namespace DataAccessLayer
                     CLRItems1.Note = FundsTransferItem.Note;
                     CLRItems1.CurID = FundsTransferItem.CurID;
                     CLRItems1.UpdateDate = FundsTransferItem.UpdateDate;
+                    CLRItems1.UserID = FundsTransferItem.UserID;
                     DbContextB.SaveChanges();
                 }
 
@@ -1151,6 +1164,7 @@ namespace DataAccessLayer
                     CLRItems2.Note = FundsTransferItem.Note;
                     CLRItems2.CurID = FundsTransferItem.CurID;
                     CLRItems2.UpdateDate = FundsTransferItem.UpdateDate;
+                    CLRItems2.UserID = FundsTransferItem.UserID;
                     DbContextB.SaveChanges();
                 }
                 status = true;
@@ -1261,12 +1275,15 @@ namespace DataAccessLayer
                 if (CLRItems != null)
                 {
 
+                    CLRItems.ValueDate = Bai_MuajjalItem.ValueDate;
+                    CLRItems.MaturityDate = Bai_MuajjalItem.MaturityDate;
                     CLRItems.DataType = Bai_MuajjalItem.DataType;
                     CLRItems.BM_InFlow = Bai_MuajjalItem.BM_InFlow;
                     CLRItems.BM_OutFLow = Bai_MuajjalItem.BM_OutFLow;
                     CLRItems.Note = Bai_MuajjalItem.Note;
                     CLRItems.CurID = Bai_MuajjalItem.CurID;
                     CLRItems.UpdateDate = Bai_MuajjalItem.UpdateDate;
+                    CLRItems.UserID = Bai_MuajjalItem.UserID;
                     DbContextB.SaveChanges();
                 }
                 status = true;
@@ -1387,7 +1404,8 @@ namespace DataAccessLayer
                         RTGSItems.CurID = RTGSItem.CurID;
                         RTGSItems.Note = RTGSItem.Note;
                         RTGSItems.UpdateDate = RTGSItem.UpdateDate;
-                        DbContextB.SaveChanges();
+                    RTGSItems.UserID = RTGSItem.UserID;
+                    DbContextB.SaveChanges();
                     }
                     status = true;
                 //}
@@ -1482,6 +1500,7 @@ namespace DataAccessLayer
                         OpenBalItems.AdjOpenBal = OpenBalItem.AdjOpenBal;
                         OpenBalItems.CurID = OpenBalItem.CurID;
                         OpenBalItems.UpdateDate = OpenBalItem.UpdateDate;
+                        OpenBalItems.UserID = OpenBalItem.UserID;
                         DbContextB.SaveChanges();
                     }
                     status = true;
@@ -1496,6 +1515,7 @@ namespace DataAccessLayer
                         OpenBalItems.BalDate = OpenBalItem.BalDate;
                         OpenBalItems.CurID = OpenBalItem.CurID;
                         OpenBalItems.UpdateDate = OpenBalItem.UpdateDate;
+                        OpenBalItems.UserID = OpenBalItem.UserID;
                         DbContextB.SaveChanges();
                     }
                     status = true;
@@ -1530,6 +1550,97 @@ namespace DataAccessLayer
 
 
 
+        //*****************************************************
+        //Funding Repo Producers
+        //*****************************************************
+
+        public static List<SP_GetSBPBlotterFR_Result> GetAllBlotterFundingRepo(int UserID, int BranchID, int CurID, int BR)
+        {
+            return DbContextB.SP_GetSBPBlotterFR(UserID, BranchID, CurID, BR).ToList();
+        }
+        public static SBP_BlotterFundingRepo GetSBP_BlotterFundingRepoById(int FundingRepoId)
+        {
+            return DbContextB.SBP_BlotterFundingRepo.Where(p => p.SNo == FundingRepoId).FirstOrDefault();
+        }
+
+        public static bool InsertFundingRepo(SBP_BlotterFundingRepo FundingRepoIdItem)
+        {
+            bool status;
+            try
+            {
+                DbContextB.SBP_BlotterFundingRepo.Add(FundingRepoIdItem);
+                DbContextB.SaveChanges();
+                status = true;
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine(ex.Message.ToString());
+                status = false;
+            }
+            return status;
+        }
+
+        public static bool UpdateFundingRepo(SBP_BlotterFundingRepo FundingRepoIdItem)
+        {
+            bool status;
+            try
+            {
+                List<SBP_BlotterFundingRepo> GetCount = DbContextB.SBP_BlotterFundingRepo.Where(p => p.SNo == FundingRepoIdItem.SNo).ToList();
+                if (GetCount.Count > 0)
+                {
+                    SBP_BlotterFundingRepo prodItem = DbContextB.SBP_BlotterFundingRepo.Where(p => p.SNo == FundingRepoIdItem.SNo).FirstOrDefault();
+                    if (prodItem != null)
+                    {
+                        prodItem.DataType = FundingRepoIdItem.DataType;
+                        prodItem.Bank = FundingRepoIdItem.Bank;
+                        prodItem.Rate = FundingRepoIdItem.Rate;
+                        prodItem.Days = FundingRepoIdItem.Days;
+                        prodItem.Issue_Date = FundingRepoIdItem.Issue_Date;
+                        prodItem.Broker = FundingRepoIdItem.Broker;
+                        prodItem.DealType = FundingRepoIdItem.DealType;
+                        prodItem.IssueType = FundingRepoIdItem.IssueType;
+                        prodItem.InFlow = FundingRepoIdItem.InFlow;
+                        prodItem.OutFLow = FundingRepoIdItem.OutFLow;
+                        prodItem.Note = FundingRepoIdItem.Note;
+                        prodItem.CurID = FundingRepoIdItem.CurID;
+                        prodItem.UpdateDate = FundingRepoIdItem.UpdateDate;
+                        prodItem.UserID = FundingRepoIdItem.UserID;
+                        DbContextB.SaveChanges();
+                    }
+                    status = true;
+                }
+                else
+                {
+                    status = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                status = false;
+            }
+            return status;
+        }
+
+        public static bool DeleteFundingRepo(int id)
+        {
+            bool status;
+            try
+            {
+                SBP_BlotterFundingRepo FundingRepoIdItem = DbContextB.SBP_BlotterFundingRepo.Where(p => p.SNo == id).FirstOrDefault();
+                if (FundingRepoIdItem != null)
+                {
+                    DbContextB.SBP_BlotterFundingRepo.Remove(FundingRepoIdItem);
+                    DbContextB.SaveChanges();
+                }
+                status = true;
+            }
+            catch (Exception)
+            {
+                status = false;
+            }
+            return status;
+        }
+
 
 
 
@@ -1560,6 +1671,7 @@ namespace DataAccessLayer
                         EstAdjBalItems.isAdjusted = EstAdjBalItem.isAdjusted;
                         EstAdjBalItems.CurID = EstAdjBalItem.CurID;
                         EstAdjBalItems.UpdateDate = EstAdjBalItem.UpdateDate;
+                        EstAdjBalItems.UserID = EstAdjBalItem.UserID;
                         DbContextB.SaveChanges();
                     }
                     status = true;
@@ -1594,6 +1706,7 @@ namespace DataAccessLayer
                         EstAdjBalItems.isAdjusted = EstAdjBalItem.isAdjusted;
                         EstAdjBalItems.CurID = EstAdjBalItem.CurID;
                         EstAdjBalItems.UpdateDate = EstAdjBalItem.UpdateDate;
+                        EstAdjBalItems.UserID = EstAdjBalItem.UserID;
                         DbContextB.SaveChanges();
                     }
                     status = true;
@@ -1607,6 +1720,7 @@ namespace DataAccessLayer
                         EstAdjBalItems.isAdjusted = EstAdjBalItem.isAdjusted;
                         EstAdjBalItems.CurID = EstAdjBalItem.CurID;
                         EstAdjBalItems.UpdateDate = EstAdjBalItem.UpdateDate;
+                        EstAdjBalItems.UserID = EstAdjBalItem.UserID;
                         DbContextB.SaveChanges();
                     }
                     status = true;
@@ -1711,6 +1825,7 @@ namespace DataAccessLayer
                     TRDItems.Note = TradeItem.Note;
                     TRDItems.CurID = TradeItem.CurID;
                     TRDItems.UpdateDate = TradeItem.UpdateDate;
+                    TRDItems.UserID = TradeItem.UserID;
                     DbContextB.SaveChanges();
                 }
                 status = true;

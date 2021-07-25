@@ -93,6 +93,23 @@ namespace WebApiServices.Controllers
 
         }
 
+
+        // GET:   
+        [HttpGet]
+        public JsonResult<Models.SBP_BlotterOpeningBalance> GetLatestOpeningBalaceForToday(int BR)
+        {
+
+            EntityMapperBlotter<DataAccessLayer.SP_GetOpeningBalance_Result, Models.SBP_BlotterOpeningBalance> mapObj = new EntityMapperBlotter<DataAccessLayer.SP_GetOpeningBalance_Result, Models.SBP_BlotterOpeningBalance>();
+            DataAccessLayer.SP_GetOpeningBalance_Result dalEmail = DAL.GetOpeningBalance(BR);
+            Models.SBP_BlotterOpeningBalance SumForEmail = new Models.SBP_BlotterOpeningBalance();
+
+            SumForEmail = mapObj.Translate(dalEmail);
+
+            return Json<Models.SBP_BlotterOpeningBalance>(SumForEmail);
+
+
+        }
+
         // GET:   
         [HttpPost]
         public JsonResult<List<Models.SP_GetOPICSManualData_Result>> GetOPICSManualData(GetBlotterMnualDataParam BMDP)
@@ -110,7 +127,7 @@ namespace WebApiServices.Controllers
             else
             {
                 EntityMapperBlotter<DataAccessLayer.SP_GetOPICSManualData_Result, Models.SP_GetOPICSManualData_Result> mapObj = new EntityMapperBlotter<DataAccessLayer.SP_GetOPICSManualData_Result, Models.SP_GetOPICSManualData_Result>();
-                List<DataAccessLayer.SP_GetOPICSManualData_Result> dalEmail = DAL.GetOPICSManualData(BMDP.BR, BMDP.DateFor);
+                List<DataAccessLayer.SP_GetOPICSManualData_Result> dalEmail = DAL.GetOPICSManualData(BMDP.BR, BMDP.DateFor, BMDP.Flag);
                 foreach (var item in dalEmail)
                 {
                     SumForEmail.Add(mapObj.Translate(item));

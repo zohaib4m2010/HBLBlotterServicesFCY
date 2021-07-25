@@ -45,7 +45,6 @@ namespace DataAccessLayer
         public virtual DbSet<SBP_BlotterRECON> SBP_BlotterRECON { get; set; }
         public virtual DbSet<SBP_LoginInfo> SBP_LoginInfo { get; set; }
         public virtual DbSet<SBP_BlotterOpeningBalance> SBP_BlotterOpeningBalance { get; set; }
-        public virtual DbSet<SBP_BlotterManualData> SBP_BlotterManualData { get; set; }
         public virtual DbSet<SBP_BlotterManualEstBalance> SBP_BlotterManualEstBalance { get; set; }
         public virtual DbSet<WebPages> WebPages { get; set; }
         public virtual DbSet<SBP_BlotterClearing> SBP_BlotterClearing { get; set; }
@@ -54,6 +53,8 @@ namespace DataAccessLayer
         public virtual DbSet<SBP_BlotterTrade> SBP_BlotterTrade { get; set; }
         public virtual DbSet<SBP_BlotterFundsTransfer> SBP_BlotterFundsTransfer { get; set; }
         public virtual DbSet<SBP_BlotterBai_Muajjal> SBP_BlotterBai_Muajjal { get; set; }
+        public virtual DbSet<SBP_BlotterManualData> SBP_BlotterManualData { get; set; }
+        public virtual DbSet<SBP_BlotterFundingRepo> SBP_BlotterFundingRepo { get; set; }
     
         public virtual ObjectResult<SP_SBPOpicsSystemDate_Result> SP_SBPOpicsSystemDate(string brCode)
         {
@@ -186,19 +187,6 @@ namespace DataAccessLayer
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetSBPBlotterCRRFINCON_Result>("SP_GetSBPBlotterCRRFINCON", userIDParameter, branchIDParameter, curIDParameter, bRParameter);
         }
     
-        public virtual ObjectResult<SP_GetOPICSManualData_Result> SP_GetOPICSManualData(Nullable<int> bR, Nullable<System.DateTime> date)
-        {
-            var bRParameter = bR.HasValue ?
-                new ObjectParameter("BR", bR) :
-                new ObjectParameter("BR", typeof(int));
-    
-            var dateParameter = date.HasValue ?
-                new ObjectParameter("Date", date) :
-                new ObjectParameter("Date", typeof(System.DateTime));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetOPICSManualData_Result>("SP_GetOPICSManualData", bRParameter, dateParameter);
-        }
-    
         public virtual ObjectResult<SP_GETLatestBlotterDTLReportForToday_Result> SP_GETLatestBlotterDTLReportForToday(Nullable<int> bR)
         {
             var bRParameter = bR.HasValue ?
@@ -281,19 +269,6 @@ namespace DataAccessLayer
                 new ObjectParameter("pURL", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_ADD_ActivityMonitor", pSessionIDParameter, pUserIDParameter, pIPParameter, pLoginGUIDParameter, pDataParameter, pActivityParameter, pURLParameter);
-        }
-    
-        public virtual ObjectResult<SP_ReconcileOPICSManualData_Result> SP_ReconcileOPICSManualData(Nullable<int> bR, Nullable<System.DateTime> date)
-        {
-            var bRParameter = bR.HasValue ?
-                new ObjectParameter("BR", bR) :
-                new ObjectParameter("BR", typeof(int));
-    
-            var dateParameter = date.HasValue ?
-                new ObjectParameter("Date", date) :
-                new ObjectParameter("Date", typeof(System.DateTime));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_ReconcileOPICSManualData_Result>("SP_ReconcileOPICSManualData", bRParameter, dateParameter);
         }
     
         public virtual ObjectResult<SP_GETAllRTGSTransactionTitles_Result> SP_GETAllRTGSTransactionTitles()
@@ -692,6 +667,70 @@ namespace DataAccessLayer
                 new ObjectParameter("SelectedDate", typeof(System.DateTime));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_SBPBlotter_Result>("SP_SBPBlotter", brParameter, dataTypeParameter, selectedDateParameter);
+        }
+    
+        public virtual ObjectResult<SP_ReconcileOPICSManualData_Result> SP_ReconcileOPICSManualData(Nullable<int> bR, Nullable<System.DateTime> date)
+        {
+            var bRParameter = bR.HasValue ?
+                new ObjectParameter("BR", bR) :
+                new ObjectParameter("BR", typeof(int));
+    
+            var dateParameter = date.HasValue ?
+                new ObjectParameter("Date", date) :
+                new ObjectParameter("Date", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_ReconcileOPICSManualData_Result>("SP_ReconcileOPICSManualData", bRParameter, dateParameter);
+        }
+    
+        public virtual ObjectResult<SP_GetSBPBlotterFR_Result> SP_GetSBPBlotterFR(Nullable<int> userID, Nullable<int> branchID, Nullable<int> curID, Nullable<int> bR)
+        {
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(int));
+    
+            var branchIDParameter = branchID.HasValue ?
+                new ObjectParameter("BranchID", branchID) :
+                new ObjectParameter("BranchID", typeof(int));
+    
+            var curIDParameter = curID.HasValue ?
+                new ObjectParameter("CurID", curID) :
+                new ObjectParameter("CurID", typeof(int));
+    
+            var bRParameter = bR.HasValue ?
+                new ObjectParameter("BR", bR) :
+                new ObjectParameter("BR", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetSBPBlotterFR_Result>("SP_GetSBPBlotterFR", userIDParameter, branchIDParameter, curIDParameter, bRParameter);
+        }
+    
+        public virtual ObjectResult<SP_GetOPICSManualData_Result> SP_GetOPICSManualData(Nullable<int> bR, Nullable<System.DateTime> date, string flag)
+        {
+            var bRParameter = bR.HasValue ?
+                new ObjectParameter("BR", bR) :
+                new ObjectParameter("BR", typeof(int));
+    
+            var dateParameter = date.HasValue ?
+                new ObjectParameter("Date", date) :
+                new ObjectParameter("Date", typeof(System.DateTime));
+    
+            var flagParameter = flag != null ?
+                new ObjectParameter("Flag", flag) :
+                new ObjectParameter("Flag", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetOPICSManualData_Result>("SP_GetOPICSManualData", bRParameter, dateParameter, flagParameter);
+        }
+    
+        public virtual ObjectResult<SP_GetOpeningBalance_Result> SP_GetOpeningBalance(Nullable<int> bR, Nullable<System.DateTime> date)
+        {
+            var bRParameter = bR.HasValue ?
+                new ObjectParameter("BR", bR) :
+                new ObjectParameter("BR", typeof(int));
+    
+            var dateParameter = date.HasValue ?
+                new ObjectParameter("Date", date) :
+                new ObjectParameter("Date", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetOpeningBalance_Result>("SP_GetOpeningBalance", bRParameter, dateParameter);
         }
     }
 }
