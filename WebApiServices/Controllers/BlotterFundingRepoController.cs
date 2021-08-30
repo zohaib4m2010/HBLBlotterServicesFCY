@@ -16,147 +16,146 @@ namespace WebApiServices.Controllers
     public class BlotterFundingRepoController : ApiController
     {
         #region Latest Code
-        //[HttpGet]
-        //public SBP_WebApiResponse GetAllblotterFundingRepo(int UserID, int BranchID, int CurID, int BR)
-        //{
-        //    EntitiyMapperBlotterFR<DataAccessLayer.SP_GetSBPBlotterFR_Result, Models.SP_GetSBPBlotterFR_Result> mapObj = new EntitiyMapperBlotterFR<DataAccessLayer.SP_GetSBPBlotterFR_Result, Models.SP_GetSBPBlotterFR_Result>();
+        [HttpGet]
+        public SBP_WebApiResponse GetAllblotterFundingRepo(int UserID, int BranchID, int CurID, int BR, string DateVal)
+        {
+            EntitiyMapperBlotterFR<DataAccessLayer.SP_GetSBPBlotterFR_Result, Models.SP_GetSBPBlotterFR_Result> mapObj = new EntitiyMapperBlotterFR<DataAccessLayer.SP_GetSBPBlotterFR_Result, Models.SP_GetSBPBlotterFR_Result>();
 
-        //    List<DataAccessLayer.SP_GetSBPBlotterFR_Result> blotterFRList = DAL.GetAllBlotterFundingRepo(UserID, BranchID, CurID, BR);
-        //    List<Models.SP_GetSBPBlotterFR_Result> blotterFR = new List<Models.SP_GetSBPBlotterFR_Result>();
-        //    foreach (var item in blotterFRList)
-        //    {
-        //        blotterFR.Add(mapObj.Translate(item));
-        //    }
-        //    var responseData = (dynamic)null;
-        //    HttpResponseMessage response = null;
-        //    response = Request.CreateResponse(HttpStatusCode.OK);
-        //    var jsonResponse = JsonConvert.SerializeObject(blotterFR.ToList(), Formatting.Indented);
-        //    response.Content = new StringContent(jsonResponse, Encoding.UTF8, "application/json");
-        //    if (blotterFR.Count > 0)
-        //    {
-        //        responseData = new SBP_WebApiResponse
-        //        {
-        //            Status = true,
-        //            Message = "Success",
-        //            Data = jsonResponse
-        //        };
-        //    }
-        //    else
-        //    {
-        //        responseData = new SBP_WebApiResponse
-        //        {
-        //            Status = false,
-        //            Message = "Failed",
-        //            Data = ""
-        //        };
-        //    }
-        //    return responseData;
-        //}
+            List<DataAccessLayer.SP_GetSBPBlotterFR_Result> blotterFRList = DAL.GetAllBlotterFundingRepo(UserID, BranchID, CurID, BR, DateVal);
+            List<Models.SP_GetSBPBlotterFR_Result> blotterFR = new List<Models.SP_GetSBPBlotterFR_Result>();
+            foreach (var item in blotterFRList)
+            {
+                blotterFR.Add(mapObj.Translate(item));
+            }
+            var responseData = (dynamic)null;
+            HttpResponseMessage response = null;
+            response = Request.CreateResponse(HttpStatusCode.OK);
+            var jsonResponse = JsonConvert.SerializeObject(blotterFR.ToList(), Formatting.Indented);
+            response.Content = new StringContent(jsonResponse, Encoding.UTF8, "application/json");
+            if (blotterFR.Count > 0)
+            {
+                responseData = new SBP_WebApiResponse
+                {
+                    Status = true,
+                    Message = "Success",
+                    Data = jsonResponse
+                };
+            }
+            else
+            {
+                responseData = new SBP_WebApiResponse
+                {
+                    Status = false,
+                    Message = "Failed",
+                    Data = ""
+                };
+            }
+            return responseData;
+        }
 
-        //[HttpPost]
-        //public SBP_WebApiResponse InsertFundingRepo(List<Models.SBP_BlotterFundingRepo> blotterFR)
-        //{
-        //    bool status = false;
-        //    var responseData = (dynamic)null;
+        [HttpPost]
+        public SBP_WebApiResponse InsertFundingRepo(List<Models.SBP_BlotterFundingRepo> blotterFR)
+        {
+            bool status = false;
+            var responseData = (dynamic)null;
 
-        //    try
-        //    {
-        //        if (ModelState.IsValid)
-        //        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
 
-        //            EntitiyMapperBlotterFR<Models.SBP_BlotterFundingRepo, DataAccessLayer.SBP_BlotterFundingRepo> mapObj = new EntitiyMapperBlotterFR<Models.SBP_BlotterFundingRepo, DataAccessLayer.SBP_BlotterFundingRepo>();
-        //            DataAccessLayer.SBP_BlotterFundingRepo FRObj = new DataAccessLayer.SBP_BlotterFundingRepo();
-        //            for (int i = 0; i < blotterFR.Count; i++)
-        //            {
-        //                FRObj = mapObj.Translate(blotterFR[i]);
-        //                status = DAL.InsertFundingRepo(FRObj);
-        //            }
+                    EntitiyMapperBlotterFR<Models.SBP_BlotterFundingRepo, DataAccessLayer.SBP_BlotterFundingRepo> mapObj = new EntitiyMapperBlotterFR<Models.SBP_BlotterFundingRepo, DataAccessLayer.SBP_BlotterFundingRepo>();
+                    DataAccessLayer.SBP_BlotterFundingRepo FRObj = new DataAccessLayer.SBP_BlotterFundingRepo();
+                    for (int i = 0; i < blotterFR.Count; i++)
+                    {
+                        FRObj = mapObj.Translate(blotterFR[i]);
+                        status = DAL.InsertFundingRepo(FRObj);
+                    }
 
-        //            HttpResponseMessage response = null;
-        //            response = Request.CreateResponse(HttpStatusCode.OK);
-        //            if (status == true)
-        //            {
-        //                responseData = new SBP_WebApiResponse
-        //                {
-        //                    Status = true,
-        //                    Message = "Record is successfully inserted!",
-        //                    Data = ""
-        //                };
-        //            }
-        //            else
-        //            {
-        //                responseData = new SBP_WebApiResponse
-        //                {
-        //                    Status = false,
-        //                    Message = "Record could not be inserted",
-        //                    Data = ""
-        //                };
-        //            }
+                    HttpResponseMessage response = null;
+                    response = Request.CreateResponse(HttpStatusCode.OK);
+                    if (status == true)
+                    {
+                        responseData = new SBP_WebApiResponse
+                        {
+                            Status = true,
+                            Message = "Record is successfully inserted!",
+                            Data = ""
+                        };
+                    }
+                    else
+                    {
+                        responseData = new SBP_WebApiResponse
+                        {
+                            Status = false,
+                            Message = "Record could not be inserted",
+                            Data = ""
+                        };
+                    }
 
-        //        }
-        //        return responseData;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        responseData = new SBP_WebApiResponse
-        //        {
-        //            Status = false,
-        //            Message = "Record could not be inserted",
-        //            Data = ex.Message
-        //        };
-        //        return responseData;
-        //    }
+                }
+                return responseData;
+            }
+            catch (Exception ex)
+            {
+                responseData = new SBP_WebApiResponse
+                {
+                    Status = false,
+                    Message = "Record could not be inserted",
+                    Data = ex.Message
+                };
+                return responseData;
+            }
 
-        //}
+        }
 
+        [HttpPost]
+        public SBP_WebApiResponse DeleteFundingRepo(IEnumerable<int> Ids)
+        {
+            bool status = false;
+            var responseData = (dynamic)null;
 
-        //[HttpPost]
-        //public SBP_WebApiResponse DeleteFundingRepo(IEnumerable<int> Ids)
-        //{
-        //    bool status = false;
-        //    var responseData = (dynamic)null;
+            try
+            {
+                foreach (var item in Ids)
+                {
+                    status = DAL.DeleteFundingRepo(item);
+                }
 
-        //    try
-        //    {
-        //        foreach (var item in Ids)
-        //        {
-        //            status = DAL.DeleteFundingRepo(item);
-        //        }
+                HttpResponseMessage response = null;
+                response = Request.CreateResponse(HttpStatusCode.OK);
+                if (status == true)
+                {
+                    responseData = new SBP_WebApiResponse
+                    {
+                        Status = true,
+                        Message = "Record is successfully deleted!",
+                        Data = ""
+                    };
+                }
+                else
+                {
+                    responseData = new SBP_WebApiResponse
+                    {
+                        Status = false,
+                        Message = "Record could not be deleted",
+                        Data = ""
+                    };
+                }
+                return responseData;
+            }
+            catch (Exception ex)
+            {
+                responseData = new SBP_WebApiResponse
+                {
+                    Status = false,
+                    Message = "Record could not be deleted",
+                    Data = ex.Message
+                };
+                return responseData;
+            }
 
-        //        HttpResponseMessage response = null;
-        //        response = Request.CreateResponse(HttpStatusCode.OK);
-        //        if (status == true)
-        //        {
-        //            responseData = new SBP_WebApiResponse
-        //            {
-        //                Status = true,
-        //                Message = "Record is successfully deleted!",
-        //                Data = ""
-        //            };
-        //        }
-        //        else
-        //        {
-        //            responseData = new SBP_WebApiResponse
-        //            {
-        //                Status = false,
-        //                Message = "Record could not be deleted",
-        //                Data = ""
-        //            };
-        //        }
-        //        return responseData;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        responseData = new SBP_WebApiResponse
-        //        {
-        //            Status = false,
-        //            Message = "Record could not be deleted",
-        //            Data = ex.Message
-        //        };
-        //        return responseData;
-        //    }
-
-        //}
+        }
 
 
         #endregion
@@ -164,50 +163,50 @@ namespace WebApiServices.Controllers
 
 
 
-        [HttpGet]
-        public JsonResult<List<Models.SP_GetSBPBlotterFR_Result>> GetAllblotterFundingRepo(int UserID, int BranchID, int CurID, int BR)
-        {
-            EntitiyMapperBlotterFR<DataAccessLayer.SP_GetSBPBlotterFR_Result, Models.SP_GetSBPBlotterFR_Result> mapObj = new EntitiyMapperBlotterFR<DataAccessLayer.SP_GetSBPBlotterFR_Result, Models.SP_GetSBPBlotterFR_Result>();
+        //[HttpGet]
+        //public JsonResult<List<Models.SP_GetSBPBlotterFR_Result>> GetAllblotterFundingRepo(int UserID, int BranchID, int CurID, int BR, string DateVal)
+        //{
+        //    EntitiyMapperBlotterFR<DataAccessLayer.SP_GetSBPBlotterFR_Result, Models.SP_GetSBPBlotterFR_Result> mapObj = new EntitiyMapperBlotterFR<DataAccessLayer.SP_GetSBPBlotterFR_Result, Models.SP_GetSBPBlotterFR_Result>();
 
-            List<DataAccessLayer.SP_GetSBPBlotterFR_Result> blotterFRList = DAL.GetAllBlotterFundingRepo(UserID, BranchID, CurID, BR);
-            List<Models.SP_GetSBPBlotterFR_Result> blotterFR = new List<Models.SP_GetSBPBlotterFR_Result>();
-            foreach (var item in blotterFRList)
-            {
-                blotterFR.Add(mapObj.Translate(item));
-            }
-            return Json<List<Models.SP_GetSBPBlotterFR_Result>>(blotterFR);
-        }
+        //    List<DataAccessLayer.SP_GetSBPBlotterFR_Result> blotterFRList = DAL.GetAllBlotterFundingRepo(UserID, BranchID, CurID, BR, DateVal);
+        //    List<Models.SP_GetSBPBlotterFR_Result> blotterFR = new List<Models.SP_GetSBPBlotterFR_Result>();
+        //    foreach (var item in blotterFRList)
+        //    {
+        //        blotterFR.Add(mapObj.Translate(item));
+        //    }
+        //    return Json<List<Models.SP_GetSBPBlotterFR_Result>>(blotterFR);
+        //}
 
 
-        [HttpPost]
-        public bool InsertFundingRepo(List<Models.SBP_BlotterFundingRepo> blotterFR)
-        {
-            bool status = false;
+        //[HttpPost]
+        //public bool InsertFundingRepo(List<Models.SBP_BlotterFundingRepo> blotterFR)
+        //{
+        //    bool status = false;
 
-            if (ModelState.IsValid)
-            {
+        //    if (ModelState.IsValid)
+        //    {
 
-                EntitiyMapperBlotterFR<Models.SBP_BlotterFundingRepo, DataAccessLayer.SBP_BlotterFundingRepo> mapObj = new EntitiyMapperBlotterFR<Models.SBP_BlotterFundingRepo, DataAccessLayer.SBP_BlotterFundingRepo>();
-                DataAccessLayer.SBP_BlotterFundingRepo FRObj = new DataAccessLayer.SBP_BlotterFundingRepo();
-                for (int i = 0; i < blotterFR.Count; i++)
-                {
-                    //blotterFR[i].DataType=()
-                    FRObj = mapObj.Translate(blotterFR[i]);
-                    status = DAL.InsertFundingRepo(FRObj);
-                }
-            }
-            return status;
-        }
+        //        EntitiyMapperBlotterFR<Models.SBP_BlotterFundingRepo, DataAccessLayer.SBP_BlotterFundingRepo> mapObj = new EntitiyMapperBlotterFR<Models.SBP_BlotterFundingRepo, DataAccessLayer.SBP_BlotterFundingRepo>();
+        //        DataAccessLayer.SBP_BlotterFundingRepo FRObj = new DataAccessLayer.SBP_BlotterFundingRepo();
+        //        for (int i = 0; i < blotterFR.Count; i++)
+        //        {
+        //            //blotterFR[i].DataType=()
+        //            FRObj = mapObj.Translate(blotterFR[i]);
+        //            status = DAL.InsertFundingRepo(FRObj);
+        //        }
+        //    }
+        //    return status;
+        //}
 
-        [HttpPost]
-        public bool DeleteFundingRepo(IEnumerable<int> Ids)
-        {
-            bool status = false;
-            foreach (var item in Ids)
-            {
-                status = DAL.DeleteFundingRepo(item);
-            }
-            return status;
-        }
+        //[HttpPost]
+        //public bool DeleteFundingRepo(IEnumerable<int> Ids)
+        //{
+        //    bool status = false;
+        //    foreach (var item in Ids)
+        //    {
+        //        status = DAL.DeleteFundingRepo(item);
+        //    }
+        //    return status;
+        //}
     }
 }

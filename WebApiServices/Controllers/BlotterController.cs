@@ -1,9 +1,11 @@
 ﻿using DataAccessLayer;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Web.Http;
 using System.Web.Http.Results;
 using WebApiServices.Models;
@@ -15,39 +17,120 @@ namespace WebApiServices.Controllers
     {
         // GET:   
         [HttpGet]
-        public JsonResult<List<Models.SP_SBPBlotter_Result>> GetAllBlotterList(String BrCode, String DataType, String CurrentDate)
+        public SBP_WebApiResponse GetAllBlotterList(String BrCode, String DataType, String CurrentDate)
         {
             //String BrCode = "02";
-            EntityMapperBlotter<DataAccessLayer.SP_SBPBlotter_Result, Models.SP_SBPBlotter_Result> mapObj = new EntityMapperBlotter<DataAccessLayer.SP_SBPBlotter_Result, Models.SP_SBPBlotter_Result>();
-
-            List<DataAccessLayer.SP_SBPBlotter_Result> blotterList = DAL.GetAllBlotterData(BrCode, DataType,CurrentDate);
-            List<Models.SP_SBPBlotter_Result> blotter = new List<Models.SP_SBPBlotter_Result>();
-            foreach (var item in blotterList)
+            var responseData = (dynamic)null;
+            try
             {
-                blotter.Add(mapObj.Translate(item));
+                EntityMapperBlotter<DataAccessLayer.SP_SBPBlotter_Result, Models.SP_SBPBlotter_Result> mapObj = new EntityMapperBlotter<DataAccessLayer.SP_SBPBlotter_Result, Models.SP_SBPBlotter_Result>();
+                List<DataAccessLayer.SP_SBPBlotter_Result> blotterList = DAL.GetAllBlotterData(BrCode, DataType, CurrentDate);
+                List<Models.SP_SBPBlotter_Result> blotter = new List<Models.SP_SBPBlotter_Result>();
+                foreach (var item in blotterList)
+                {
+                    blotter.Add(mapObj.Translate(item));
+                }
+
+                HttpResponseMessage response = null;
+                response = Request.CreateResponse(HttpStatusCode.OK);
+                var jsonResponse = JsonConvert.SerializeObject(blotter.ToList(), Formatting.Indented);
+                response.Content = new StringContent(jsonResponse, Encoding.UTF8, "application/json");
+                if (blotter.Count > 0)
+                {
+                    responseData = new SBP_WebApiResponse
+                    {
+                        Status = true,
+                        Message = "Success",
+                        Data = jsonResponse
+                    };
+                }
+                else
+                {
+                    responseData = new SBP_WebApiResponse
+                    {
+                        Status = false,
+                        Message = "Data not available",
+                        Data = ""
+                    };
+                }
+                return responseData;
             }
-            return Json<List<Models.SP_SBPBlotter_Result>>(blotter);
+            catch (Exception ex)
+            {
+                {
+                    responseData = new SBP_WebApiResponse
+                    {
+                        Status = false,
+                        Message = "Failed",
+                        Data = ex.Message
+                    };
+                }
+                return responseData;
+            }
+
         }
 
         [HttpGet]
-        public JsonResult<List<Models.SP_SBPBlotter_FCY_Result>> GetAllBlotterFCYList(String BrCode, int CurrId)
+        public SBP_WebApiResponse GetAllBlotterFCYList(String BrCode, int CurrId, String CurrentDate, string NostroBank)
         {
             //String BrCode = "02";
-            EntityMapperBlotterFCY<DataAccessLayer.SP_SBPBlotter_FCY_Result, Models.SP_SBPBlotter_FCY_Result> mapObj = new EntityMapperBlotterFCY<DataAccessLayer.SP_SBPBlotter_FCY_Result, Models.SP_SBPBlotter_FCY_Result>();
-
-            List<DataAccessLayer.SP_SBPBlotter_FCY_Result> blotterList = DAL.GetAllBlotterData_FCY(BrCode, CurrId);
-            List<Models.SP_SBPBlotter_FCY_Result> blotter = new List<Models.SP_SBPBlotter_FCY_Result>();
-            foreach (var item in blotterList)
+            var responseData = (dynamic)null;
+            try
             {
-                blotter.Add(mapObj.Translate(item));
+                EntityMapperBlotterFCY<DataAccessLayer.SP_SBPBlotter_FCY_Result, Models.SP_SBPBlotter_FCY_Result> mapObj = new EntityMapperBlotterFCY<DataAccessLayer.SP_SBPBlotter_FCY_Result, Models.SP_SBPBlotter_FCY_Result>();
+
+                List<DataAccessLayer.SP_SBPBlotter_FCY_Result> blotterList = DAL.GetAllBlotterData_FCY(BrCode, CurrId, CurrentDate, NostroBank);
+                List<Models.SP_SBPBlotter_FCY_Result> blotter = new List<Models.SP_SBPBlotter_FCY_Result>();
+                foreach (var item in blotterList)
+                {
+                    blotter.Add(mapObj.Translate(item));
+                }
+
+                HttpResponseMessage response = null;
+                response = Request.CreateResponse(HttpStatusCode.OK);
+                var jsonResponse = JsonConvert.SerializeObject(blotter.ToList(), Formatting.Indented);
+                response.Content = new StringContent(jsonResponse, Encoding.UTF8, "application/json");
+                if (blotter.Count > 0)
+                {
+                    responseData = new SBP_WebApiResponse
+                    {
+                        Status = true,
+                        Message = "Success",
+                        Data = jsonResponse
+                    };
+                }
+                else
+                {
+                    responseData = new SBP_WebApiResponse
+                    {
+                        Status = false,
+                        Message = "Data not available",
+                        Data = ""
+                    };
+                }
+                return responseData;
             }
-            return Json<List<Models.SP_SBPBlotter_FCY_Result>>(blotter);
+            catch (Exception ex)
+            {
+                {
+                    responseData = new SBP_WebApiResponse
+                    {
+                        Status = false,
+                        Message = "Failed",
+                        Data = ex.Message
+                    };
+                }
+                return responseData;
+            }
+
         }
+
 
 
         // GET:   
         [HttpGet]
-        public JsonResult<Models.BlotterSumEmail> GetBlotterSum(String BrCode)        {
+        public JsonResult<Models.BlotterSumEmail> GetBlotterSum(String BrCode)
+        {
 
             EntityMapperBlotterEmail<DataAccessLayer.BlotterSumEmail, Models.BlotterSumEmail> mapObj = new EntityMapperBlotterEmail<DataAccessLayer.BlotterSumEmail, Models.BlotterSumEmail>();
             DataAccessLayer.BlotterSumEmail dalEmail = DAL.GetAllBlotterDataSum(BrCode);
@@ -55,7 +138,7 @@ namespace WebApiServices.Controllers
             SumForEmail = mapObj.Translate(dalEmail);
             return Json<Models.BlotterSumEmail>(SumForEmail);
 
-         
+
         }
 
 
@@ -76,7 +159,6 @@ namespace WebApiServices.Controllers
 
         }
 
-
         // GET:   
         [HttpGet]
         public JsonResult<Models.SP_GETLatestBlotterDTLReportDayWise_Result> GetLatestBlotterDTLReportForToday(int BR)
@@ -85,9 +167,9 @@ namespace WebApiServices.Controllers
             EntityMapperBlotter<DataAccessLayer.SP_GETLatestBlotterDTLReportForToday_Result, Models.SP_GETLatestBlotterDTLReportDayWise_Result> mapObj = new EntityMapperBlotter<DataAccessLayer.SP_GETLatestBlotterDTLReportForToday_Result, Models.SP_GETLatestBlotterDTLReportDayWise_Result>();
             DataAccessLayer.SP_GETLatestBlotterDTLReportForToday_Result dalEmail = DAL.GetLatestBlotterDTLForToday(BR);
             Models.SP_GETLatestBlotterDTLReportDayWise_Result SumForEmail = new Models.SP_GETLatestBlotterDTLReportDayWise_Result();
-            
-                SumForEmail = mapObj.Translate(dalEmail);
-            
+
+            SumForEmail = mapObj.Translate(dalEmail);
+
             return Json<Models.SP_GETLatestBlotterDTLReportDayWise_Result>(SumForEmail);
 
 
@@ -116,9 +198,10 @@ namespace WebApiServices.Controllers
         {
 
             List<Models.SP_GetOPICSManualData_Result> SumForEmail = new List<Models.SP_GetOPICSManualData_Result>();
-            if (BMDP.Recon) {
+            if (BMDP.Recon)
+            {
                 EntityMapperBlotter<DataAccessLayer.SP_ReconcileOPICSManualData_Result, Models.SP_GetOPICSManualData_Result> mapObj = new EntityMapperBlotter<DataAccessLayer.SP_ReconcileOPICSManualData_Result, Models.SP_GetOPICSManualData_Result>();
-                List<DataAccessLayer.SP_ReconcileOPICSManualData_Result> dalEmail = DAL.ReconcileOPICSManualData(BMDP.BR, BMDP.DateFor);
+                List<DataAccessLayer.SP_ReconcileOPICSManualData_Result> dalEmail = DAL.ReconcileOPICSManualData(BMDP.BR, BMDP.DateFor, BMDP.CurId);
                 foreach (var item in dalEmail)
                 {
                     SumForEmail.Add(mapObj.Translate(item));
@@ -127,7 +210,7 @@ namespace WebApiServices.Controllers
             else
             {
                 EntityMapperBlotter<DataAccessLayer.SP_GetOPICSManualData_Result, Models.SP_GetOPICSManualData_Result> mapObj = new EntityMapperBlotter<DataAccessLayer.SP_GetOPICSManualData_Result, Models.SP_GetOPICSManualData_Result>();
-                List<DataAccessLayer.SP_GetOPICSManualData_Result> dalEmail = DAL.GetOPICSManualData(BMDP.BR, BMDP.DateFor, BMDP.Flag);
+                List<DataAccessLayer.SP_GetOPICSManualData_Result> dalEmail = DAL.GetOPICSManualData(BMDP.BR, BMDP.DateFor, BMDP.Flag, BMDP.CurId);
                 foreach (var item in dalEmail)
                 {
                     SumForEmail.Add(mapObj.Translate(item));
@@ -137,5 +220,40 @@ namespace WebApiServices.Controllers
 
 
         }
+
+        #region Added 04-Aug-2021
+
+        // POST:   
+        [HttpPost]
+        public SBP_WebApiResponse InsertBlotterListLCY(List<Models.BlotterDataColor> BlotterDataLCY)
+        {
+            bool status = false;
+            EntityMapperBlotter<Models.BlotterDataColor, DataAccessLayer.BlotterDataColor> mapObj = new EntityMapperBlotter<Models.BlotterDataColor, DataAccessLayer.BlotterDataColor>();
+            DataAccessLayer.BlotterDataColor Obj = new DataAccessLayer.BlotterDataColor();
+            for (int i = 0; i < BlotterDataLCY.Count; i++)
+            {
+                Obj = mapObj.Translate(BlotterDataLCY[i]);
+                status = DAL.InsertBlotterDumpDta(Obj);
+            }
+            return null;
+        }
+
+        [HttpPost]
+        public SBP_WebApiResponse InsertBlotterListFCY(List<Models.BlotterDataColor> BlotterDataFCY)
+        {
+            bool status = false;
+            EntityMapperBlotter<Models.BlotterDataColor, DataAccessLayer.BlotterDataColor> mapObj = new EntityMapperBlotter<Models.BlotterDataColor, DataAccessLayer.BlotterDataColor>();
+            DataAccessLayer.BlotterDataColor Obj = new DataAccessLayer.BlotterDataColor();
+            for (int i = 0; i < BlotterDataFCY.Count; i++)
+            {
+                Obj = mapObj.Translate(BlotterDataFCY[i]);
+                status = DAL.InsertBlotterDumpDta(Obj);
+            }
+            return null;
+        }
+
+       
+
+        #endregion
     }
 }

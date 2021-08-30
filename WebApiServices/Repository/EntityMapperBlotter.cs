@@ -43,6 +43,10 @@ namespace WebApiServices.Repository
 
             Mapper.CreateMap<Models.SP_GetOPICSManualData_Result, DataAccessLayer.SP_ReconcileOPICSManualData_Result>();
             Mapper.CreateMap<DataAccessLayer.SP_ReconcileOPICSManualData_Result, Models.SP_GetOPICSManualData_Result>();
+
+
+            Mapper.CreateMap<Models.BlotterDataColor, DataAccessLayer.BlotterDataColor>();
+            Mapper.CreateMap<DataAccessLayer.BlotterDataColor, Models.BlotterDataColor>();
         }
       
         public TDestination Translate(TSource obj)

@@ -20,6 +20,9 @@ namespace WebApiServices.Repository
             Mapper.CreateMap<Models.NostroBank, DataAccessLayer.SP_GetAllNostroBankList_Result>();
             Mapper.CreateMap<DataAccessLayer.SP_GetAllNostroBankList_Result, Models.NostroBank>();
 
+            Mapper.CreateMap<Models.SP_GetNostroBankFromOPICS_Result, DataAccessLayer.SP_GetNostroBankFromOPICS_Result>();
+            Mapper.CreateMap<DataAccessLayer.SP_GetNostroBankFromOPICS_Result, Models.SP_GetNostroBankFromOPICS_Result>();
+
         }
         public TDestination Translate(TSource obj)
         {

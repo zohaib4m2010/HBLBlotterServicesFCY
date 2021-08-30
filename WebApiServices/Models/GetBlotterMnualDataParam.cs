@@ -11,5 +11,6 @@ namespace WebApiServices.Models
         public string Flag { get; set; }
         public System.DateTime DateFor { get; set; }
         public bool Recon { get; set; }
+        public int CurId { get; set; }
     }
 }

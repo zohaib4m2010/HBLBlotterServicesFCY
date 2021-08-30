@@ -48,7 +48,7 @@
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="AutoMapper">
-      <HintPath>..\..\..\..\HBL\AutoMapper.dll</HintPath>
+      <HintPath>..\..\..\HBL\AutoMapper.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
@@ -183,6 +183,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\BlotterDataColor.cs" />
     <Compile Include="Models\BlotterSumEmail.cs" />
     <Compile Include="Models\Branches.cs" />
     <Compile Include="Models\ChangePassword.cs" />
@@ -203,6 +204,7 @@
     <Compile Include="Models\SBP_BlotterTrade.cs" />
     <Compile Include="Models\SBP_LoginInfo.cs" />
     <Compile Include="Models\SBP_LoginInfoWithRoleId.cs" />
+    <Compile Include="Models\SBP_WebApiResponse.cs" />
     <Compile Include="Models\SP_ADD_SessionStart.cs" />
     <Compile Include="Models\SP_GetAllBlotterCurrencyById_Result.cs" />
     <Compile Include="Models\SP_GETAllNostroBanks_Result.cs" />
@@ -222,6 +224,7 @@
     <Compile Include="Models\SP_GetAll_SBPBlotterTrade_Result.cs" />
     <Compile Include="Models\SP_GETLatestBlotterDTLReportDayWise_Result.cs" />
     <Compile Include="Models\SP_GetLatestBreakup_Result.cs" />
+    <Compile Include="Models\SP_GetNostroBankFromOPICS_Result.cs" />
     <Compile Include="Models\SP_GetOPICSManualData_Result.cs" />
     <Compile Include="Models\SP_GetSBPBlotterCRD_Result.cs" />
     <Compile Include="Models\SP_GetSBPBlotterFR_Result.cs" />

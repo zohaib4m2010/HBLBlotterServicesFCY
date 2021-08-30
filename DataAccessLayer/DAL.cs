@@ -18,7 +18,7 @@ namespace DataAccessLayer
         }
         public static List<SP_SBPBlotter_Result> GetAllBlotterData(String Br, String DataType, String CurrentDate)
         {
-            var results = DbContextB.SP_SBPBlotter(Br, DataType,Convert.ToDateTime(CurrentDate)).ToList();
+            var results = DbContextB.SP_SBPBlotterBR1(Br,  Convert.ToDateTime(CurrentDate)).ToList();
             return results;
         }
 
@@ -33,9 +33,9 @@ namespace DataAccessLayer
             return results;
         }
 
-        public static List<SP_GetOPICSManualData_Result> GetOPICSManualData(int BR, DateTime Date,string Flag)
+        public static List<SP_GetOPICSManualData_Result> GetOPICSManualData(int BR, DateTime Date, string Flag, int CurId)
         {
-            var results = DbContextB.SP_GetOPICSManualData(BR, Date,Flag).ToList();
+            var results = DbContextB.SP_GetOPICSManualData(BR, Date, Flag, CurId).ToList();
             return results;
         }
 
@@ -43,13 +43,13 @@ namespace DataAccessLayer
 
         public static SP_GetOpeningBalance_Result GetOpeningBalance(int BR)
         {
-            var results = DbContextB.SP_GetOpeningBalance(BR ,DateTime.Now.AddDays(-38)).FirstOrDefault();
+            var results = DbContextB.SP_GetOpeningBalance(BR, DateTime.Now.AddDays(-38)).FirstOrDefault();
             return results;
         }
 
-        public static List<SP_ReconcileOPICSManualData_Result> ReconcileOPICSManualData(int BR, DateTime Date)
+        public static List<SP_ReconcileOPICSManualData_Result> ReconcileOPICSManualData(int BR, DateTime Date, int CurId)
         {
-            var results = DbContextB.SP_ReconcileOPICSManualData(BR, Date).ToList();
+            var results = DbContextB.SP_ReconcileOPICSManualData(BR, Date, CurId).ToList();
             return results;
         }
         public static BlotterSumEmail GetAllBlotterDataSum(String BrCode)
@@ -180,7 +180,7 @@ namespace DataAccessLayer
             bool status;
             try
             {
-                List<SBP_BlotterCRRFINCON> GetCount = DbContextB.SBP_BlotterCRRFINCON.Where(p => CRRFINCONItem.StartDate >= p.StartDate && CRRFINCONItem.StartDate <= p.EndDate && p.BR == CRRFINCONItem.BR && p.CurID==CRRFINCONItem.CurID).ToList();
+                List<SBP_BlotterCRRFINCON> GetCount = DbContextB.SBP_BlotterCRRFINCON.Where(p => CRRFINCONItem.StartDate >= p.StartDate && CRRFINCONItem.StartDate <= p.EndDate && p.BR == CRRFINCONItem.BR && p.CurID == CRRFINCONItem.CurID).ToList();
                 if (GetCount.Count > 0)
                 {
                     status = false;
@@ -288,9 +288,9 @@ namespace DataAccessLayer
             return DbContextB.SP_GETAllTBOTransactionTitles().ToList();
         }
 
-        public static List<SP_GetAll_SBPBlotterTBO_Result> GetAllBlotterTBO(int UserID, int BranchID, int CurID, int BR)
+        public static List<SP_GetAll_SBPBlotterTBO_Result> GetAllBlotterTBO(int UserID, int BranchID, int CurID, int BR, string DateVal)
         {
-            return DbContextB.SP_GetAll_SBPBlotterTBO(UserID, BranchID, CurID, BR).ToList();
+            return DbContextB.SP_GetAll_SBPBlotterTBO(UserID, BranchID, CurID, BR, DateVal).ToList();
         }
         public static SBP_BlotterTBO GetTBOItem(int TBOId)
         {
@@ -365,6 +365,11 @@ namespace DataAccessLayer
         //*****************************************************
         //NostroBank Producers
         //*****************************************************
+
+        public static List<SP_GetNostroBankFromOPICS_Result> GetNostroBankDDL(int CurId, String BrCode)
+        {
+            return DbContextB.SP_GetNostroBankFromOPICS(CurId, BrCode).ToList();
+        }
 
         public static List<NostroBank> GetAllNostroBank()
         {
@@ -773,8 +778,9 @@ namespace DataAccessLayer
                 {
                     status = false;
                 }
-                else {
-                    DbContextB.SP_InsertLoginInfo(item.UserName, item.Password, item.ContactNo, item.Email,item.Department, item.BranchID, item.isActive, item.isConventional, item.isislamic, item.CreateDate, item.BlotterType, item.URID);
+                else
+                {
+                    DbContextB.SP_InsertLoginInfo(item.UserName, item.Password, item.ContactNo, item.Email, item.Department, item.BranchID, item.isActive, item.isConventional, item.isislamic, item.CreateDate, item.BlotterType, item.URID);
                     DbContextB.SaveChanges();
                     status = true;
                 }
@@ -811,8 +817,9 @@ namespace DataAccessLayer
 
                     status = false;
                 }
-                else {
-                    DbContextB.SP_UpdateLoginInfo(Item.Id,Item.UserName, Item.Password, Item.ContactNo, Item.Email,Item.BranchID, Item.Department, Item.isActive, Item.isConventional, Item.isislamic, Item.CreateDate, Item.BlotterType, Item.URID);
+                else
+                {
+                    DbContextB.SP_UpdateLoginInfo(Item.Id, Item.UserName, Item.Password, Item.ContactNo, Item.Email, Item.BranchID, Item.Department, Item.isActive, Item.isConventional, Item.isislamic, Item.CreateDate, Item.BlotterType, Item.URID);
                     DbContextB.SaveChanges();
                     status = true;
                 }
@@ -936,9 +943,9 @@ namespace DataAccessLayer
         {
             return DbContextB.SP_GETAllClearingTransactionTitles().ToList();
         }
-        public static List<SP_GetAll_SBPBlotterClearing_Result> GetAllBlotterClearing(int UserID, int BranchID, int CurID, int BR)
+        public static List<SP_GetAll_SBPBlotterClearing_Result> GetAllBlotterClearing(int UserID, int BranchID, int CurID, int BR, string DateVal)
         {
-            return DbContextB.SP_GetAll_SBPBlotterClearing(UserID, BranchID, CurID, BR).ToList();
+            return DbContextB.SP_GetAll_SBPBlotterClearing(UserID, BranchID, CurID, BR, DateVal).ToList();
         }
         public static SBP_BlotterClearing GetClearingItem(int ClearingId)
         {
@@ -956,9 +963,9 @@ namespace DataAccessLayer
                 //}
                 //else
                 //{
-                    DbContextB.SBP_BlotterClearing.Add(ClearingItem);
-                    DbContextB.SaveChanges();
-                    status = true;
+                DbContextB.SBP_BlotterClearing.Add(ClearingItem);
+                DbContextB.SaveChanges();
+                status = true;
                 //}
             }
             catch (Exception ex)
@@ -981,21 +988,21 @@ namespace DataAccessLayer
                 //}
                 //else
                 //{
-                    SBP_BlotterClearing CLRItems = DbContextB.SBP_BlotterClearing.Where(p => p.SNo == ClearingItem.SNo).FirstOrDefault();
-                    if (CLRItems != null)
-                    {
+                SBP_BlotterClearing CLRItems = DbContextB.SBP_BlotterClearing.Where(p => p.SNo == ClearingItem.SNo).FirstOrDefault();
+                if (CLRItems != null)
+                {
 
                     CLRItems.DataType = ClearingItem.DataType;
                     CLRItems.TTID = ClearingItem.TTID;
-                        CLRItems.Clearing_InFlow = ClearingItem.Clearing_InFlow;
-                        CLRItems.Clearing_OutFLow = ClearingItem.Clearing_OutFLow;
-                        CLRItems.Note = ClearingItem.Note;
-                        CLRItems.CurID = ClearingItem.CurID;
-                        CLRItems.UpdateDate = ClearingItem.UpdateDate;
+                    CLRItems.Clearing_InFlow = ClearingItem.Clearing_InFlow;
+                    CLRItems.Clearing_OutFLow = ClearingItem.Clearing_OutFLow;
+                    CLRItems.Note = ClearingItem.Note;
+                    CLRItems.CurID = ClearingItem.CurID;
+                    CLRItems.UpdateDate = ClearingItem.UpdateDate;
                     CLRItems.UserID = ClearingItem.UserID;
                     DbContextB.SaveChanges();
-                    }
-                    status = true;
+                }
+                status = true;
                 //}
             }
             catch (Exception)
@@ -1033,7 +1040,7 @@ namespace DataAccessLayer
 
         public static List<SBP_BlotterFundsTransfer> GetAllBlotterFundsTransfer(int UserID, int BranchID, int CurID, int BR)
         {
-            return DbContextB.SBP_BlotterFundsTransfer.Where(p => p.UserID== UserID && p.BID== BranchID && p.CurID== CurID && p.BR== BR).ToList();
+            return DbContextB.SBP_BlotterFundsTransfer.Where(p => p.UserID == UserID && p.BID == BranchID && p.CurID == CurID && p.BR == BR).ToList();
         }
         public static SBP_BlotterFundsTransfer GetFundsTransferItem(int FundsTransferId)
         {
@@ -1073,7 +1080,8 @@ namespace DataAccessLayer
 
 
                 }
-                else {
+                else
+                {
                     FundsTransferItem.DataType = "SBP";
                     if (FundsTransferItem.FT_InFlow != 0)
                     {
@@ -1112,7 +1120,7 @@ namespace DataAccessLayer
                 //}
                 //else
                 //{
-                SBP_BlotterFundsTransfer CLRItems1 = DbContextB.SBP_BlotterFundsTransfer.Where(p => p.SNo == FundsTransferItem.SNo && p.FT_Date== FundsTransferItem.FT_Date).FirstOrDefault();
+                SBP_BlotterFundsTransfer CLRItems1 = DbContextB.SBP_BlotterFundsTransfer.Where(p => p.SNo == FundsTransferItem.SNo && p.FT_Date == FundsTransferItem.FT_Date).FirstOrDefault();
                 if (CLRItems1 != null)
                 {
 
@@ -1141,7 +1149,8 @@ namespace DataAccessLayer
                         FundsTransferItem.FT_OutFLow = 0;
                     }
                 }
-                else {
+                else
+                {
                     FundsTransferItem.DataType = "SBP";
                     if (FundsTransferItem.FT_InFlow != 0)
                     {
@@ -1199,7 +1208,8 @@ namespace DataAccessLayer
                             }
                         }
                     }
-                    else {
+                    else
+                    {
                         FundsTransferItem = DbContextB.SBP_BlotterFundsTransfer.Where(p => p.FT_Date == CLRItems2.FT_Date && p.FT_OutFLow == CLRItems2.FT_OutFLow).ToList();
                         if (FundsTransferItem.Count > 0)
                         {
@@ -1228,7 +1238,7 @@ namespace DataAccessLayer
 
         public static List<SBP_BlotterBai_Muajjal> GetAllBlotterBai_Muajjal(int UserID, int BranchID, int CurID, int BR)
         {
-            return DbContextB.SBP_BlotterBai_Muajjal.Where(p => p.UserID==UserID && p.BID == BranchID && p.CurID == CurID && p.BR == BR).ToList();
+            return DbContextB.SBP_BlotterBai_Muajjal.Where(p => p.UserID == UserID && p.BID == BranchID && p.CurID == CurID && p.BR == BR).ToList();
         }
         public static SBP_BlotterBai_Muajjal GetBai_MuajjalItem(int Bai_MuajjalId)
         {
@@ -1320,7 +1330,7 @@ namespace DataAccessLayer
         //Change Password Producers
         //*****************************************************
 
-        public static bool UpdateUserPassword(int UserId,string OldPassword,string NewPassword)
+        public static bool UpdateUserPassword(int UserId, string OldPassword, string NewPassword)
         {
             bool status;
             try
@@ -1349,9 +1359,9 @@ namespace DataAccessLayer
         {
             return DbContextB.SP_GETAllRTGSTransactionTitles().ToList();
         }
-        public static List<SP_GetAll_SBPBlotterRTGS_Result> GetAllBlotterRTGS(int UserID, int BranchID, int CurID, int BR)
+        public static List<SP_GetAll_SBPBlotterRTGS_Result> GetAllBlotterRTGS(int UserID, int BranchID, int CurID, int BR, String DateVal)
         {
-            return DbContextB.SP_GetAll_SBPBlotterRTGS(UserID, BranchID, CurID, BR).ToList();
+            return DbContextB.SP_GetAll_SBPBlotterRTGS(UserID, BranchID, CurID, BR, DateVal).ToList();
         }
         public static SBP_BlotterRTGS GetRTGSItem(int RTGSId)
         {
@@ -1369,9 +1379,9 @@ namespace DataAccessLayer
                 //}
                 //else
                 //{
-                    DbContextB.SBP_BlotterRTGS.Add(RTGSItem);
-                    DbContextB.SaveChanges();
-                    status = true;
+                DbContextB.SBP_BlotterRTGS.Add(RTGSItem);
+                DbContextB.SaveChanges();
+                status = true;
                 //}
             }
             catch (Exception ex)
@@ -1394,20 +1404,20 @@ namespace DataAccessLayer
                 //}
                 //else
                 //{
-                    SBP_BlotterRTGS RTGSItems = DbContextB.SBP_BlotterRTGS.Where(p => p.SNo == RTGSItem.SNo).FirstOrDefault();
-                    if (RTGSItems != null)
+                SBP_BlotterRTGS RTGSItems = DbContextB.SBP_BlotterRTGS.Where(p => p.SNo == RTGSItem.SNo).FirstOrDefault();
+                if (RTGSItems != null)
                 {
                     RTGSItems.DataType = RTGSItem.DataType;
                     RTGSItems.TTID = RTGSItem.TTID;
-                        RTGSItems.RTGS_InFlow = RTGSItem.RTGS_InFlow;
-                        RTGSItems.RTGS_OutFLow = RTGSItem.RTGS_OutFLow;
-                        RTGSItems.CurID = RTGSItem.CurID;
-                        RTGSItems.Note = RTGSItem.Note;
-                        RTGSItems.UpdateDate = RTGSItem.UpdateDate;
+                    RTGSItems.RTGS_InFlow = RTGSItem.RTGS_InFlow;
+                    RTGSItems.RTGS_OutFLow = RTGSItem.RTGS_OutFLow;
+                    RTGSItems.CurID = RTGSItem.CurID;
+                    RTGSItems.Note = RTGSItem.Note;
+                    RTGSItems.UpdateDate = RTGSItem.UpdateDate;
                     RTGSItems.UserID = RTGSItem.UserID;
                     DbContextB.SaveChanges();
-                    }
-                    status = true;
+                }
+                status = true;
                 //}
             }
             catch (Exception)
@@ -1443,7 +1453,7 @@ namespace DataAccessLayer
         //Opening Balance Producers
         //*****************************************************
 
-        public static List<SP_GetAllOpeningBalance_Result> GetAllBlotterOpenBal(int UserID, int BranchID, int CurID, int BR)
+        public static List<SP_GetAllOpeningBalance_Result> GetAllBlotterOpenBal(int UserID, int BranchID, int CurID, int BR, string DateVal)
         {
             return DbContextB.SP_GetAllOpeningBalance(UserID, BranchID, CurID, BR).ToList();
         }
@@ -1456,7 +1466,7 @@ namespace DataAccessLayer
             bool status;
             try
             {
-                List<SBP_BlotterOpeningBalance> GetCount = DbContextB.SBP_BlotterOpeningBalance.Where(p => p.DataType == OpnBalItem.DataType &&  p.BalDate== OpnBalItem.BalDate && p.BR==OpnBalItem.BR).ToList();
+                List<SBP_BlotterOpeningBalance> GetCount = DbContextB.SBP_BlotterOpeningBalance.Where(p => p.DataType == OpnBalItem.DataType && p.BalDate == OpnBalItem.BalDate && p.BR == OpnBalItem.BR).ToList();
                 if (GetCount.Count > 0)
                 {
                     SBP_BlotterOpeningBalance OpenBalItems = DbContextB.SBP_BlotterOpeningBalance.Where(p => p.DataType == OpnBalItem.DataType && p.BalDate == OpnBalItem.BalDate && p.BR == OpnBalItem.BR).FirstOrDefault();
@@ -1554,9 +1564,9 @@ namespace DataAccessLayer
         //Funding Repo Producers
         //*****************************************************
 
-        public static List<SP_GetSBPBlotterFR_Result> GetAllBlotterFundingRepo(int UserID, int BranchID, int CurID, int BR)
+        public static List<SP_GetSBPBlotterFR_Result> GetAllBlotterFundingRepo(int UserID, int BranchID, int CurID, int BR, string DateVal)
         {
-            return DbContextB.SP_GetSBPBlotterFR(UserID, BranchID, CurID, BR).ToList();
+            return DbContextB.SP_GetSBPBlotterFR(UserID, BranchID, CurID, BR, DateVal).ToList();
         }
         public static SBP_BlotterFundingRepo GetSBP_BlotterFundingRepoById(int FundingRepoId)
         {
@@ -1650,7 +1660,7 @@ namespace DataAccessLayer
 
         public static List<SBP_BlotterManualEstBalance> GetAllBlotterEstAdjBal(int UserID, int BranchID, int CurID, int BR)
         {
-            return DbContextB.SBP_BlotterManualEstBalance.Where(p => p.UserID == UserID && p.BID==BranchID && p.CurID==CurID && p.BR==BR && p.isAdjusted==true).ToList();
+            return DbContextB.SBP_BlotterManualEstBalance.Where(p => p.UserID == UserID && p.BID == BranchID && p.CurID == CurID && p.BR == BR && p.isAdjusted == true).ToList();
         }
         public static SBP_BlotterManualEstBalance GetEstAdjBalById(int EstAdjBalId)
         {
@@ -1783,10 +1793,10 @@ namespace DataAccessLayer
         {
             return DbContextB.SP_GETAllTradeTransactionTitles().ToList();
         }
-        public static List<SP_GetAll_SBPBlotterTrade_Result> GetAllBlotterTrade(int UserID, int BranchID, int CurID, int BR)
+        public static List<SP_GetAll_SBPBlotterTrade_Result> GetAllBlotterTrade(int UserID, int BranchID, int CurID, int BR, string DateVal)
         {
             // return DbContextB.SBP_BlotterTrade.Where(p => p.UserID == UserID && p.BR == BranchID && p.CurID == CurID).ToList();
-            return DbContextB.SP_GetAll_SBPBlotterTrade(UserID, BranchID, CurID, BR).ToList();
+            return DbContextB.SP_GetAll_SBPBlotterTrade(UserID, BranchID, CurID, BR, DateVal).ToList();
         }
         public static SBP_BlotterTrade GetTradeItem(int TradeId)
         {
@@ -2226,10 +2236,6 @@ namespace DataAccessLayer
                 status = false;
             }
             return status;
-
-
-
-
         }
 
 
@@ -2239,10 +2245,10 @@ namespace DataAccessLayer
         //CRD Producers
         //*****************************************************
 
-        public static List<SP_GetSBPBlotterCRD_Result> GetAllBlotterCRD(int UserID, int BranchID, int CurID, int BR)
+        public static List<SP_GetSBPBlotterCRD_Result> GetAllBlotterCRD(int UserID, int BranchID, int CurID, int BR, string DateVal)
         {
             var CurrentDate = DateTime.Now;
-            return DbContextB.SP_GetSBPBlotterCRD(UserID, BranchID, CurID, BR).ToList();
+            return DbContextB.SP_GetSBPBlotterCRD(UserID, BranchID, CurID, BR, DateVal).ToList();
         }
         public static SBP_BlotterCRD GetCRDItem(int CRDId)
         {
@@ -2327,10 +2333,10 @@ namespace DataAccessLayer
         //RECON Producers
         //*****************************************************
 
-        public static List<SP_GetSBPBlotterRECON_Result> GetAllBlotterRECON(int UserID, int BranchID, int CurID, int BR)
+        public static List<SP_GetSBPBlotterRECON_Result> GetAllBlotterRECON(int UserID, int BranchID, int CurID, int BR, string DateVal)
         {
             var CurrentDate = DateTime.Now;
-            return DbContextB.SP_GetSBPBlotterRECON(UserID, BranchID, CurID, BR).ToList();
+            return DbContextB.SP_GetSBPBlotterRECON(UserID, BranchID, CurID, BR, DateVal).ToList();
         }
         public static SBP_BlotterRECON GetRECONItem(int CRDId)
         {
@@ -2434,10 +2440,89 @@ namespace DataAccessLayer
             return DbContextB.SP_GetAllNostroBankList(currId).ToList();
         }
 
-        public static List<SP_SBPBlotter_FCY_Result> GetAllBlotterData_FCY(String Br, int CurrId)
+        public static List<SP_SBPBlotter_FCY_Result> GetAllBlotterData_FCY(String Br, int CurrId, string CurrentDate, string NostroBank)
         {
-            var results = DbContextB.SP_SBPBlotter_FCY(Br, CurrId).ToList();
+            var results = DbContextB.SP_SBPBlotter_FCY(Br, CurrId, CurrentDate, NostroBank).ToList();
             return results;
+        }
+        
+        //*****************************************************
+        //Blotter List for Color
+        //*****************************************************
+
+        public static bool InsertBlotterDumpDta(BlotterDataColor BlotterItem)
+        {
+            bool status;
+            try
+            {
+                BlotterDataColor prodItem = DbContextB.BlotterDataColors.Where(p => p.DealNo == BlotterItem.DealNo && p.Balance == BlotterItem.Balance).FirstOrDefault();
+                if (prodItem != null)
+                {
+                    prodItem.DealNo = BlotterItem.DealNo;
+                    prodItem.Description = BlotterItem.Description;
+                    prodItem.Inflow = BlotterItem.Inflow;
+                    prodItem.Outflow = BlotterItem.Outflow;
+                    prodItem.Balance = BlotterItem.Balance;
+                    prodItem.Recon_isActive = BlotterItem.Recon_isActive;
+                    prodItem.UpdateDate = BlotterItem.UpdateDate;
+                    prodItem.UserId = BlotterItem.UserId;
+                    DbContextB.SaveChanges();
+                    status = true;
+                }
+                
+                else if (BlotterItem.DealNo != 0)
+                {
+                    DbContextB.BlotterDataColors.Add(BlotterItem);
+                    DbContextB.SaveChanges();
+                    status = true;
+                }
+                else
+                {
+                    status = false;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine(ex.Message.ToString());
+                status = false;
+            }
+            return status;
+        }
+
+        public static bool UpdateBlotterDumpDta(BlotterDataColor BlotterItem)
+        {
+            bool status;
+            try
+            {
+                List<BlotterDataColor> GetCount = DbContextB.BlotterDataColors.Where(p => p.DealNo == BlotterItem.DealNo).ToList();
+                if (GetCount.Count > 0)
+                {
+                    BlotterDataColor prodItem = DbContextB.BlotterDataColors.Where(p => p.DealNo == BlotterItem.DealNo).FirstOrDefault();
+                    if (prodItem != null)
+                    {
+                        prodItem.DealNo = BlotterItem.DealNo;
+                        prodItem.Description = BlotterItem.Description;
+                        prodItem.Inflow = BlotterItem.Inflow;
+                        prodItem.Outflow = BlotterItem.Outflow;
+                        prodItem.Balance = BlotterItem.Balance;
+                        prodItem.Recon_isActive = BlotterItem.Recon_isActive;
+                        prodItem.UpdateDate = BlotterItem.UpdateDate;
+                        prodItem.UserId = BlotterItem.UserId;
+                        DbContextB.SaveChanges();
+                    }
+                    status = true;
+                }
+                else
+                {
+                    status = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                status = false;
+            }
+            return status;
         }
         #endregion
     }

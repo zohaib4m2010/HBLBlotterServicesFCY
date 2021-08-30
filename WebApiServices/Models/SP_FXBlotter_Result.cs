@@ -18,5 +18,6 @@ namespace WebApiServices.Models
         public decimal Inflow { get; set; }
         public decimal Outflow { get; set; }
         public Nullable<decimal> OpeningBalance { get; set; }
+        public Nullable<bool> Recon_IsActive { get; set; }
     }
 }
