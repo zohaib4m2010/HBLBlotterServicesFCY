@@ -144,11 +144,11 @@ namespace WebApiServices.Controllers
 
         // GET:   
         [HttpGet]
-        public JsonResult<List<Models.SP_GETLatestBlotterDTLReportDayWise_Result>> GetLatestBlotterDTLReportDayWise(int BR)
+        public JsonResult<List<Models.SP_GETLatestBlotterDTLReportDayWise_Result>> GetLatestBlotterDTLReportDayWise(int BR, string StartDate, string EndDate)
         {
 
             EntityMapperBlotter<DataAccessLayer.SP_GETLatestBlotterDTLReportDayWise_Result, Models.SP_GETLatestBlotterDTLReportDayWise_Result> mapObj = new EntityMapperBlotter<DataAccessLayer.SP_GETLatestBlotterDTLReportDayWise_Result, Models.SP_GETLatestBlotterDTLReportDayWise_Result>();
-            List<DataAccessLayer.SP_GETLatestBlotterDTLReportDayWise_Result> dalEmail = DAL.GetLatestBlotterDTLDayWise(BR);
+            List<DataAccessLayer.SP_GETLatestBlotterDTLReportDayWise_Result> dalEmail = DAL.GetLatestBlotterDTLDayWise(BR, StartDate, EndDate);
             List<Models.SP_GETLatestBlotterDTLReportDayWise_Result> SumForEmail = new List<Models.SP_GETLatestBlotterDTLReportDayWise_Result>();
             foreach (var item in dalEmail)
             {
@@ -175,22 +175,29 @@ namespace WebApiServices.Controllers
 
         }
 
-
         // GET:   
         [HttpGet]
-        public JsonResult<Models.SBP_BlotterOpeningBalance> GetLatestOpeningBalaceForToday(int BR)
+        public JsonResult<Models.SBP_BlotterOpeningBalance> GetLatestOpeningBalaceForToday(int BR, string Date)
         {
 
             EntityMapperBlotter<DataAccessLayer.SP_GetOpeningBalance_Result, Models.SBP_BlotterOpeningBalance> mapObj = new EntityMapperBlotter<DataAccessLayer.SP_GetOpeningBalance_Result, Models.SBP_BlotterOpeningBalance>();
-            DataAccessLayer.SP_GetOpeningBalance_Result dalEmail = DAL.GetOpeningBalance(BR);
+            DataAccessLayer.SP_GetOpeningBalance_Result dalEmail = DAL.GetOpeningBalance(BR, Convert.ToDateTime(Date));
             Models.SBP_BlotterOpeningBalance SumForEmail = new Models.SBP_BlotterOpeningBalance();
-
             SumForEmail = mapObj.Translate(dalEmail);
-
             return Json<Models.SBP_BlotterOpeningBalance>(SumForEmail);
-
-
         }
+
+        [HttpGet]
+        public JsonResult<Models.SP_GetFCYOpeningBalance_Result> GetLatestFCYOpeningBalaceForToday(int BR, string Date)
+        {
+
+            EntityMapperBlotter<DataAccessLayer.SP_GetFCYOpeningBalance_Result, Models.SP_GetFCYOpeningBalance_Result> mapObj = new EntityMapperBlotter<DataAccessLayer.SP_GetFCYOpeningBalance_Result, Models.SP_GetFCYOpeningBalance_Result>();
+            DataAccessLayer.SP_GetFCYOpeningBalance_Result dalEmail = DAL.GetFCYOpeningBalance(BR, Convert.ToDateTime(Date));
+            Models.SP_GetFCYOpeningBalance_Result SumForEmail = new Models.SP_GetFCYOpeningBalance_Result();
+            SumForEmail = mapObj.Translate(dalEmail);
+            return Json<Models.SP_GetFCYOpeningBalance_Result>(SumForEmail);
+        }
+
 
         // GET:   
         [HttpPost]
@@ -201,7 +208,7 @@ namespace WebApiServices.Controllers
             if (BMDP.Recon)
             {
                 EntityMapperBlotter<DataAccessLayer.SP_ReconcileOPICSManualData_Result, Models.SP_GetOPICSManualData_Result> mapObj = new EntityMapperBlotter<DataAccessLayer.SP_ReconcileOPICSManualData_Result, Models.SP_GetOPICSManualData_Result>();
-                List<DataAccessLayer.SP_ReconcileOPICSManualData_Result> dalEmail = DAL.ReconcileOPICSManualData(BMDP.BR, BMDP.DateFor, BMDP.CurId);
+                List<DataAccessLayer.SP_ReconcileOPICSManualData_Result> dalEmail = DAL.ReconcileOPICSManualData(BMDP.BR, BMDP.DateFor);
                 foreach (var item in dalEmail)
                 {
                     SumForEmail.Add(mapObj.Translate(item));
@@ -210,7 +217,7 @@ namespace WebApiServices.Controllers
             else
             {
                 EntityMapperBlotter<DataAccessLayer.SP_GetOPICSManualData_Result, Models.SP_GetOPICSManualData_Result> mapObj = new EntityMapperBlotter<DataAccessLayer.SP_GetOPICSManualData_Result, Models.SP_GetOPICSManualData_Result>();
-                List<DataAccessLayer.SP_GetOPICSManualData_Result> dalEmail = DAL.GetOPICSManualData(BMDP.BR, BMDP.DateFor, BMDP.Flag, BMDP.CurId);
+                List<DataAccessLayer.SP_GetOPICSManualData_Result> dalEmail = DAL.GetOPICSManualData(BMDP.BR, BMDP.DateFor, BMDP.Flag, BMDP.CurId, BMDP.NostroCode);
                 foreach (var item in dalEmail)
                 {
                     SumForEmail.Add(mapObj.Translate(item));
@@ -252,7 +259,38 @@ namespace WebApiServices.Controllers
             return null;
         }
 
-       
+
+
+
+        [HttpPut]
+        public bool Update(Models.SP_GETLatestBlotterDTLReportDayWise_Result blotterCRRDayWise)
+        {
+            bool status = false;
+
+            if (ModelState.IsValid)
+            {
+                EntityMapperBlotter<Models.SP_GETLatestBlotterDTLReportDayWise_Result, DataAccessLayer.SP_GETLatestBlotterDTLReportDayWise_Result> mapObj = new EntityMapperBlotter<Models.SP_GETLatestBlotterDTLReportDayWise_Result, DataAccessLayer.SP_GETLatestBlotterDTLReportDayWise_Result>();
+                DataAccessLayer.SP_GETLatestBlotterDTLReportDayWise_Result CRRObj = new DataAccessLayer.SP_GETLatestBlotterDTLReportDayWise_Result();
+                CRRObj = mapObj.Translate(blotterCRRDayWise);
+                status = DAL.UpdateCRRReportDayWiseBalance(CRRObj);
+            }
+            return status;
+        }
+
+
+        [HttpGet]
+        public JsonResult<List<Models.SP_GetSBP_CRRReportingFCYCurrWise_Result>> GetLatestBlotterCRRFCYReportCurrencyWise(int BR, int BID, int UserID, string StartDate, string EndDate)
+        {
+
+            EntitiyMapperBlotterCRRReportFCY<DataAccessLayer.SP_GetSBP_CRRReportingFCYCurrWise_Result, Models.SP_GetSBP_CRRReportingFCYCurrWise_Result> mapObj = new EntitiyMapperBlotterCRRReportFCY<DataAccessLayer.SP_GetSBP_CRRReportingFCYCurrWise_Result, Models.SP_GetSBP_CRRReportingFCYCurrWise_Result>();
+            List<DataAccessLayer.SP_GetSBP_CRRReportingFCYCurrWise_Result> dalEmail = DAL.GetLatestBlotterFCYCRRReportingCurrencyWise(BR, BID, UserID, StartDate, EndDate);
+            List<Models.SP_GetSBP_CRRReportingFCYCurrWise_Result> SumForEmail = new List<Models.SP_GetSBP_CRRReportingFCYCurrWise_Result>();
+            foreach (var item in dalEmail)
+            {
+                SumForEmail.Add(mapObj.Translate(item));
+            }
+            return Json<List<Models.SP_GetSBP_CRRReportingFCYCurrWise_Result>>(SumForEmail);
+        }
 
         #endregion
     }

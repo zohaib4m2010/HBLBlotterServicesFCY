@@ -13,7 +13,7 @@ namespace DataAccessLayer
     
     public partial class SP_GetAllNostroBankList_Result
     {
-        public long ID { get; set; }
+        public int ID { get; set; }
         public string BankName { get; set; }
         public Nullable<decimal> NostroLimit { get; set; }
         public string NostroDescription { get; set; }

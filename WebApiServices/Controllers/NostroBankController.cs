@@ -125,15 +125,14 @@ namespace WebApiServices.Controllers
         [HttpGet]
         public SBP_WebApiResponse GetAllNostroBank(int currId)
         {
-            EntityMapperNostroBank<DataAccessLayer.SP_GetAllNostroBankList_Result, Models.NostroBank> mapObj = new EntityMapperNostroBank<DataAccessLayer.SP_GetAllNostroBankList_Result, Models.NostroBank>();
+            EntityMapperNostroBank<DataAccessLayer.SP_GetAllNostroBankList_Result, Models.SP_GetAllNostroBankList_Result> mapObj = new EntityMapperNostroBank<DataAccessLayer.SP_GetAllNostroBankList_Result, Models.SP_GetAllNostroBankList_Result>();
 
             List<DataAccessLayer.SP_GetAllNostroBankList_Result> NostroBankList = DAL.GetAllNostroBankList(currId);
-            List<Models.NostroBank> blotterNostroBank = new List<Models.NostroBank>();
+            List<Models.SP_GetAllNostroBankList_Result> blotterNostroBank = new List<Models.SP_GetAllNostroBankList_Result>();
             foreach (var item in NostroBankList)
             {
                 blotterNostroBank.Add(mapObj.Translate(item));
             }
-
             var responseData = (dynamic)null;
             HttpResponseMessage response = null;
             response = Request.CreateResponse(HttpStatusCode.OK);
@@ -159,6 +158,7 @@ namespace WebApiServices.Controllers
             }
             return responseData;
         }
+
 
         [HttpPost]
         public SBP_WebApiResponse InsertNostroBank(Models.NostroBank item)

@@ -213,6 +213,81 @@ namespace WebApiServices.Controllers
 
         }
 
+        [HttpPost]
+        public SBP_WebApiResponse BulkInsertTrade(Models.SBP_BlotterTrade blotterTrade)
+        {
+            bool status = false;
+            long NewId = 0; 
+            Models.SBP_BlotterTrade TradenewItem = new Models.SBP_BlotterTrade();
+            var responseData = (dynamic)null;
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    EntityMapperBlotterTrade<Models.SBP_BlotterTrade, DataAccessLayer.SBP_BlotterTrade> mapObj = new EntityMapperBlotterTrade<Models.SBP_BlotterTrade, DataAccessLayer.SBP_BlotterTrade>();
+                    DataAccessLayer.SBP_BlotterTrade TradeObj = new DataAccessLayer.SBP_BlotterTrade();
+                    TradeObj = mapObj.Translate(blotterTrade);
+                    NewId = DAL.TradeExcelUpload(TradeObj);
+                    if (NewId > 0)
+                    {
+                        TradenewItem = blotterTrade;
+                        TradenewItem.SNo = NewId;
+                        status = true;
+                    }
+                  
+                    //List<Models.SBP_BlotterTrade> blotterTradeNewList = new List<Models.SBP_BlotterTrade>();
+                    //for (int i = 0; i < blotterTrade.Count; i++)
+                    //{
+                    //    Models.SBP_BlotterTrade TradenewItem = new Models.SBP_BlotterTrade();
+                    //    if (blotterTrade[i].Flag == "N")
+                    //    {
+                    //        TradeObj = mapObj.Translate(blotterTrade[i]);
+                    //        NewId = DAL.TradeExcelUpload(TradeObj);
+                    //        TradenewItem = blotterTrade[i];
+                    //        TradenewItem.SNo = NewId;
+                    //        blotterTradeNewList.Add(TradenewItem);
+                    //        status = true;
+                    //    }
+                    //}
+                    HttpResponseMessage response = null;
+                    response = Request.CreateResponse(HttpStatusCode.OK);
+                    if (status == true)
+                    {
+                        responseData = new SBP_WebApiResponse
+                        {
+                            Status = true,
+                            Message = "Record is successfully inserted!",
+                            Data = TradenewItem
+                        };
+                    }
+                    else
+                    {
+                        responseData = new SBP_WebApiResponse
+                        {
+                            Status = false,
+                            Message = "Record could not be inserted",
+                            Data = ""
+                        };
+                    }
+                }
+                return responseData;
+            }
+            catch (Exception ex)
+            {
+                responseData = new SBP_WebApiResponse
+                {
+                    Status = false,
+                    Message = "Record could not be inserted",
+                    Data = ex.ToString()
+                };
+                return responseData;
+            }
+        }
+
+        public void CreateExcel()
+        {
+
+        }
 
         [HttpPut]
         public SBP_WebApiResponse UpdateTrade(Models.SBP_BlotterTrade blotterTrade)

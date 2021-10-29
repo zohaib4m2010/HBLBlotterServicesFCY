@@ -15,10 +15,11 @@ namespace DataAccessLayer
     public partial class SBP_BlotterRECON
     {
         public long ID { get; set; }
-        public long NostroBankId { get; set; }
+        public string BankCode { get; set; }
         public Nullable<System.DateTime> LastStatementDate { get; set; }
-        public string OurBooks { get; set; }
-        public string TheirBooks { get; set; }
+        public Nullable<decimal> OurBooks { get; set; }
+        public Nullable<decimal> TheirBooks { get; set; }
+        public Nullable<decimal> EstimatedOpenBal { get; set; }
         public Nullable<decimal> ConversionRate { get; set; }
         public Nullable<decimal> EquivalentUSD { get; set; }
         public Nullable<decimal> LimitAvailable { get; set; }
@@ -29,7 +30,5 @@ namespace DataAccessLayer
         public int BID { get; set; }
         public int CurID { get; set; }
         public string Flag { get; set; }
-    
-        public virtual NostroBank NostroBank { get; set; }
     }
 }

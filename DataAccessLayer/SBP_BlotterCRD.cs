@@ -15,7 +15,7 @@ namespace DataAccessLayer
     public partial class SBP_BlotterCRD
     {
         public long SNo { get; set; }
-        public long Nostro_Account { get; set; }
+        public string BankCode { get; set; }
         public Nullable<System.DateTime> ValueDate { get; set; }
         public Nullable<decimal> CRD_InFlow { get; set; }
         public Nullable<decimal> CRD_OutFlow { get; set; }
@@ -26,7 +26,5 @@ namespace DataAccessLayer
         public int BID { get; set; }
         public int CurID { get; set; }
         public string Flag { get; set; }
-    
-        public virtual NostroBank NostroBank { get; set; }
     }
 }

@@ -20,6 +20,7 @@ namespace DataAccessLayer
         public string TradeCOde { get; set; }
         public Nullable<decimal> Trade_InFlow { get; set; }
         public Nullable<decimal> Trade_OutFLow { get; set; }
+        public string BankName { get; set; }
         public string Note { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
@@ -27,5 +28,6 @@ namespace DataAccessLayer
         public int BID { get; set; }
         public int CurID { get; set; }
         public string Flag { get; set; }
+        public string BankCode { get; set; }
     }
 }

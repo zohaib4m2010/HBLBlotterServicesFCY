@@ -8,7 +8,7 @@ namespace WebApiServices.Models
     public class SBP_BlotterCRD
     {
         public long SNo { get; set; }
-        public long Nostro_Account { get; set; }
+        public string BankCode { get; set; }
         public Nullable<System.DateTime> ValueDate { get; set; }
         public Nullable<decimal> CRD_InFlow { get; set; }
         public Nullable<decimal> CRD_OutFlow { get; set; }

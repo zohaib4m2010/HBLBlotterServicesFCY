@@ -8,10 +8,10 @@ namespace WebApiServices.Models
     public class SP_GetSBPBlotterRECON_Result
     {
         public long ID { get; set; }
-        public long NostroBankId { get; set; }
+        public string BankCode { get; set; }
         public Nullable<System.DateTime> LastStatementDate { get; set; }
-        public string OurBooks { get; set; }
-        public string TheirBooks { get; set; }
+        public Nullable<decimal> OurBooks { get; set; }
+        public Nullable<decimal> TheirBooks { get; set; }
         public Nullable<decimal> ConversionRate { get; set; }
         public Nullable<decimal> EquivalentUSD { get; set; }
         public Nullable<decimal> LimitAvailable { get; set; }

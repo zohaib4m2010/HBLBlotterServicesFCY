@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'D:\Shakir\Shakir\HBLBoltter_Latest\HBLBlotterServices\DataAccessLayer\BlotterEF.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Users\AppXone\Desktop\BlotterLatestLiveCode\BlotterLatestLiveCode\HBLBoltter_Latest\HBLBlotterServices\DataAccessLayer\BlotterEF.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

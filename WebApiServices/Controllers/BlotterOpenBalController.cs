@@ -69,14 +69,14 @@ namespace WebApiServices.Controllers
         }
 
         [HttpGet]
-        public SBP_WebApiResponse GetAllBlotterOpenBal(int UserID, int BranchID, int CurID, int BR, string DateVal)
+        public SBP_WebApiResponse GetAllBlotterOpenBal(int UserID, int BranchID, int CurID, int BR, string dateVal)
         {
             var responseData = (dynamic)null;
             try
             {
                 EntityMapperBlotterOpenBal<DataAccessLayer.SP_GetAllOpeningBalance_Result, Models.SBP_BlotterOpeningBalance> mapObj = new EntityMapperBlotterOpenBal<DataAccessLayer.SP_GetAllOpeningBalance_Result, Models.SBP_BlotterOpeningBalance>();
 
-                List<DataAccessLayer.SP_GetAllOpeningBalance_Result> blotterOpenBalList = DAL.GetAllBlotterOpenBal(UserID, BranchID, CurID, BR, DateVal);
+                List<DataAccessLayer.SP_GetAllOpeningBalance_Result> blotterOpenBalList = DAL.GetAllBlotterOpenBal(UserID, BranchID, CurID, BR, dateVal);
                 List<Models.SBP_BlotterOpeningBalance> blotterOpenBal = new List<Models.SBP_BlotterOpeningBalance>();
                 foreach (var item in blotterOpenBalList)
                 {

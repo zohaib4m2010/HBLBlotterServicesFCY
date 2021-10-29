@@ -12,5 +12,7 @@ namespace WebApiServices.Models
         public System.DateTime DateFor { get; set; }
         public bool Recon { get; set; }
         public int CurId { get; set; }
+        public string NostroCode { get; set; }
+
     }
 }

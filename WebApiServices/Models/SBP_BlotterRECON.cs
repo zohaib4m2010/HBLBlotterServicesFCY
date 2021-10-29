@@ -10,7 +10,7 @@ namespace WebApiServices.Models
     public class SBP_BlotterRECON
     {
         public long ID { get; set; }
-        public long NostroBankId { get; set; }
+        public string BankCode { get; set; }
         [DisplayName("Last Statement Date")]
         [DataType(DataType.Date, ErrorMessage = "Date only")]
         [DisplayFormat(DataFormatString = "{0:dd-MMM-yyyy}", ApplyFormatInEditMode = true)]
@@ -18,11 +18,12 @@ namespace WebApiServices.Models
         //[Required]
         [DisplayFormat(DataFormatString = "{0:N2}")]
         [Display(Name = "Our Books")]
-        public string OurBooks { get; set; }
+        public Nullable<decimal> OurBooks { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:N2}")]
         [Display(Name = "Their Books")]
-        public string TheirBooks { get; set; }
+        public Nullable<decimal> TheirBooks { get; set; }
+        public Nullable<decimal> EstimatedOpenBal { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:N2}")]
         [Display(Name = "Conversion Rate")]

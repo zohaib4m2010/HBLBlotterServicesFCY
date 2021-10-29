@@ -18,38 +18,44 @@ namespace DataAccessLayer
         }
         public static List<SP_SBPBlotter_Result> GetAllBlotterData(String Br, String DataType, String CurrentDate)
         {
-            var results = DbContextB.SP_SBPBlotterBR1(Br,  Convert.ToDateTime(CurrentDate)).ToList();
+            var results = DbContextB.SP_SBPBlotter(Br, DataType, Convert.ToDateTime(CurrentDate)).ToList();
             return results;
         }
 
-        public static List<SP_GETLatestBlotterDTLReportDayWise_Result> GetLatestBlotterDTLDayWise(int BR)
+        public static List<SP_GETLatestBlotterDTLReportDayWise_Result> GetLatestBlotterDTLDayWise(int BR, string StartDate, string EndDate)
         {
-            var results = DbContextB.SP_GETLatestBlotterDTLReportDayWise(BR).ToList();
+            var results = DbContextB.SP_GETLatestBlotterDTLReportDayWise(BR, StartDate, EndDate).ToList();
             return results;
         }
+
+
         public static SP_GETLatestBlotterDTLReportForToday_Result GetLatestBlotterDTLForToday(int BR)
         {
             var results = DbContextB.SP_GETLatestBlotterDTLReportForToday(BR).FirstOrDefault();
             return results;
         }
 
-        public static List<SP_GetOPICSManualData_Result> GetOPICSManualData(int BR, DateTime Date, string Flag, int CurId)
+        public static List<SP_GetOPICSManualData_Result> GetOPICSManualData(int BR, DateTime Date, string Flag, int CurId, string NostroCode)
         {
-            var results = DbContextB.SP_GetOPICSManualData(BR, Date, Flag, CurId).ToList();
+            var results = DbContextB.SP_GetOPICSManualData(BR, Date, Flag, CurId, NostroCode).ToList();
             return results;
         }
 
-
-
-        public static SP_GetOpeningBalance_Result GetOpeningBalance(int BR)
+        public static SP_GetOpeningBalance_Result GetOpeningBalance(int BR, DateTime Date)
         {
-            var results = DbContextB.SP_GetOpeningBalance(BR, DateTime.Now.AddDays(-38)).FirstOrDefault();
+            //var results = DbContextB.SP_GetOpeningBalance(BR ,DateTime.Now.AddDays(-38)).FirstOrDefault();
+            var results = DbContextB.SP_GetOpeningBalance(BR, Date).FirstOrDefault();
             return results;
         }
-
-        public static List<SP_ReconcileOPICSManualData_Result> ReconcileOPICSManualData(int BR, DateTime Date, int CurId)
+        public static SP_GetFCYOpeningBalance_Result GetFCYOpeningBalance(int BR, DateTime Date)
         {
-            var results = DbContextB.SP_ReconcileOPICSManualData(BR, Date, CurId).ToList();
+            //var results = DbContextB.SP_GetOpeningBalance(BR ,DateTime.Now.AddDays(-38)).FirstOrDefault();
+            var results = DbContextB.SP_GetFCYOpeningBalance(BR, Date).FirstOrDefault();
+            return results;
+        }
+        public static List<SP_ReconcileOPICSManualData_Result> ReconcileOPICSManualData(int BR, DateTime Date)
+        {
+            var results = DbContextB.SP_ReconcileOPICSManualData(BR, Date).ToList();
             return results;
         }
         public static BlotterSumEmail GetAllBlotterDataSum(String BrCode)
@@ -236,7 +242,6 @@ namespace DataAccessLayer
                         CRRFINCONItems.RequirementExtBenefit = CRRFINCONItem.RequirementExtBenefit;
                         CRRFINCONItems.CurID = CRRFINCONItem.CurID;
                         CRRFINCONItems.UpdateDate = CRRFINCONItem.UpdateDate;
-                        CRRFINCONItems.UserID = CRRFINCONItem.UserID;
                         DbContextB.SaveChanges();
                         DbContextB.SP_UpdateDaysInBlotterReport(CRRFINCONItem.DemandTimeLiablitiesTotalForCRR, CRRFINCONItem.StartDate, CRRFINCONItem.EndDate, CRRFINCONItem.BR);
                     }
@@ -277,7 +282,26 @@ namespace DataAccessLayer
             return status;
         }
 
-
+        public static bool UpdateCRRReportDayWiseBalance(SP_GETLatestBlotterDTLReportDayWise_Result blotterCRRDayWise)
+        {
+            bool status;
+            try
+            {
+                SBP_BlotterCRRReportDaysWiseBal blotterItems = DbContextB.SBP_BlotterCRRReportDaysWiseBal.Where(p => p.Id == blotterCRRDayWise.Id && p.BR == blotterCRRDayWise.BR).FirstOrDefault();
+                if (blotterItems != null)
+                {
+                    blotterItems.BlotterBalance = blotterCRRDayWise.BlotterBalance;
+                    blotterItems.UpdateDate = blotterCRRDayWise.UpdateDate;
+                    DbContextB.SaveChanges();
+                }
+                status = true;
+            }
+            catch (Exception ex)
+            {
+                status = false;
+            }
+            return status;
+        }
 
 
         //*****************************************************
@@ -325,17 +349,18 @@ namespace DataAccessLayer
                 {
                     TboItems.DataType = TBOItem.DataType;
                     TboItems.TTID = TBOItem.TTID;
+                    TboItems.TBO_Date = TBOItem.TBO_Date;
                     TboItems.TBO_InFlow = TBOItem.TBO_InFlow;
                     TboItems.TBO_OutFLow = TBOItem.TBO_OutFLow;
                     TboItems.Note = TBOItem.Note;
                     TboItems.CurID = TBOItem.CurID;
-                    TboItems.UserID = TBOItem.UserID;
+                    TboItems.BankCode = TBOItem.BankCode;
                     TboItems.UpdateDate = TBOItem.UpdateDate;
                     DbContextB.SaveChanges();
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -355,7 +380,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -366,11 +391,6 @@ namespace DataAccessLayer
         //NostroBank Producers
         //*****************************************************
 
-        public static List<SP_GetNostroBankFromOPICS_Result> GetNostroBankDDL(int CurId, String BrCode)
-        {
-            return DbContextB.SP_GetNostroBankFromOPICS(CurId, BrCode).ToList();
-        }
-
         public static List<NostroBank> GetAllNostroBank()
         {
             return DbContextB.NostroBanks.ToList();
@@ -380,6 +400,14 @@ namespace DataAccessLayer
             return DbContextB.NostroBanks.Where(p => p.ID == Id).FirstOrDefault();
         }
 
+        public static List<SP_Get_SBPBlotterConversionRate_Result> GetConversionRate(int currID, string BR)
+        {
+            return DbContextB.SP_Get_SBPBlotterConversionRate(currID, BR).ToList();
+        }
+        public static SP_Get_SBPBlotterConversionRate_Result GetConversionRateRECON(int currID, string BR)
+        {
+            return DbContextB.SP_Get_SBPBlotterConversionRate(currID, BR).FirstOrDefault();
+        }
         public static bool InsertNostroBank(NostroBank Item)
         {
             bool status;
@@ -415,7 +443,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -435,7 +463,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -489,7 +517,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -509,7 +537,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -574,7 +602,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -593,7 +621,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -648,7 +676,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -668,7 +696,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -723,7 +751,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -743,7 +771,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -824,7 +852,7 @@ namespace DataAccessLayer
                     status = true;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -844,7 +872,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -891,6 +919,7 @@ namespace DataAccessLayer
                 SBP_BlotterBreakups Items = DbContextB.SBP_BlotterBreakups.Where(p => p.SNo == Item.SNo).FirstOrDefault();
                 if (Items != null)
                 {
+                    Items.BreakupDate = Item.BreakupDate;
                     Items.FoodPayment_inFlow = Item.FoodPayment_inFlow;
                     Items.HOKRemittance_inFlow = Item.HOKRemittance_inFlow;
                     Items.ERF_inflow = Item.ERF_inflow;
@@ -904,12 +933,11 @@ namespace DataAccessLayer
                     Items.SBPCheqGivenToOtherBank_outFlow = Item.SBPCheqGivenToOtherBank_outFlow;
                     Items.Miscellaneous_outflow = Item.Miscellaneous_outflow;
                     Items.UpdateDate = Item.UpdateDate;
-                    Items.UserID = Item.UserID;
                     DbContextB.SaveChanges();
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -929,7 +957,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -994,18 +1022,18 @@ namespace DataAccessLayer
 
                     CLRItems.DataType = ClearingItem.DataType;
                     CLRItems.TTID = ClearingItem.TTID;
+                    CLRItems.Clearing_Date = ClearingItem.Clearing_Date;
                     CLRItems.Clearing_InFlow = ClearingItem.Clearing_InFlow;
                     CLRItems.Clearing_OutFLow = ClearingItem.Clearing_OutFLow;
                     CLRItems.Note = ClearingItem.Note;
                     CLRItems.CurID = ClearingItem.CurID;
                     CLRItems.UpdateDate = ClearingItem.UpdateDate;
-                    CLRItems.UserID = ClearingItem.UserID;
                     DbContextB.SaveChanges();
                 }
                 status = true;
                 //}
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -1025,7 +1053,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -1038,9 +1066,10 @@ namespace DataAccessLayer
         //*****************************************************
 
 
-        public static List<SBP_BlotterFundsTransfer> GetAllBlotterFundsTransfer(int UserID, int BranchID, int CurID, int BR)
+        public static List<SBP_BlotterFundsTransfer> GetAllBlotterFundsTransfer(int UserID, int BranchID, int CurID, int BR, string DateVal)
         {
-            return DbContextB.SBP_BlotterFundsTransfer.Where(p => p.UserID == UserID && p.BID == BranchID && p.CurID == CurID && p.BR == BR).ToList();
+            string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+            return DbContextB.SBP_BlotterFundsTransfer.Where(p => p.BID == BranchID && p.CurID == CurID && p.BR == BR && (p.FT_Date.ToString() == DateVal || (DateVal == null && p.FT_Date >= DateTime.Today))).ToList();
         }
         public static SBP_BlotterFundsTransfer GetFundsTransferItem(int FundsTransferId)
         {
@@ -1120,17 +1149,17 @@ namespace DataAccessLayer
                 //}
                 //else
                 //{
-                SBP_BlotterFundsTransfer CLRItems1 = DbContextB.SBP_BlotterFundsTransfer.Where(p => p.SNo == FundsTransferItem.SNo && p.FT_Date == FundsTransferItem.FT_Date).FirstOrDefault();
+                SBP_BlotterFundsTransfer CLRItems1 = DbContextB.SBP_BlotterFundsTransfer.Where(p => p.SNo == FundsTransferItem.SNo).FirstOrDefault();
                 if (CLRItems1 != null)
                 {
 
                     CLRItems1.DataType = FundsTransferItem.DataType;
+                    CLRItems1.FT_Date = FundsTransferItem.FT_Date;
                     CLRItems1.FT_InFlow = FundsTransferItem.FT_InFlow;
                     CLRItems1.FT_OutFLow = FundsTransferItem.FT_OutFLow;
                     CLRItems1.Note = FundsTransferItem.Note;
                     CLRItems1.CurID = FundsTransferItem.CurID;
                     CLRItems1.UpdateDate = FundsTransferItem.UpdateDate;
-                    CLRItems1.UserID = FundsTransferItem.UserID;
                     DbContextB.SaveChanges();
                 }
 
@@ -1163,23 +1192,23 @@ namespace DataAccessLayer
                         FundsTransferItem.FT_OutFLow = 0;
                     }
                 }
-                SBP_BlotterFundsTransfer CLRItems2 = DbContextB.SBP_BlotterFundsTransfer.Where(p => p.SNo != FundsTransferItem.SNo && p.FT_Date == FundsTransferItem.FT_Date).FirstOrDefault();
+                SBP_BlotterFundsTransfer CLRItems2 = DbContextB.SBP_BlotterFundsTransfer.Where(p => p.SNo != FundsTransferItem.SNo).FirstOrDefault();
                 if (CLRItems2 != null)
                 {
 
                     CLRItems2.DataType = FundsTransferItem.DataType;
+                    CLRItems2.FT_Date = FundsTransferItem.FT_Date;
                     CLRItems2.FT_InFlow = FundsTransferItem.FT_InFlow;
                     CLRItems2.FT_OutFLow = FundsTransferItem.FT_OutFLow;
                     CLRItems2.Note = FundsTransferItem.Note;
                     CLRItems2.CurID = FundsTransferItem.CurID;
                     CLRItems2.UpdateDate = FundsTransferItem.UpdateDate;
-                    CLRItems2.UserID = FundsTransferItem.UserID;
                     DbContextB.SaveChanges();
                 }
                 status = true;
                 //}
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -1224,7 +1253,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -1236,9 +1265,10 @@ namespace DataAccessLayer
         //Bai_Muajjal Producers
         //*****************************************************
 
-        public static List<SBP_BlotterBai_Muajjal> GetAllBlotterBai_Muajjal(int UserID, int BranchID, int CurID, int BR)
+        public static List<SBP_BlotterBai_Muajjal> GetAllBlotterBai_Muajjal(int UserID, int BranchID, int CurID, int BR, String DateVal)
         {
-            return DbContextB.SBP_BlotterBai_Muajjal.Where(p => p.UserID == UserID && p.BID == BranchID && p.CurID == CurID && p.BR == BR).ToList();
+            string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+            return DbContextB.SBP_BlotterBai_Muajjal.Where(p => p.UserID == UserID && p.BID == BranchID && p.CurID == CurID && p.BR == BR && (p.ValueDate.ToString() == DateVal || (DateVal == null && p.ValueDate >= DateTime.Today))).ToList();
         }
         public static SBP_BlotterBai_Muajjal GetBai_MuajjalItem(int Bai_MuajjalId)
         {
@@ -1293,13 +1323,12 @@ namespace DataAccessLayer
                     CLRItems.Note = Bai_MuajjalItem.Note;
                     CLRItems.CurID = Bai_MuajjalItem.CurID;
                     CLRItems.UpdateDate = Bai_MuajjalItem.UpdateDate;
-                    CLRItems.UserID = Bai_MuajjalItem.UserID;
                     DbContextB.SaveChanges();
                 }
                 status = true;
                 //}
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -1319,7 +1348,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -1345,7 +1374,7 @@ namespace DataAccessLayer
                     status = false;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -1359,7 +1388,7 @@ namespace DataAccessLayer
         {
             return DbContextB.SP_GETAllRTGSTransactionTitles().ToList();
         }
-        public static List<SP_GetAll_SBPBlotterRTGS_Result> GetAllBlotterRTGS(int UserID, int BranchID, int CurID, int BR, String DateVal)
+        public static List<SP_GetAll_SBPBlotterRTGS_Result> GetAllBlotterRTGS(int UserID, int BranchID, int CurID, int BR, string DateVal)
         {
             return DbContextB.SP_GetAll_SBPBlotterRTGS(UserID, BranchID, CurID, BR, DateVal).ToList();
         }
@@ -1409,18 +1438,18 @@ namespace DataAccessLayer
                 {
                     RTGSItems.DataType = RTGSItem.DataType;
                     RTGSItems.TTID = RTGSItem.TTID;
+                    RTGSItems.RTGS_Date = RTGSItem.RTGS_Date;
                     RTGSItems.RTGS_InFlow = RTGSItem.RTGS_InFlow;
                     RTGSItems.RTGS_OutFLow = RTGSItem.RTGS_OutFLow;
                     RTGSItems.CurID = RTGSItem.CurID;
                     RTGSItems.Note = RTGSItem.Note;
                     RTGSItems.UpdateDate = RTGSItem.UpdateDate;
-                    RTGSItems.UserID = RTGSItem.UserID;
                     DbContextB.SaveChanges();
                 }
                 status = true;
                 //}
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -1440,7 +1469,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -1453,39 +1482,40 @@ namespace DataAccessLayer
         //Opening Balance Producers
         //*****************************************************
 
-        public static List<SP_GetAllOpeningBalance_Result> GetAllBlotterOpenBal(int UserID, int BranchID, int CurID, int BR, string DateVal)
+        public static List<SP_GetAllOpeningBalance_Result> GetAllBlotterOpenBal(int UserID, int BranchID, int CurID, int BR, string dateVal)
         {
-            return DbContextB.SP_GetAllOpeningBalance(UserID, BranchID, CurID, BR).ToList();
+            return DbContextB.SP_GetAllOpeningBalance(UserID, BranchID, CurID, BR, dateVal).ToList();
         }
         public static SBP_BlotterOpeningBalance GetOpenBalItem(int OpnBalId)
         {
             return DbContextB.SBP_BlotterOpeningBalance.Where(p => p.Id == OpnBalId).FirstOrDefault();
         }
-        public static bool InsertOpenBal(SBP_BlotterOpeningBalance OpnBalItem)
+        public static bool InsertOpenBal(SBP_BlotterOpeningBalance OpenBalItem)
         {
             bool status;
             try
             {
-                List<SBP_BlotterOpeningBalance> GetCount = DbContextB.SBP_BlotterOpeningBalance.Where(p => p.DataType == OpnBalItem.DataType && p.BalDate == OpnBalItem.BalDate && p.BR == OpnBalItem.BR).ToList();
-                if (GetCount.Count > 0)
-                {
-                    SBP_BlotterOpeningBalance OpenBalItems = DbContextB.SBP_BlotterOpeningBalance.Where(p => p.DataType == OpnBalItem.DataType && p.BalDate == OpnBalItem.BalDate && p.BR == OpnBalItem.BR).FirstOrDefault();
-                    if (OpenBalItems != null)
-                    {
-                        OpenBalItems.OpenBalActual = OpnBalItem.OpenBalActual;
-                        OpenBalItems.AdjOpenBal = OpnBalItem.AdjOpenBal;
-                        OpenBalItems.CurID = OpnBalItem.CurID;
-                        OpenBalItems.UpdateDate = OpnBalItem.UpdateDate;
-                        DbContextB.SaveChanges();
-                    }
-                    status = true;
-                }
-                else
-                {
-                    DbContextB.SBP_BlotterOpeningBalance.Add(OpnBalItem);
-                    DbContextB.SaveChanges();
-                    status = true;
-                }
+                DbContextB.SP_InsertOpeningBalance(OpenBalItem.OpenBalActual, OpenBalItem.AdjOpenBal, OpenBalItem.BalDate, OpenBalItem.DataType, OpenBalItem.UserID, OpenBalItem.CreateDate, OpenBalItem.UpdateDate, OpenBalItem.BR, OpenBalItem.BID, OpenBalItem.CurID, OpenBalItem.Flag, OpenBalItem.EstimatedOpenBal);
+                //List<SBP_BlotterOpeningBalance> GetCount = DbContextB.SBP_BlotterOpeningBalance.Where(p => p.DataType == OpnBalItem.DataType &&  p.BalDate== OpnBalItem.BalDate && p.BR==OpnBalItem.BR).ToList();
+                //if (GetCount.Count > 0)
+                //{
+                //    SBP_BlotterOpeningBalance OpenBalItems = DbContextB.SBP_BlotterOpeningBalance.Where(p => p.DataType == OpnBalItem.DataType && p.BalDate == OpnBalItem.BalDate && p.BR == OpnBalItem.BR).FirstOrDefault();
+                //    if (OpenBalItems != null)
+                //    {
+                //        OpenBalItems.OpenBalActual = OpnBalItem.OpenBalActual;
+                //        OpenBalItems.AdjOpenBal = OpnBalItem.AdjOpenBal;
+                //        OpenBalItems.CurID = OpnBalItem.CurID;
+                //        OpenBalItems.UpdateDate = OpnBalItem.UpdateDate;
+                //        DbContextB.SaveChanges();
+                //    }
+                status = true;
+                //}
+                //else
+                //{
+                //    DbContextB.SBP_BlotterOpeningBalance.Add(OpnBalItem);
+                //    DbContextB.SaveChanges();
+                //    status = true;
+                //}
             }
             catch (Exception ex)
             {
@@ -1500,38 +1530,39 @@ namespace DataAccessLayer
             bool status;
             try
             {
-                List<SBP_BlotterOpeningBalance> GetCount = DbContextB.SBP_BlotterOpeningBalance.Where(p => p.Id != OpenBalItem.Id && p.BalDate == OpenBalItem.BalDate && p.BR == OpenBalItem.BR).ToList();
-                if (GetCount.Count > 0)
-                {
-                    SBP_BlotterOpeningBalance OpenBalItems = DbContextB.SBP_BlotterOpeningBalance.Where(p => p.Id == OpenBalItem.Id && p.BalDate == OpenBalItem.BalDate && p.BR == OpenBalItem.BR).FirstOrDefault();
-                    if (OpenBalItems != null)
-                    {
-                        OpenBalItems.OpenBalActual = OpenBalItem.OpenBalActual;
-                        OpenBalItems.AdjOpenBal = OpenBalItem.AdjOpenBal;
-                        OpenBalItems.CurID = OpenBalItem.CurID;
-                        OpenBalItems.UpdateDate = OpenBalItem.UpdateDate;
-                        OpenBalItems.UserID = OpenBalItem.UserID;
-                        DbContextB.SaveChanges();
-                    }
-                    status = true;
-                }
-                else
-                {
-                    SBP_BlotterOpeningBalance OpenBalItems = DbContextB.SBP_BlotterOpeningBalance.Where(p => p.Id == OpenBalItem.Id).FirstOrDefault();
-                    if (OpenBalItems != null)
-                    {
-                        OpenBalItems.OpenBalActual = OpenBalItem.OpenBalActual;
-                        OpenBalItems.AdjOpenBal = OpenBalItem.AdjOpenBal;
-                        OpenBalItems.BalDate = OpenBalItem.BalDate;
-                        OpenBalItems.CurID = OpenBalItem.CurID;
-                        OpenBalItems.UpdateDate = OpenBalItem.UpdateDate;
-                        OpenBalItems.UserID = OpenBalItem.UserID;
-                        DbContextB.SaveChanges();
-                    }
-                    status = true;
-                }
+                DbContextB.SP_UpdateOpeningBalance(OpenBalItem.Id, OpenBalItem.OpenBalActual, OpenBalItem.AdjOpenBal, OpenBalItem.BalDate, OpenBalItem.DataType, OpenBalItem.UserID, OpenBalItem.CreateDate, OpenBalItem.UpdateDate, OpenBalItem.BR, OpenBalItem.BID, OpenBalItem.CurID, OpenBalItem.Flag, OpenBalItem.EstimatedOpenBal);
+                //List<SBP_BlotterOpeningBalance> GetCount = DbContextB.SBP_BlotterOpeningBalance.Where(p => p.Id != OpenBalItem.Id && p.BalDate == OpenBalItem.BalDate && p.BR == OpenBalItem.BR).ToList();
+                //if (GetCount.Count > 0)
+                //{
+                //    SBP_BlotterOpeningBalance OpenBalItems = DbContextB.SBP_BlotterOpeningBalance.Where(p => p.Id == OpenBalItem.Id && p.BalDate == OpenBalItem.BalDate && p.BR == OpenBalItem.BR).FirstOrDefault();
+                //    if (OpenBalItems != null)
+                //    {
+                //        OpenBalItems.OpenBalActual = OpenBalItem.OpenBalActual;
+                //        OpenBalItems.AdjOpenBal = OpenBalItem.AdjOpenBal;
+                //        OpenBalItems.CurID = OpenBalItem.CurID;
+                //        OpenBalItems.UpdateDate = OpenBalItem.UpdateDate;
+                //        OpenBalItems.UserID = OpenBalItem.UserID;
+                DbContextB.SaveChanges();
+                //    }
+                status = true;
+                //}
+                //else
+                //{
+                //    SBP_BlotterOpeningBalance OpenBalItems = DbContextB.SBP_BlotterOpeningBalance.Where(p => p.Id == OpenBalItem.Id).FirstOrDefault();
+                //    if (OpenBalItems != null)
+                //    {
+                //        OpenBalItems.OpenBalActual = OpenBalItem.OpenBalActual;
+                //        OpenBalItems.AdjOpenBal = OpenBalItem.AdjOpenBal;
+                //        OpenBalItems.BalDate = OpenBalItem.BalDate;
+                //        OpenBalItems.CurID = OpenBalItem.CurID;
+                //        OpenBalItems.UpdateDate = OpenBalItem.UpdateDate;
+                //        OpenBalItems.UserID = OpenBalItem.UserID;
+                //        DbContextB.SaveChanges();
+                //    }
+                //    status = true;
+                //}
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -1551,7 +1582,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -1614,7 +1645,6 @@ namespace DataAccessLayer
                         prodItem.Note = FundingRepoIdItem.Note;
                         prodItem.CurID = FundingRepoIdItem.CurID;
                         prodItem.UpdateDate = FundingRepoIdItem.UpdateDate;
-                        prodItem.UserID = FundingRepoIdItem.UserID;
                         DbContextB.SaveChanges();
                     }
                     status = true;
@@ -1644,7 +1674,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -1681,7 +1711,6 @@ namespace DataAccessLayer
                         EstAdjBalItems.isAdjusted = EstAdjBalItem.isAdjusted;
                         EstAdjBalItems.CurID = EstAdjBalItem.CurID;
                         EstAdjBalItems.UpdateDate = EstAdjBalItem.UpdateDate;
-                        EstAdjBalItems.UserID = EstAdjBalItem.UserID;
                         DbContextB.SaveChanges();
                     }
                     status = true;
@@ -1716,7 +1745,6 @@ namespace DataAccessLayer
                         EstAdjBalItems.isAdjusted = EstAdjBalItem.isAdjusted;
                         EstAdjBalItems.CurID = EstAdjBalItem.CurID;
                         EstAdjBalItems.UpdateDate = EstAdjBalItem.UpdateDate;
-                        EstAdjBalItems.UserID = EstAdjBalItem.UserID;
                         DbContextB.SaveChanges();
                     }
                     status = true;
@@ -1730,13 +1758,12 @@ namespace DataAccessLayer
                         EstAdjBalItems.isAdjusted = EstAdjBalItem.isAdjusted;
                         EstAdjBalItems.CurID = EstAdjBalItem.CurID;
                         EstAdjBalItems.UpdateDate = EstAdjBalItem.UpdateDate;
-                        EstAdjBalItems.UserID = EstAdjBalItem.UserID;
                         DbContextB.SaveChanges();
                     }
                     status = true;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -1756,7 +1783,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -1779,7 +1806,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -1819,6 +1846,56 @@ namespace DataAccessLayer
             }
             return status;
         }
+        /// <summary>
+        /// Excel Uploader Trade
+        /// </summary>
+        public static long TradeExcelUpload(SBP_BlotterTrade TradeItem)
+        {
+            long Newid = 0;
+            try
+            {
+                if (TradeItem.Flag == "N" && (TradeItem.SNo == null || TradeItem.SNo == 0))
+                {
+                    DbContextB.SBP_BlotterTrade.Add(TradeItem);
+                    DbContextB.SaveChanges();
+                    Newid = (from trade in DbContextB.SBP_BlotterTrade orderby trade.SNo select trade.SNo).Max();
+                }
+                else if ((TradeItem.Flag == "U" || TradeItem.Flag == "N") && TradeItem.SNo > 0)
+                {
+                    SBP_BlotterTrade TRDItemsUpdate = DbContextB.SBP_BlotterTrade.Where(p => p.SNo == TradeItem.SNo).FirstOrDefault();
+                    if (TRDItemsUpdate != null)
+                    {
+                        TRDItemsUpdate.TTID = TradeItem.TTID;
+                        TRDItemsUpdate.Trade_Date = TradeItem.Trade_Date;
+                        TRDItemsUpdate.Trade_InFlow = TradeItem.Trade_InFlow;
+                        TRDItemsUpdate.Trade_OutFLow = TradeItem.Trade_OutFLow;
+                        TRDItemsUpdate.Note = TradeItem.Note;
+                        TRDItemsUpdate.CurID = TradeItem.CurID;
+                        TRDItemsUpdate.BankCode = TradeItem.BankCode;
+                        TRDItemsUpdate.UpdateDate = TradeItem.UpdateDate;
+                        DbContextB.SaveChanges();
+                        Newid = TRDItemsUpdate.SNo;
+                    }
+                }
+                else if (TradeItem.Flag == "D" && TradeItem.SNo > 0)
+                {
+                    SBP_BlotterTrade TradeItemDelete = DbContextB.SBP_BlotterTrade.Where(p => p.SNo == TradeItem.SNo).FirstOrDefault();
+                    if (TradeItemDelete != null)
+                    {
+                        DbContextB.SBP_BlotterTrade.Remove(TradeItemDelete);
+                        DbContextB.SaveChanges();
+                        Newid = TradeItemDelete.SNo;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine(ex.Message.ToString());
+            }
+            return Newid;
+        }
+        /// <returns></returns>
+
 
         public static bool UpdateTrade(SBP_BlotterTrade TradeItem)
         {
@@ -1830,17 +1907,18 @@ namespace DataAccessLayer
                 {
                     TRDItems.DataType = TradeItem.DataType;
                     TRDItems.TTID = TradeItem.TTID;
+                    TRDItems.Trade_Date = TradeItem.Trade_Date;
                     TRDItems.Trade_InFlow = TradeItem.Trade_InFlow;
                     TRDItems.Trade_OutFLow = TradeItem.Trade_OutFLow;
                     TRDItems.Note = TradeItem.Note;
                     TRDItems.CurID = TradeItem.CurID;
+                    TRDItems.BankCode = TradeItem.BankCode;
                     TRDItems.UpdateDate = TradeItem.UpdateDate;
-                    TRDItems.UserID = TradeItem.UserID;
                     DbContextB.SaveChanges();
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -1860,7 +1938,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -1886,7 +1964,7 @@ namespace DataAccessLayer
                 DbContextB.SaveChanges();
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -1906,7 +1984,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -1925,7 +2003,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -1973,7 +2051,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -1992,7 +2070,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -2057,7 +2135,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -2076,7 +2154,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -2182,7 +2260,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -2236,6 +2314,10 @@ namespace DataAccessLayer
                 status = false;
             }
             return status;
+
+
+
+
         }
 
 
@@ -2284,7 +2366,7 @@ namespace DataAccessLayer
                     SBP_BlotterCRD prodItem = DbContextB.SBP_BlotterCRD.Where(p => p.SNo == CRDItem.SNo).FirstOrDefault();
                     if (prodItem != null)
                     {
-                        prodItem.Nostro_Account = CRDItem.Nostro_Account;
+                        prodItem.BankCode = CRDItem.BankCode;
                         prodItem.ValueDate = CRDItem.ValueDate;
                         prodItem.CurID = CRDItem.CurID;
                         prodItem.CRD_InFlow = CRDItem.CRD_InFlow;
@@ -2300,7 +2382,7 @@ namespace DataAccessLayer
                     status = false;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -2320,7 +2402,7 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
@@ -2343,14 +2425,13 @@ namespace DataAccessLayer
             return DbContextB.SBP_BlotterRECON.Where(p => p.ID == CRDId).FirstOrDefault();
         }
 
-        public static bool InsertRECON(SBP_BlotterRECON CRDItem)
+        public static bool InsertRECON(SBP_BlotterRECON RECONItem)
         {
             bool status;
             try
             {
-                DbContextB.SBP_BlotterRECON.Add(CRDItem);
+                DbContextB.SBP_BlotterRECON.Add(RECONItem);
                 DbContextB.SaveChanges();
-                //DbContextB.SP_AddDaysInBlotterReport(CRRFINCONItem.DemandTimeLiablitiesTotalForCRR, CRRFINCONItem.StartDate, CRRFINCONItem.EndDate, CRRFINCONItem.BR);
                 status = true;
             }
             catch (Exception ex)
@@ -2361,38 +2442,26 @@ namespace DataAccessLayer
             return status;
         }
 
-        public static bool UpdateRECON(SBP_BlotterRECON CRDItem)
+        public static bool UpdateRECON(SBP_BlotterRECON RECONItem)
         {
             bool status;
             try
             {
-                List<SBP_BlotterRECON> GetCount = DbContextB.SBP_BlotterRECON.Where(p => p.ID == CRDItem.ID).ToList();
-                if (GetCount.Count > 0)
-                {
-                    SBP_BlotterRECON prodItem = DbContextB.SBP_BlotterRECON.Where(p => p.ID == CRDItem.ID).FirstOrDefault();
-                    if (prodItem != null)
-                    {
-                        //prodItem.NostroBank = CRDItem.NostroBank;
-                        prodItem.NostroBankId = CRDItem.NostroBankId;
-                        prodItem.CurID = CRDItem.CurID;
-                        prodItem.LastStatementDate = CRDItem.LastStatementDate;
-                        prodItem.OurBooks = CRDItem.OurBooks;
-                        prodItem.TheirBooks = CRDItem.TheirBooks;
-                        prodItem.ConversionRate = CRDItem.ConversionRate;
-                        prodItem.EquivalentUSD = CRDItem.EquivalentUSD;
-                        prodItem.ConversionRate = CRDItem.ConversionRate;
-                        prodItem.LimitAvailable = CRDItem.LimitAvailable;
-                        prodItem.UpdateDate = CRDItem.UpdateDate;
-
-                        DbContextB.SaveChanges();
-                        //DbContextB.SP_UpdateDaysInBlotterReport(CRRFINCONItem.DemandTimeLiablitiesTotalForCRR, CRRFINCONItem.StartDate, CRRFINCONItem.EndDate, CRRFINCONItem.BR);
-                    }
-                    status = true;
-                }
-                else
-                {
-                    status = false;
-                }
+                DbContextB.SP_UpdateFCYRECONOpeningBalance(
+                    RECONItem.ID,
+                    RECONItem.BankCode,
+                    RECONItem.LastStatementDate,
+                    RECONItem.OurBooks,
+                    RECONItem.TheirBooks,
+                    RECONItem.EstimatedOpenBal,
+                    RECONItem.ConversionRate,
+                    RECONItem.EquivalentUSD,
+                    RECONItem.LimitAvailable,
+                    RECONItem.UserID,
+                    RECONItem.CreateDate,
+                    RECONItem.UpdateDate, RECONItem.BR, RECONItem.BID, RECONItem.CurID, RECONItem.Flag);
+                DbContextB.SaveChanges();
+                status = true;
             }
             catch (Exception ex)
             {
@@ -2400,6 +2469,46 @@ namespace DataAccessLayer
             }
             return status;
         }
+
+        //public static bool UpdateRECON(SBP_BlotterRECON CRDItem)
+        //{
+        //    bool status;
+        //    try
+        //    {
+        //        List<SBP_BlotterRECON> GetCount = DbContextB.SBP_BlotterRECON.Where(p => p.ID == CRDItem.ID).ToList();
+        //        if (GetCount.Count > 0)
+        //        {
+        //            SBP_BlotterRECON prodItem = DbContextB.SBP_BlotterRECON.Where(p => p.ID == CRDItem.ID).FirstOrDefault();
+        //            if (prodItem != null)
+        //            {
+        //                //prodItem.NostroBank = CRDItem.NostroBank;
+        //                prodItem.BankCode = CRDItem.BankCode;
+        //                prodItem.CurID = CRDItem.CurID;
+        //                prodItem.LastStatementDate = CRDItem.LastStatementDate;
+        //                prodItem.OurBooks = CRDItem.OurBooks;
+        //                prodItem.TheirBooks = CRDItem.TheirBooks;
+        //                prodItem.ConversionRate = CRDItem.ConversionRate;
+        //                prodItem.EquivalentUSD = CRDItem.EquivalentUSD;
+        //                prodItem.ConversionRate = CRDItem.ConversionRate;
+        //                prodItem.LimitAvailable = CRDItem.LimitAvailable;
+        //                prodItem.UpdateDate = CRDItem.UpdateDate;
+
+        //                DbContextB.SaveChanges();
+        //                //DbContextB.SP_UpdateDaysInBlotterReport(CRRFINCONItem.DemandTimeLiablitiesTotalForCRR, CRRFINCONItem.StartDate, CRRFINCONItem.EndDate, CRRFINCONItem.BR);
+        //            }
+        //            status = true;
+        //        }
+        //        else
+        //        {
+        //            status = false;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        status = false;
+        //    }
+        //    return status;
+        //}
 
         public static bool DeleteRECON(int id)
         {
@@ -2414,13 +2523,98 @@ namespace DataAccessLayer
                 }
                 status = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 status = false;
             }
             return status;
         }
 
+        public static long ReconExcelUpload(SBP_BlotterRECON ReconItem)
+        {
+            long Newid = 0;
+            try
+            {
+                if (ReconItem.Flag == "N" && (ReconItem.ID == null || ReconItem.ID == 0))
+                {
+                    DbContextB.SBP_BlotterRECON.Add(ReconItem);
+                    DbContextB.SaveChanges();
+                    Newid = (from trade in DbContextB.SBP_BlotterRECON orderby trade.ID select trade.ID).Max();
+                }
+                else if ((ReconItem.Flag == "U" || ReconItem.Flag == "N") && ReconItem.ID > 0)
+                {
+                    SBP_BlotterRECON RECONItemsUpdate = DbContextB.SBP_BlotterRECON.Where(p => p.ID == ReconItem.ID).FirstOrDefault();
+                    if (RECONItemsUpdate != null)
+                    {
+                        RECONItemsUpdate.LastStatementDate = ReconItem.LastStatementDate;
+                        RECONItemsUpdate.OurBooks = ReconItem.OurBooks;
+                        RECONItemsUpdate.TheirBooks = ReconItem.TheirBooks;
+                        RECONItemsUpdate.EquivalentUSD = ReconItem.EquivalentUSD;
+                        RECONItemsUpdate.ConversionRate = ReconItem.ConversionRate;
+                        RECONItemsUpdate.CurID = ReconItem.CurID;
+                        RECONItemsUpdate.BankCode = ReconItem.BankCode;
+                        RECONItemsUpdate.UpdateDate = ReconItem.UpdateDate;
+                        DbContextB.SaveChanges();
+                        Newid = ReconItem.ID;
+                    }
+                }
+                else if (ReconItem.Flag == "D" && ReconItem.ID > 0)
+                {
+                    SBP_BlotterRECON ReconItemDelete = DbContextB.SBP_BlotterRECON.Where(p => p.ID == ReconItem.ID).FirstOrDefault();
+                    if (ReconItemDelete != null)
+                    {
+                        DbContextB.SBP_BlotterRECON.Remove(ReconItemDelete);
+                        DbContextB.SaveChanges();
+                        Newid = ReconItemDelete.ID;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine(ex.Message.ToString());
+            }
+            return Newid;
+        }
+
+        //*****************************************************
+        //Opening Closing Balance Differential Repo Producers
+        //*****************************************************
+
+        public static List<SP_GetSBPBlotterOpeningClosingBalanceDIfferential_Result> GetAllBlotterOpeningClosingBalanceDifferential(int BranchID, int CurID, int BR, string DateVal)
+        {
+            return DbContextB.SP_GetSBPBlotterOpeningClosingBalanceDIfferential(BranchID, CurID, BR, DateVal).ToList();
+        }
+
+
+        public static bool UpdaterOpeningClosingBalanceDifferential(int Sno)
+        {
+            bool status;
+            try
+            {
+                //List<SBP_BlotterOpeningClosingBalanceDIfferential> GetCount = DbContextB.SBP_BlotterOpeningClosingBalanceDIfferential.Where(p => p.SNo == Sno).ToList();
+                //if (GetCount.Count > 0)
+                //{
+                SBP_BlotterOpeningClosingBalanceDIfferential prodItem = DbContextB.SBP_BlotterOpeningClosingBalanceDIfferential.Where(p => p.SNo == Sno).FirstOrDefault();
+                if (prodItem != null)
+                {
+                    prodItem.InFlow = 0;
+                    prodItem.OutFLow = 0;
+                    prodItem.UpdateDate = DateTime.Now;
+                    DbContextB.SaveChanges();
+                    status = true;
+                }
+                //}
+                else
+                {
+                    status = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                status = false;
+            }
+            return status;
+        }
 
         //*****************************************************
         //Currencies 
@@ -2440,47 +2634,47 @@ namespace DataAccessLayer
             return DbContextB.SP_GetAllNostroBankList(currId).ToList();
         }
 
-        public static List<SP_SBPBlotter_FCY_Result> GetAllBlotterData_FCY(String Br, int CurrId, string CurrentDate, string NostroBank)
+        public static List<SP_GetNostroBankFromOPICS_Result> GetNostroBankDDL(int currId, string BRCode)
+        {
+            return DbContextB.SP_GetNostroBankFromOPICS(currId, BRCode).ToList();
+        }
+
+
+        public static List<SP_SBPBlotter_FCY_Result> GetAllBlotterData_FCY(String Br, int CurrId, String CurrentDate, string NostroBank)
         {
             var results = DbContextB.SP_SBPBlotter_FCY(Br, CurrId, CurrentDate, NostroBank).ToList();
             return results;
         }
-        
+
         //*****************************************************
-        //Blotter List for Color
+        //Blotter Dumb Data with Color 
         //*****************************************************
 
-        public static bool InsertBlotterDumpDta(BlotterDataColor BlotterItem)
+        public static bool InsertBlotterDumpDta(BlotterDataColor BlotterColorItem)
         {
             bool status;
             try
             {
-                BlotterDataColor prodItem = DbContextB.BlotterDataColors.Where(p => p.DealNo == BlotterItem.DealNo && p.Balance == BlotterItem.Balance).FirstOrDefault();
+                BlotterDataColor prodItem = DbContextB.BlotterDataColors.Where(p => p.DealNo == BlotterColorItem.DealNo && p.Description == BlotterColorItem.Description && p.Inflow == BlotterColorItem.Inflow && p.Outflow == BlotterColorItem.Outflow).FirstOrDefault();
                 if (prodItem != null)
                 {
-                    prodItem.DealNo = BlotterItem.DealNo;
-                    prodItem.Description = BlotterItem.Description;
-                    prodItem.Inflow = BlotterItem.Inflow;
-                    prodItem.Outflow = BlotterItem.Outflow;
-                    prodItem.Balance = BlotterItem.Balance;
-                    prodItem.Recon_isActive = BlotterItem.Recon_isActive;
-                    prodItem.UpdateDate = BlotterItem.UpdateDate;
-                    prodItem.UserId = BlotterItem.UserId;
+                    prodItem.DealNo = BlotterColorItem.DealNo;
+                    prodItem.Description = BlotterColorItem.Description;
+                    prodItem.Status = BlotterColorItem.Status;
+                    prodItem.Inflow = BlotterColorItem.Inflow;
+                    prodItem.Outflow = BlotterColorItem.Outflow;
+                    prodItem.Balance = BlotterColorItem.Balance;
+                    prodItem.Recon_isActive = BlotterColorItem.Recon_isActive;
+                    prodItem.UpdateDate = BlotterColorItem.UpdateDate;
                     DbContextB.SaveChanges();
-                    status = true;
-                }
-                
-                else if (BlotterItem.DealNo != 0)
-                {
-                    DbContextB.BlotterDataColors.Add(BlotterItem);
-                    DbContextB.SaveChanges();
-                    status = true;
                 }
                 else
                 {
-                    status = false;
+                    DbContextB.BlotterDataColors.Add(BlotterColorItem);
+                    DbContextB.SaveChanges();
                 }
 
+                status = true;
             }
             catch (Exception ex)
             {
@@ -2490,25 +2684,90 @@ namespace DataAccessLayer
             return status;
         }
 
-        public static bool UpdateBlotterDumpDta(BlotterDataColor BlotterItem)
+        //public static bool UpdateBlotterDumpDta(BlotterDataColor BlotterColorItem)
+        //{
+        //    bool status;
+        //    try
+        //    {
+
+        //        BlotterDataColor prodItem = DbContextB.BlotterDataColors.Where(p => p.Sno == BlotterColorItem.Sno).FirstOrDefault();
+        //        if (prodItem != null)
+        //        {
+        //            prodItem.DealNo = BlotterColorItem.DealNo;
+        //            prodItem.Description = BlotterColorItem.Description;
+        //            prodItem.Status = BlotterColorItem.Status;
+        //            prodItem.Inflow = BlotterColorItem.Inflow;
+        //            prodItem.Outflow = BlotterColorItem.Outflow;
+        //            prodItem.Balance = BlotterColorItem.Balance;
+        //            prodItem.Recon_isActive = BlotterColorItem.Recon_isActive;
+        //            prodItem.UpdateDate = BlotterColorItem.UpdateDate;
+        //            DbContextB.SaveChanges();
+        //        }
+        //        status = true;
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        status = false;
+        //    }
+        //    return status;
+        //}
+
+
+        ////*****************************************************
+        ////Import Export Producers
+        ////*****************************************************
+
+        public static List<SP_GetSBP_BlotterImportExport_Result> GetAllBlotterImportExport(int UserID, int BranchID, int BR, string DateVal)
+        {
+
+            return DbContextB.SP_GetSBP_BlotterImportExport(UserID, BranchID, BR, DateVal).ToList();
+        }
+        public static SBP_BlotterImportExport GetImportExportItem(int IEId)
+        {
+            return DbContextB.SBP_BlotterImportExport.Where(p => p.SNo == IEId).FirstOrDefault();
+        }
+
+        public static bool InsertImportExport(SBP_BlotterImportExport IEItem)
         {
             bool status;
             try
             {
-                List<BlotterDataColor> GetCount = DbContextB.BlotterDataColors.Where(p => p.DealNo == BlotterItem.DealNo).ToList();
+                DbContextB.SBP_BlotterImportExport.Add(IEItem);
+                DbContextB.SaveChanges();
+                status = true;
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine(ex.Message.ToString());
+                status = false;
+            }
+            return status;
+        }
+
+        public static bool UpdateImportExport(SBP_BlotterImportExport IEItem)
+        {
+            bool status;
+            try
+            {
+                List<SBP_BlotterImportExport> GetCount = DbContextB.SBP_BlotterImportExport.Where(p => p.SNo == IEItem.SNo).ToList();
                 if (GetCount.Count > 0)
                 {
-                    BlotterDataColor prodItem = DbContextB.BlotterDataColors.Where(p => p.DealNo == BlotterItem.DealNo).FirstOrDefault();
+                    SBP_BlotterImportExport prodItem = DbContextB.SBP_BlotterImportExport.Where(p => p.SNo == IEItem.SNo).FirstOrDefault();
                     if (prodItem != null)
                     {
-                        prodItem.DealNo = BlotterItem.DealNo;
-                        prodItem.Description = BlotterItem.Description;
-                        prodItem.Inflow = BlotterItem.Inflow;
-                        prodItem.Outflow = BlotterItem.Outflow;
-                        prodItem.Balance = BlotterItem.Balance;
-                        prodItem.Recon_isActive = BlotterItem.Recon_isActive;
-                        prodItem.UpdateDate = BlotterItem.UpdateDate;
-                        prodItem.UserId = BlotterItem.UserId;
+                        //prodItem.NostroBank = CRDItem.NostroBank;
+                        prodItem.BankCode = IEItem.BankCode;
+                        prodItem.CurId = IEItem.CurId;
+                        prodItem.Branch = IEItem.Branch;
+                        prodItem.Customer = IEItem.Customer;
+                        prodItem.AgainstCurId = IEItem.AgainstCurId;
+                        prodItem.AgainstBankCode = IEItem.AgainstBankCode;
+                        prodItem.Inflow = IEItem.Inflow;
+                        prodItem.Outflow = IEItem.Outflow;
+                        prodItem.Date = IEItem.Date;
+                        prodItem.UpdateDate = IEItem.UpdateDate;
+
                         DbContextB.SaveChanges();
                     }
                     status = true;
@@ -2524,6 +2783,309 @@ namespace DataAccessLayer
             }
             return status;
         }
+
+        public static bool DeleteImportExport(int id)
+        {
+            bool status;
+            try
+            {
+                SBP_BlotterImportExport CRDItem = DbContextB.SBP_BlotterImportExport.Where(p => p.SNo == id).FirstOrDefault();
+                if (CRDItem != null)
+                {
+                    DbContextB.SBP_BlotterImportExport.Remove(CRDItem);
+                    DbContextB.SaveChanges();
+                }
+                status = true;
+            }
+            catch (Exception)
+            {
+                status = false;
+            }
+            return status;
+        }
+
+        //*****************************************************
+        //DMMO Producers
+        //*****************************************************
+
+
+        public static List<SP_GetSBP_DMMO_Result> GetAllBlotterDMMO(int UserID, int BranchID, int BR, string DateVal)
+        {
+            return DbContextB.SP_GetSBP_DMMO(UserID, BranchID, BR, DateVal).ToList();
+        }
+        public static SBP_DMMO GetDMMOItem(int DMMOId)
+        {
+            return DbContextB.SBP_DMMO.Where(p => p.SNo == DMMOId).FirstOrDefault();
+        }
+
+
+        public static bool UpdateDMMO(SBP_DMMO DMMOItem)
+        {
+            bool status;
+            try
+            {
+                SBP_DMMO DmmoItems = DbContextB.SBP_DMMO.Where(p => p.SNo == DMMOItem.SNo).FirstOrDefault();
+                if (DmmoItems != null)
+                {
+                    DmmoItems.PakistanBalance = DMMOItem.PakistanBalance;
+                    DmmoItems.BalanceDifference = DMMOItem.BalanceDifference;
+                    DmmoItems.SBPBalanace = DMMOItem.SBPBalanace;
+                    DmmoItems.Date = DMMOItem.Date;
+                    DmmoItems.Note = DMMOItem.Note;
+                    DmmoItems.UpdateDate = DMMOItem.UpdateDate;
+                    DmmoItems.UserID = DMMOItem.UserID;
+                    DmmoItems.BR = DMMOItem.BR;
+                    DmmoItems.BID = DMMOItem.BID;
+
+                    DbContextB.SaveChanges();
+                }
+                status = true;
+            }
+            catch (Exception ex)
+            {
+                status = false;
+            }
+            return status;
+        }
+
+
+        //*****************************************************
+        //Reserved Producers
+        //*****************************************************
+
+
+        public static List<SP_GetSBP_Reserved_Result> GetAllBlotterReserved(int UserID, int BranchID, int BR)
+        {
+            return DbContextB.SP_GetSBP_Reserved(UserID, BranchID, BR).ToList();
+        }
+        public static BlotterSBP_Reserved GetReservedItem(int DMMOId)
+        {
+            return DbContextB.BlotterSBP_Reserved.Where(p => p.SNo == DMMOId).FirstOrDefault();
+        }
+
+
+        public static bool UpdateReserved(BlotterSBP_Reserved ReservedItem)
+        {
+            bool status;
+            try
+            {
+                BlotterSBP_Reserved ReservedItems = DbContextB.BlotterSBP_Reserved.Where(p => p.SNo == ReservedItem.SNo).FirstOrDefault();
+                if (ReservedItems != null)
+                {
+                    ReservedItems.BalanceDifference = ReservedItem.BalanceDifference;
+                    ReservedItems.SBPBalanace = ReservedItem.SBPBalanace;
+                    ReservedItems.UpdateDate = ReservedItem.UpdateDate;
+                    DbContextB.SaveChanges();
+                }
+                status = true;
+            }
+            catch (Exception ex)
+            {
+                status = false;
+            }
+            return status;
+        }
+
+
+        //*****************************************************
+        // CRR Report FCY Producers
+        //*****************************************************
+
+        public static List<SP_GetSBPBlotterCRRReportFCY_Result> GetAllBlotterCRRReportFCY(int UserID, int BranchID, int BR)
+        {
+            var CurrentDate = DateTime.Now;
+            return DbContextB.SP_GetSBPBlotterCRRReportFCY(UserID, BranchID, BR).ToList();
+        }
+        public static SBP_BlotterCRRReportFCY GetCRRReportFCYItem(int CRRFCYItem)
+        {
+            return DbContextB.SBP_BlotterCRRReportFCY.Where(p => p.CRRID == CRRFCYItem).FirstOrDefault();
+        }
+
+        public static bool InsertCRRReportFCY(SBP_BlotterCRRReportFCY CRRFCYItem)
+        {
+            bool status;
+            try
+            {
+                DbContextB.SBP_BlotterCRRReportFCY.Add(CRRFCYItem);
+                DbContextB.SaveChanges();
+                status = true;
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine(ex.Message.ToString());
+                status = false;
+            }
+            return status;
+        }
+
+        public static bool UpdateCRRReportFCY(SBP_BlotterCRRReportFCY CRRFCYItem)
+        {
+            bool status;
+            try
+            {
+                List<SBP_BlotterCRRReportFCY> GetCount = DbContextB.SBP_BlotterCRRReportFCY.Where(p => p.CRRID == CRRFCYItem.CRRID).ToList();
+                if (GetCount.Count > 0)
+                {
+                    SBP_BlotterCRRReportFCY prodItem = DbContextB.SBP_BlotterCRRReportFCY.Where(p => p.CRRID == CRRFCYItem.CRRID).FirstOrDefault();
+                    if (prodItem != null)
+                    {
+                        prodItem.StartDate = CRRFCYItem.StartDate;
+                        prodItem.EndDate = CRRFCYItem.EndDate;
+                        prodItem.PreWeek5PcrReq = CRRFCYItem.PreWeek5PcrReq;
+                        prodItem.PreWeek10PcrReq = CRRFCYItem.PreWeek10PcrReq;
+                        prodItem.UpdateDate = CRRFCYItem.UpdateDate;
+                        DbContextB.SaveChanges();
+                    }
+                    status = true;
+                }
+                else
+                {
+                    status = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                status = false;
+            }
+            return status;
+        }
+
+        public static bool DeleteCRRReportFCY(int id)
+        {
+            bool status;
+            try
+            {
+                SBP_BlotterCRRReportFCY CRRFCYItem = DbContextB.SBP_BlotterCRRReportFCY.Where(p => p.CRRID == id).FirstOrDefault();
+                List<SBP_BlotterCRRReportingCurrencyWise> CRRFCYCurWiseItem = DbContextB.SBP_BlotterCRRReportingCurrencyWise.Where(p => p.CRRID == id).ToList();
+                if (CRRFCYItem != null)
+                {
+                    DbContextB.SBP_BlotterCRRReportFCY.Remove(CRRFCYItem);
+                    DbContextB.SaveChanges();
+                    for (int i = 0; i < CRRFCYCurWiseItem.Count; i++)
+                    {
+                        DbContextB.SBP_BlotterCRRReportingCurrencyWise.Remove(CRRFCYCurWiseItem[i]);
+                        DbContextB.SaveChanges();
+                    }
+
+                }
+                status = true;
+            }
+            catch (Exception ex)
+            {
+                status = false;
+            }
+            return status;
+        }
+
+
+        public static bool InsertCRRReportFCYCurrencyWise(SBP_BlotterCRRReportingCurrencyWise CRRfcyCWItem)
+        {
+            bool status;
+            try
+            {
+                int id = (from r in DbContextB.SBP_BlotterCRRReportFCY orderby r.CRRID select r.CRRID).Max();
+                CRRfcyCWItem.CRRID = id;
+                DbContextB.SBP_BlotterCRRReportingCurrencyWise.Add(CRRfcyCWItem);
+                DbContextB.SaveChanges();
+                status = true;
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine(ex.Message.ToString());
+                status = false;
+            }
+            return status;
+        }
+        public static List<SP_GetSBP_CRRReportingFCYCurrWise_Result> GetLatestBlotterFCYCRRReportingCurrencyWise(int BR, int BID, int UserID, string StartDate, string EndDate)
+        {
+            var results = DbContextB.SP_GetSBP_CRRReportingFCYCurrWise(BR, BID, UserID, StartDate, EndDate).ToList();
+            return results;
+        }
+
+
+        //*****************************************************
+        //GazettedHolidays Producers
+        //*****************************************************
+
+        public static List<SP_GetSBPBlotterGH_Result> GetAllBlotterGH(int UserID)
+        {
+            var CurrentDate = DateTime.Now;
+            return DbContextB.SP_GetSBPBlotterGH(UserID).ToList();
+        }
+        public static GazettedHoliday GetGHItem(int GHId)
+        {
+            return DbContextB.GazettedHolidays.Where(p => p.GHID == GHId).FirstOrDefault();
+        }
+
+        public static bool InsertGH(GazettedHoliday GHItem)
+        {
+            bool status;
+            try
+            {
+                DbContextB.GazettedHolidays.Add(GHItem);
+                DbContextB.SaveChanges();
+                status = true;
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine(ex.Message.ToString());
+                status = false;
+            }
+            return status;
+        }
+
+        public static bool UpdateGH(GazettedHoliday GHItem)
+        {
+            bool status;
+            try
+            {
+                List<GazettedHoliday> GetCount = DbContextB.GazettedHolidays.Where(p => p.GHID == GHItem.GHID).ToList();
+                if (GetCount.Count > 0)
+                {
+                    GazettedHoliday prodItem = DbContextB.GazettedHolidays.Where(p => p.GHID == GHItem.GHID).FirstOrDefault();
+                    if (prodItem != null)
+                    {
+                        prodItem.HolidayTitle = GHItem.HolidayTitle;
+                        prodItem.GHDate = GHItem.GHDate;
+                        prodItem.GHDescription = GHItem.GHDescription;
+                        prodItem.UpdateDate = GHItem.UpdateDate;
+                        DbContextB.SaveChanges();
+                    }
+                    status = true;
+                }
+                else
+                {
+                    status = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                status = false;
+            }
+            return status;
+        }
+
+        public static bool DeleteGH(int id)
+        {
+            bool status;
+            try
+            {
+                GazettedHoliday GHItem = DbContextB.GazettedHolidays.Where(p => p.GHID == id).FirstOrDefault();
+                if (GHItem != null)
+                {
+                    DbContextB.GazettedHolidays.Remove(GHItem);
+                    DbContextB.SaveChanges();
+                }
+                status = true;
+            }
+            catch (Exception ex)
+            {
+                status = false;
+            }
+            return status;
+        }
+
+
         #endregion
     }
 }

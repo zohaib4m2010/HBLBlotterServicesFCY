@@ -14,7 +14,6 @@ namespace DataAccessLayer
     public partial class SP_SBPBlotter_Result
     {
         public int DealNo { get; set; }
-        public string DataType { get; set; }
         public string Description { get; set; }
         public string Status { get; set; }
         public Nullable<System.DateTime> DealDate { get; set; }

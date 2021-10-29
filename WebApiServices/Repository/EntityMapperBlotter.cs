@@ -28,8 +28,6 @@ namespace WebApiServices.Repository
             Mapper.CreateMap<Models.SBP_BlotterOpeningBalance, DataAccessLayer.SP_GetOpeningBalance_Result>();
             Mapper.CreateMap<DataAccessLayer.SP_GetOpeningBalance_Result, Models.SBP_BlotterOpeningBalance>();
 
-
-
             Mapper.CreateMap<Models.SP_GETLatestBlotterDTLReportDayWise_Result, DataAccessLayer.SP_GETLatestBlotterDTLReportDayWise_Result>();
             Mapper.CreateMap<DataAccessLayer.SP_GETLatestBlotterDTLReportDayWise_Result, Models.SP_GETLatestBlotterDTLReportDayWise_Result>();
 
@@ -47,6 +45,9 @@ namespace WebApiServices.Repository
 
             Mapper.CreateMap<Models.BlotterDataColor, DataAccessLayer.BlotterDataColor>();
             Mapper.CreateMap<DataAccessLayer.BlotterDataColor, Models.BlotterDataColor>();
+
+            Mapper.CreateMap<Models.SP_GetFCYOpeningBalance_Result, DataAccessLayer.SP_GetFCYOpeningBalance_Result>();
+            Mapper.CreateMap<DataAccessLayer.SP_GetFCYOpeningBalance_Result, Models.SP_GetFCYOpeningBalance_Result>();
         }
       
         public TDestination Translate(TSource obj)
