@@ -124,23 +124,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\Site.css" />
-    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
-    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
-    <Content Include="Scripts\jquery-1.10.2.js" />
-    <Content Include="Scripts\jquery-1.10.2.min.js" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\modernizr-2.6.2.js" />
-    <Content Include="tableStructure.sql" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -157,12 +141,14 @@
     <Compile Include="Controllers\BlotterController.cs" />
     <Compile Include="Controllers\BlotterCRDController.cs" />
     <Compile Include="Controllers\BlotterCRRFINCONController.cs" />
+    <Compile Include="Controllers\BlotterCRRReportFCYController.cs" />
     <Compile Include="Controllers\BlotterCurrencyController.cs" />
     <Compile Include="Controllers\BlotterDTController.cs" />
     <Compile Include="Controllers\BlotterDTLController.cs" />
     <Compile Include="Controllers\BlotterDTLDBController.cs" />
     <Compile Include="Controllers\BlotterFundingRepoController.cs" />
     <Compile Include="Controllers\BlotterFundsTransferController.cs" />
+    <Compile Include="Controllers\BlotterImportExportController.cs" />
     <Compile Include="Controllers\BlotterLoginController.cs" />
     <Compile Include="Controllers\BlotterManualDealsController.cs" />
     <Compile Include="Controllers\BlotterOpenBalController.cs" />
@@ -200,6 +186,7 @@
     <Compile Include="Models\SBP_BlotterCRRReportingCurrencyWise.cs" />
     <Compile Include="Models\SBP_BlotterFundingRepo.cs" />
     <Compile Include="Models\SBP_BlotterFundsTransfer.cs" />
+    <Compile Include="Models\SBP_BlotterImportExport.cs" />
     <Compile Include="Models\SBP_BlotterManualEstBalance.cs" />
     <Compile Include="Models\SBP_BlotterOpeningBalance.cs" />
     <Compile Include="Models\SBP_BlotterRECON.cs" />
@@ -236,6 +223,7 @@
     <Compile Include="Models\SP_GetSBPBlotterFR_Result.cs" />
     <Compile Include="Models\SP_GetSBPBlotterGH_Result.cs" />
     <Compile Include="Models\SP_GetSBPBlotterRECON_Result.cs" />
+    <Compile Include="Models\SP_GetSBP_BlotterImportExport_Result.cs" />
     <Compile Include="Models\SP_GetSBP_CRRReportingFCYCurrWise_Result.cs" />
     <Compile Include="Models\SP_Get_SBPBlotterConversionRate_Result.cs" />
     <Compile Include="Models\SP_SBPBlotterRunningBal.cs" />
@@ -253,6 +241,7 @@
     <Compile Include="Repository\EntitiyMapperBlotterCRRReportFCY.cs" />
     <Compile Include="Repository\EntitiyMapperBlotterCRRReportFCYCurrencyWise.cs" />
     <Compile Include="Repository\EntitiyMapperBlotterFR.cs" />
+    <Compile Include="Repository\EntitiyMapperBlotterImportExport.cs" />
     <Compile Include="Repository\EntitiyMapperBlotterRECON.cs" />
     <Compile Include="Repository\EntitiyMapperBlotterTBO.cs" />
     <Compile Include="Repository\EntityMapperBlotterBai_Muajjal.cs" />
@@ -280,16 +269,11 @@
     <Compile Include="Repository\EntityMapperWebPages.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <None Include="Properties\PublishProfiles\WebApiServices.pubxml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\web.config" />
-    <Content Include="Scripts\jquery-1.10.2.min.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
